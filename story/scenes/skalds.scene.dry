@@ -1,0 +1,130 @@
+@scene skalds_deck
+title: The Skald's Deck
+subtitle: Wit Challenges
+is-deck: true
+
+This is a **deck**. It contains cards that test your **Wit** stat. Each card uses a **broad difficulty check** — your Wit is compared against the difficulty, and a random element determines success or failure.
+
+Higher Wit means better odds. Current Wit: **[+ wit +]**
+
+- @skald_card_easy: Easy Verse (Difficulty 3)
+- @skald_card_medium: Complex Kenning (Difficulty 6)
+- @skald_card_hard: Epic Saga (Difficulty 8)
+- @main_hall: Return to the hall
+
+@scene skald_card_easy
+title: Easy Verse
+subtitle: Broad Check — Difficulty 3
+is-card: true
+check-quality: wit
+broad-difficulty: 3
+check-success-go-to: skald_easy_win
+check-failure-go-to: skald_easy_fail
+
+A simple verse challenge. The opposing skald offers a basic rhyme. Your **Wit ([+ wit +])** is checked against difficulty **3**.
+
+This is a **broad difficulty check**: your stat is compared to the difficulty. The higher your stat relative to the difficulty, the better your chances.
+
+@scene skald_easy_win
+title: Verse Matched!
+subtitle: Success
+on-arrival: wit = wit + 1; reputation = reputation + 1
+
+You matched the verse with ease! The crowd cheers.
+
+This demonstrates a **successful stat check**. Your Wit and Reputation have increased.
+
+Wit is now **[+ wit +]**. Reputation is now **[+ reputation +]**.
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_easy_fail
+title: Tongue-Tied
+subtitle: Failure
+on-arrival: reputation = reputation - 1
+
+The words escape you. The crowd murmurs.
+
+This demonstrates a **failed stat check**. Your Reputation has decreased.
+
+Reputation is now **[+ reputation +]**.
+
+- @skalds_deck: Try another card
+- @main_hall: Return to the hall
+
+@scene skald_card_medium
+title: Complex Kenning
+subtitle: Broad Check — Difficulty 6
+is-card: true
+check-quality: wit
+broad-difficulty: 6
+check-success-go-to: skald_medium_win
+check-failure-go-to: skald_medium_fail
+choose-if: wit >= 3
+
+A kenning challenge — metaphor wrapped in metaphor. Your **Wit ([+ wit +])** is checked against difficulty **6**.
+
+This card also demonstrates **choose-if** gating: you need at least Wit 3 to attempt it. If your Wit is below 3, this card appears disabled.
+
+@scene skald_medium_win
+title: Kenning Mastered!
+subtitle: Success
+on-arrival: wit = wit + 2; reputation = reputation + 2
+
+Brilliant! You decoded the kenning and fired back with one of your own.
+
+Higher difficulty means better rewards on success. Wit +2, Reputation +2.
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_medium_fail
+title: Kenning Confounded
+subtitle: Failure
+on-arrival: wit = wit - 1
+
+The layers of metaphor defeat you. You lose some confidence in your craft.
+
+Higher difficulty also means harsher failure. Wit -1.
+
+Wit is now **[+ wit +]**.
+
+- @skalds_deck: Try again
+- @main_hall: Return to the hall
+
+@scene skald_card_hard
+title: Epic Saga
+subtitle: Broad Check — Difficulty 8
+is-card: true
+check-quality: wit
+broad-difficulty: 8
+check-success-go-to: skald_hard_win
+check-failure-go-to: skald_hard_fail
+choose-if: wit >= 5
+
+An epic saga that must be recited from memory. Your **Wit ([+ wit +])** is checked against difficulty **8**.
+
+This card requires **Wit 5 or higher** to even attempt. This demonstrates stacking **choose-if** with **stat checks** — two layers of gating.
+
+@scene skald_hard_win
+title: Saga Complete!
+subtitle: Legendary Success
+on-arrival: wit = wit + 3; reputation = reputation + 3; has_rune_stone = 1
+
+The hall falls silent, then erupts. You have proven yourself a true skald.
+
+This grants the **Rune Stone** item, which unlocks the Rune Chamber back in the main hall. This demonstrates how card rewards can **unlock new content** via conditional gating.
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_hard_fail
+title: Memory Fails
+subtitle: Failure
+on-arrival: wit = wit - 2; reputation = reputation - 1
+
+The saga crumbles in your mind. A devastating failure.
+
+- @skalds_deck: Try again
+- @main_hall: Return to the hall

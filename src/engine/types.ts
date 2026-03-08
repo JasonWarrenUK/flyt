@@ -24,6 +24,11 @@ export interface GameScene {
 	isCard?: boolean;
 	isPinnedCard?: boolean;
 	cardImage?: string;
+	checkQuality?: string;
+	broadDifficulty?: number;
+	narrowDifficulty?: number;
+	checkSuccessGoTo?: string;
+	checkFailureGoTo?: string;
 }
 
 export interface SceneOption {
@@ -42,6 +47,7 @@ export interface QualityDefinition {
 	words?: string[];
 	min?: number;
 	max?: number;
+	category?: string;
 }
 
 export interface CompiledGame {
@@ -64,6 +70,9 @@ export interface DisplayContent {
 	subtitle?: string;
 	body: string;
 	choices: DisplayChoice[];
+	isHand?: boolean;
+	isDeck?: boolean;
+	isCard?: boolean;
 }
 
 export interface DisplayChoice {
@@ -71,4 +80,9 @@ export interface DisplayChoice {
 	text: string;
 	enabled: boolean;
 	visible: boolean;
+	isCard?: boolean;
+	isDeck?: boolean;
+	checkQuality?: string;
+	broadDifficulty?: number;
+	narrowDifficulty?: number;
 }

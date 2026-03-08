@@ -16,6 +16,16 @@ import type {
 	GameScene
 } from './types.js';
 
+export interface CheckResult {
+	quality: string;
+	qualityValue: number;
+	difficulty: number;
+	type: 'broad' | 'narrow';
+	roll: number;
+	threshold: number;
+	success: boolean;
+}
+
 export class FlytEngine {
 	game: CompiledGame | null = $state(null);
 	state: GameState = $state({
@@ -26,6 +36,7 @@ export class FlytEngine {
 	});
 	loading = $state(true);
 	error: string | null = $state(null);
+	lastCheck: CheckResult | null = $state(null);
 
 	currentScene: GameScene | null = $derived.by(() => {
 		if (!this.game || !this.state.currentSceneId) return null;
@@ -36,18 +47,29 @@ export class FlytEngine {
 		const scene = this.currentScene;
 		if (!scene) return null;
 
-		const choices: DisplayChoice[] = (scene.options ?? []).map((opt) => ({
-			id: opt.id,
-			text: opt.title ?? opt.id,
-			enabled: this.evaluateCondition(opt.chooseIf),
-			visible: this.evaluateCondition(opt.viewIf)
-		}));
+		const choices: DisplayChoice[] = (scene.options ?? []).map((opt) => {
+			const targetScene = this.game?.scenes[opt.id];
+			return {
+				id: opt.id,
+				text: opt.title ?? opt.id,
+				enabled: this.evaluateCondition(opt.chooseIf) && this.evaluateCondition(targetScene?.chooseIf),
+				visible: this.evaluateCondition(opt.viewIf) && this.evaluateCondition(targetScene?.viewIf),
+				isCard: targetScene?.isCard ?? false,
+				isDeck: targetScene?.isDeck ?? false,
+				checkQuality: targetScene?.checkQuality,
+				broadDifficulty: targetScene?.broadDifficulty,
+				narrowDifficulty: targetScene?.narrowDifficulty
+			};
+		});
 
 		return {
 			title: scene.title ?? scene.id,
 			subtitle: scene.subtitle,
 			body: this.renderContent(scene.content ?? ''),
-			choices: choices.filter((c) => c.visible)
+			choices: choices.filter((c) => c.visible),
+			isHand: scene.isHand,
+			isDeck: scene.isDeck,
+			isCard: scene.isCard
 		};
 	});
 
@@ -90,6 +112,7 @@ export class FlytEngine {
 			visits: { [this.game.firstScene]: 1 },
 			history: [this.game.firstScene]
 		};
+		this.lastCheck = null;
 
 		this.executeArrival();
 	}
@@ -100,13 +123,82 @@ export class FlytEngine {
 		const target = this.game.scenes[sceneId];
 		if (!target) return;
 
+		this.lastCheck = null;
 		this.executeDeparture();
+
+		// If the target is a card with a stat check, resolve the check
+		if (target.isCard && target.checkQuality && (target.broadDifficulty != null || target.narrowDifficulty != null)) {
+			// Navigate to the card scene first (executes on-arrival for costs etc.)
+			this.state.currentSceneId = sceneId;
+			this.state.visits[sceneId] = (this.state.visits[sceneId] ?? 0) + 1;
+			this.state.history = [...this.state.history, sceneId];
+			this.executeArrival();
+
+			// Perform the check
+			const checkResult = this.performCheck(target);
+			this.lastCheck = checkResult;
+
+			// Route to success or failure scene
+			const resultSceneId = checkResult.success
+				? target.checkSuccessGoTo
+				: target.checkFailureGoTo;
+
+			if (resultSceneId && this.game.scenes[resultSceneId]) {
+				this.state.currentSceneId = resultSceneId;
+				this.state.visits[resultSceneId] = (this.state.visits[resultSceneId] ?? 0) + 1;
+				this.state.history = [...this.state.history, resultSceneId];
+				this.executeArrivalFor(resultSceneId);
+			}
+			return;
+		}
 
 		this.state.currentSceneId = sceneId;
 		this.state.visits[sceneId] = (this.state.visits[sceneId] ?? 0) + 1;
 		this.state.history = [...this.state.history, sceneId];
 
 		this.executeArrival();
+
+		// Handle go-to chains
+		const scene = this.game.scenes[sceneId];
+		if (scene?.goTo && this.game.scenes[scene.goTo]) {
+			this.choose(scene.goTo);
+		}
+	}
+
+	/**
+	 * Perform a broad or narrow difficulty check.
+	 *
+	 * Broad check: success chance = stat / (stat + difficulty) * 100
+	 * Narrow check: success chance = 50 + (stat - difficulty) * 5, clamped to [10, 90]
+	 */
+	private performCheck(scene: GameScene): CheckResult {
+		const qualityId = scene.checkQuality!;
+		const qualityValue = this.state.qualities[qualityId] ?? 0;
+		const isNarrow = scene.narrowDifficulty != null;
+		const difficulty = isNarrow ? scene.narrowDifficulty! : scene.broadDifficulty!;
+
+		let threshold: number;
+		if (isNarrow) {
+			// Narrow: linear, clamped [10, 90]
+			threshold = Math.max(10, Math.min(90, 50 + (qualityValue - difficulty) * 10));
+		} else {
+			// Broad: ratio-based
+			threshold = Math.round((qualityValue / (qualityValue + difficulty)) * 100);
+			threshold = Math.max(5, Math.min(95, threshold));
+		}
+
+		const roll = Math.floor(Math.random() * 100) + 1;
+		const success = roll <= threshold;
+
+		return {
+			quality: qualityId,
+			qualityValue,
+			difficulty,
+			type: isNarrow ? 'narrow' : 'broad',
+			roll,
+			threshold,
+			success
+		};
 	}
 
 	private executeArrival(): void {
@@ -115,6 +207,16 @@ export class FlytEngine {
 		for (const cmd of scene.onArrival) {
 			this.executeCommand(cmd);
 		}
+		this.clampQualities();
+	}
+
+	private executeArrivalFor(sceneId: string): void {
+		const scene = this.game?.scenes[sceneId];
+		if (!scene?.onArrival) return;
+		for (const cmd of scene.onArrival) {
+			this.executeCommand(cmd);
+		}
+		this.clampQualities();
 	}
 
 	private executeDeparture(): void {
@@ -122,6 +224,20 @@ export class FlytEngine {
 		if (!scene?.onDeparture) return;
 		for (const cmd of scene.onDeparture) {
 			this.executeCommand(cmd);
+		}
+		this.clampQualities();
+	}
+
+	/**
+	 * Clamp all qualities to their min/max bounds.
+	 */
+	private clampQualities(): void {
+		if (!this.game) return;
+		for (const [id, def] of Object.entries(this.game.qualities)) {
+			const val = this.state.qualities[id];
+			if (val == null) continue;
+			if (def.min != null && val < def.min) this.state.qualities[id] = def.min;
+			if (def.max != null && val > def.max) this.state.qualities[id] = def.max;
 		}
 	}
 
@@ -164,13 +280,25 @@ export class FlytEngine {
 	}
 
 	/**
-	 * Evaluate a Dendry condition. Returns true if undefined (no condition).
+	 * Evaluate a Dendry condition (comparison operators and arithmetic).
+	 * Returns true if undefined (no condition).
 	 */
-	private evaluateCondition(condition?: string): boolean {
+	evaluateCondition(condition?: string): boolean {
 		if (!condition) return true;
 		try {
-			const value = this.evaluateExpression(condition);
-			return Boolean(value);
+			let resolved = condition.trim();
+			// Replace quality references with their values
+			resolved = resolved.replace(/\b([a-zA-Z_]\w*)\b/g, (match) => {
+				if (match in (this.state.qualities ?? {})) {
+					return String(this.state.qualities[match]);
+				}
+				return match;
+			});
+			// Support comparison operators
+			if (/^[\d\s+\-*/().>=<!&|]+$/.test(resolved)) {
+				return Boolean(Function(`"use strict"; return (${resolved});`)());
+			}
+			return true;
 		} catch {
 			return true;
 		}

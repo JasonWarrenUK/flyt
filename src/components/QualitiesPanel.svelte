@@ -1,17 +1,32 @@
 <script lang="ts">
-	let { qualities }: { qualities: { id: string; name: string; value: number }[] } = $props();
+	import type { QualityDefinition } from '$engine';
+	import StatBar from '$components/StatBar.svelte';
+
+	let { qualities }: {
+		qualities: { id: string; name: string; value: number; definition: QualityDefinition }[];
+	} = $props();
+
+	const grouped = $derived.by(() => {
+		const groups: Record<string, typeof qualities> = {};
+		for (const q of qualities) {
+			const cat = q.definition.category ?? 'Other';
+			if (!groups[cat]) groups[cat] = [];
+			groups[cat].push(q);
+		}
+		return groups;
+	});
 </script>
 
 <div class="panel">
 	<h3>Qualities</h3>
-	<ul class="quality-list">
-		{#each qualities as q (q.id)}
-			<li class="quality-item">
-				<span class="quality-name">{q.name}</span>
-				<span class="quality-value">{q.value}</span>
-			</li>
-		{/each}
-	</ul>
+	{#each Object.entries(grouped) as [category, items] (category)}
+		<div class="category">
+			<h4 class="category-label">{category}</h4>
+			{#each items as q (q.id)}
+				<StatBar name={q.name} value={q.value} definition={q.definition} />
+			{/each}
+		</div>
+	{/each}
 </div>
 
 <style>
@@ -31,29 +46,20 @@
 		border-bottom: 1px solid var(--border-subtle);
 	}
 
-	.quality-list {
-		list-style: none;
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-xs);
+	.category {
+		margin-bottom: var(--space-md);
 	}
 
-	.quality-item {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: var(--space-xs) 0;
-		font-size: 0.85rem;
+	.category:last-child {
+		margin-bottom: 0;
 	}
 
-	.quality-name {
-		color: var(--text-secondary);
-	}
-
-	.quality-value {
-		font-family: var(--font-heading);
-		color: var(--bronze-light);
+	.category-label {
+		font-size: 0.6rem;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		color: var(--bronze-dark);
+		margin-bottom: var(--space-xs);
 		font-weight: 700;
-		font-size: 0.9rem;
 	}
 </style>

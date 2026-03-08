@@ -1,0 +1,13 @@
+@scene intro
+title: The Mead Hall
+subtitle: A Proof of Concept
+
+Welcome to this demonstration of the card and deck mechanics.
+
+You stand in a great mead hall. The hearth crackles. Around you, several opportunities present themselves as **decks of cards** you can draw from.
+
+Each deck contains cards that demonstrate different mechanics: **stat checks**, **conditional gating**, and **resource costs**.
+
+Your current Wit is **[+ wit +]** and your Courage is **[+ courage +]**.
+
+- @main_hall: Enter the hall

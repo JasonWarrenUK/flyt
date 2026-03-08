@@ -1,0 +1,114 @@
+@scene warriors_deck
+title: The Warrior's Deck
+subtitle: Courage Challenges
+is-deck: true
+
+This deck tests your **Courage**. These cards use **narrow difficulty checks** — the success window is tighter than broad checks, making them riskier but thematically appropriate for feats of bravery.
+
+Current Courage: **[+ courage +]**
+
+- @warrior_card_brawl: Tavern Brawl (Difficulty 3)
+- @warrior_card_beast: Face the Beast (Difficulty 5)
+- @warrior_card_duel: Holmgang Duel (Difficulty 7)
+- @main_hall: Return to the hall
+
+@scene warrior_card_brawl
+title: Tavern Brawl
+subtitle: Narrow Check — Difficulty 3
+is-card: true
+check-quality: courage
+narrow-difficulty: 3
+check-success-go-to: brawl_win
+check-failure-go-to: brawl_fail
+
+A drunk warrior challenges you to a brawl. Your **Courage ([+ courage +])** is checked against difficulty **3** using a **narrow check**.
+
+Narrow checks have a tighter success range than broad checks — even with high stats, failure is more likely. This represents the inherent unpredictability of combat.
+
+@scene brawl_win
+title: Brawl Won!
+subtitle: Success
+on-arrival: courage = courage + 1; silver = silver + 2
+
+You throw the drunkard across the table. The crowd buys you a round.
+
+Courage +1, Silver +2.
+
+- @warriors_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene brawl_fail
+title: Black Eye
+subtitle: Failure
+on-arrival: courage = courage - 1; mead = mead - 1
+
+The drunk lands a lucky punch. You lose some mead in the scuffle.
+
+- @warriors_deck: Try again
+- @main_hall: Return to the hall
+
+@scene warrior_card_beast
+title: Face the Beast
+subtitle: Narrow Check — Difficulty 5
+is-card: true
+check-quality: courage
+narrow-difficulty: 5
+check-success-go-to: beast_win
+check-failure-go-to: beast_fail
+choose-if: courage >= 3
+
+A great wolf prowls outside the hall. Only those with **Courage 3+** dare face it.
+
+This demonstrates **choose-if** gating on a warrior card.
+
+@scene beast_win
+title: Wolf Slain!
+subtitle: Success
+on-arrival: courage = courage + 2; reputation = reputation + 2
+
+You slay the beast! Its pelt will make fine armour.
+
+- @warriors_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene beast_fail
+title: Driven Back
+subtitle: Failure
+on-arrival: courage = courage - 1; reputation = reputation - 1
+
+The wolf bares its fangs and you retreat. No shame in living to fight again... well, some shame.
+
+- @warriors_deck: Try again
+- @main_hall: Return to the hall
+
+@scene warrior_card_duel
+title: Holmgang Duel
+subtitle: Narrow Check — Difficulty 7
+is-card: true
+check-quality: courage
+narrow-difficulty: 7
+check-success-go-to: duel_win
+check-failure-go-to: duel_fail
+choose-if: courage >= 5
+
+A formal duel on the island. **Courage 5+** required to accept. Narrow difficulty 7 — even the brave may fall.
+
+@scene duel_win
+title: Holmgang Victor!
+subtitle: Legendary Success
+on-arrival: courage = courage + 3; reputation = reputation + 3; silver = silver + 5
+
+You stand victorious. The defeated warrior yields his silver and his respect.
+
+- @warriors_deck: Draw another
+- @main_hall: Return to the hall
+
+@scene duel_fail
+title: Defeated
+subtitle: Failure
+on-arrival: courage = courage - 2; silver = silver - 3
+
+You fall. The healers tend your wounds, but your purse is lighter.
+
+- @warriors_deck: Try again
+- @main_hall: Return to the hall

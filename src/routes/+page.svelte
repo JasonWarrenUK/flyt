@@ -28,7 +28,7 @@
 {:else if engine.display}
 	<div class="game-layout">
 		<div class="scene-column">
-			<SceneView display={engine.display} onChoose={(id) => engine.choose(id)} />
+			<SceneView display={engine.display} onChoose={(id) => engine.choose(id)} lastCheck={engine.lastCheck} />
 		</div>
 		<aside class="qualities-column">
 			<QualitiesPanel qualities={engine.qualityList} />
