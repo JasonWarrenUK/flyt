@@ -12,19 +12,34 @@ npm run compile:dendry   # compile .dry story files → static/game.json
 npm run dev              # start dev server
 ```
 
+## Commands
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Compile story + production build |
+| `npm run preview` | Preview production build locally |
+| `npm run compile:dendry` | Compile `story/*.dry` → `static/game.json` |
+| `npm run check` | TypeScript + Svelte type checking |
+
 ## Project Structure
 
 ```
-story/              # Dendry content files (.dry)
-  game.dry          # Game metadata
-  qualities.dry     # Stats/qualities definitions
-  scenes/           # Scene files (.scene.dry)
+story/                  # Dendry content files (.dry)
+  game.dry              # Game metadata (title, author, first-scene)
+  qualities.dry         # Stats/qualities definitions
+  scenes/               # Scene files (.scene.dry)
 src/
-  engine/           # TypeScript engine wrapper for DendryNexus game data
-  components/       # Svelte UI components
-  routes/           # SvelteKit pages
+  engine/               # TypeScript engine wrapper for DendryNexus game data
+  components/           # Svelte UI components
+  routes/               # SvelteKit pages
 scripts/
-  compile-dendry.js # Compiles .dry files to game.json
+  compile-dendry.js     # Compiles .dry files to game.json
+.claude/
+  hooks/                # Auto-compile on .dry edits, install deps on session start
+  skills/               # /compile-dendry, /add-scene, /add-quality
+  settings.json         # Hook registration
+CLAUDE.md               # Full reference for the DendryNexus + Svelte 5 stack
 ```
 
 ## Writing Content
