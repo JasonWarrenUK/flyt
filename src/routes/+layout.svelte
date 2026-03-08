@@ -7,7 +7,7 @@
 <div class="app-shell">
 	<header class="app-header">
 		<h1>Flyt</h1>
-		<p class="tagline">A Contest of Words</p>
+		<p class="tagline">A Game of Kennings</p>
 	</header>
 
 	<main class="app-main">
@@ -36,12 +36,15 @@
 	}
 
 	.app-header h1 {
+		font-family: var(--font-title);
+		font-weight: 900;
 		font-size: 2.8rem;
 		letter-spacing: 0.15em;
 	}
 
 	.tagline {
-		font-family: var(--font-heading);
+		font-family: var(--font-title);
+		font-weight: 200;
 		color: var(--text-secondary);
 		font-size: 0.9rem;
 		letter-spacing: 0.1em;
