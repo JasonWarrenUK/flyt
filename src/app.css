@@ -5,7 +5,7 @@
  * birch bark, and deep northern forest.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Texturina:wght@200;900&display=swap');
 
 :root {
 	/* Core palette */
@@ -37,6 +37,7 @@
 	/* Typography */
 	--font-heading: 'Cinzel', serif;
 	--font-body: 'Cormorant Garamond', serif;
+	--font-title: 'Texturina', serif;
 
 	/* Spacing */
 	--space-xs: 0.25rem;
