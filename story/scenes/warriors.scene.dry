@@ -10,6 +10,11 @@ Current Courage: **[+ courage +]**
 - @warrior_card_brawl: Tavern Brawl (Difficulty 3)
 - @warrior_card_beast: Face the Beast (Difficulty 5)
 - @warrior_card_duel: Holmgang Duel (Difficulty 7)
+- @warrior_card_arm_wrestle: Arm Wrestling
+- @warrior_card_berserker: Berserker's Fury
+- @warrior_card_shaken: Shaken Nerves
+- @warrior_card_war_chant: War Chant
+- @warrior_card_cornered: Cornered Rat
 - @main_hall: Return to the hall
 
 @scene warrior_card_brawl
@@ -111,4 +116,121 @@ on-arrival: courage = courage - 2; silver = silver - 3
 You fall. The healers tend your wounds, but your purse is lighter.
 
 - @warriors_deck: Try again
+- @main_hall: Return to the hall
+
+@scene warrior_card_arm_wrestle
+title: Arm Wrestling
+subtitle: No Check — Random Event
+is-card: true
+on-arrival: courage = courage + 1; silver = silver - 1
+
+A broad-shouldered farmer challenges you to arm wrestling. Win or lose, it costs a silver to enter. You strain, you sweat, and you gain a measure of nerve from the effort.
+
+Courage: **[+ courage +]** | Silver: **[+ silver +]**
+
+- @warriors_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene warrior_card_berserker
+title: Berserker's Fury
+subtitle: Requires High Courage
+is-card: true
+view-if: courage >= 6
+check-quality: courage
+narrow-difficulty: 8
+check-success-go-to: warrior_berserker_win
+check-failure-go-to: warrior_berserker_fail
+
+The battle-madness stirs in your veins. Only the truly brave — **Courage 6+** — can channel it without losing themselves. A narrow check against difficulty **8**.
+
+@scene warrior_berserker_win
+title: Controlled Fury!
+subtitle: Success
+on-arrival: courage = courage + 3; reputation = reputation + 3
+
+You channel the berserker rage and shatter a training post with your bare hands. The warriors bow their heads in respect.
+
+Courage: **[+ courage +]** | Reputation: **[+ reputation +]**
+
+- @warriors_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene warrior_berserker_fail
+title: Madness Unleashed
+subtitle: Failure
+on-arrival: courage = courage - 1; reputation = reputation - 2; mead = mead - 1
+
+The rage takes you but you cannot control it. You overturn a table and spill someone's mead. The hall is unimpressed.
+
+Courage: **[+ courage +]** | Reputation: **[+ reputation +]** | Mead: **[+ mead +]**
+
+- @warriors_deck: Try again
+- @main_hall: Return to the hall
+
+@scene warrior_card_shaken
+title: Shaken Nerves
+subtitle: Requires Low Courage
+is-card: true
+view-if: courage <= 2
+on-arrival: courage = courage + 2; mead = mead + 1
+
+Your hands tremble and the other warriors notice. A grizzled veteran sits beside you and pushes a horn of mead into your grip. *"Drink. Then we train."* He spends the afternoon drilling you in basic stances until your hands are steady again.
+
+This event only appears when **Courage is 2 or lower**.
+
+Courage: **[+ courage +]** | Mead: **[+ mead +]**
+
+- @warriors_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene warrior_card_war_chant
+title: War Chant
+subtitle: Requires High Wit
+is-card: true
+view-if: wit >= 5
+check-quality: courage
+narrow-difficulty: 4
+check-success-go-to: warrior_war_chant_win
+check-failure-go-to: warrior_war_chant_fail
+
+Your sharp mind recalls an ancient war chant that can rally fighters. Only those with **Wit 5+** know the words. Now you must find the **Courage** to lead the chant before the assembled warriors.
+
+@scene warrior_war_chant_win
+title: The Hall Roars!
+subtitle: Success
+on-arrival: courage = courage + 1; wit = wit + 1; reputation = reputation + 2
+
+Your voice rings out and the warriors stamp their feet in unison. Knowledge and nerve, combined.
+
+Courage: **[+ courage +]** | Wit: **[+ wit +]** | Reputation: **[+ reputation +]**
+
+- @warriors_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene warrior_war_chant_fail
+title: Forgotten Words
+subtitle: Failure
+on-arrival: wit = wit - 1
+
+You open your mouth but the ancient words flee. The hall stares. Perhaps you didn't know the chant as well as you thought.
+
+Wit: **[+ wit +]**
+
+- @warriors_deck: Try again
+- @main_hall: Return to the hall
+
+@scene warrior_card_cornered
+title: Cornered Rat
+subtitle: Requires Low Wit
+is-card: true
+view-if: wit <= 3
+on-arrival: courage = courage + 2
+
+You're not clever enough to talk your way out of trouble, so you've learned to fight your way out instead. A lifetime of being outwitted has made your fists quick and your resolve iron.
+
+This event only appears when **Wit is 3 or lower**.
+
+Courage: **[+ courage +]**
+
+- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
