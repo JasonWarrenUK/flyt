@@ -1,0 +1,98 @@
+@scene merchants_deck
+title: The Merchant's Deck
+subtitle: Resource Costs
+is-deck: true
+
+This deck demonstrates **resource-gated cards** — each card costs Silver or Mead to play. No stat check, just a price.
+
+Current Silver: **[+ silver +]** | Current Mead: **[+ mead +]**
+
+- @merchant_card_mead: Buy a Round (costs 1 Mead)
+- @merchant_card_silver: Hire a Skald (costs 3 Silver)
+- @merchant_card_gamble: Gamble (costs 2 Silver, random outcome)
+- @merchant_card_expensive: Commission a Saga (costs 8 Silver)
+- @main_hall: Return to the hall
+
+@scene merchant_card_mead
+title: Buy a Round
+subtitle: Costs 1 Mead
+is-card: true
+choose-if: mead >= 1
+on-arrival: mead = mead - 1; reputation = reputation + 1
+
+You share your mead with the hall. Generosity earns respect.
+
+This card demonstrates a **simple resource cost** using choose-if. If you have no mead, this card is disabled.
+
+Mead: **[+ mead +]** | Reputation: **[+ reputation +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_silver
+title: Hire a Skald
+subtitle: Costs 3 Silver
+is-card: true
+choose-if: silver >= 3
+on-arrival: silver = silver - 3; wit = wit + 2
+
+You hire a travelling skald to teach you new verses. Silver well spent.
+
+This demonstrates **buying stat increases** with resources. Locked if Silver < 3.
+
+Silver: **[+ silver +]** | Wit: **[+ wit +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_gamble
+title: Gamble at Dice
+subtitle: Costs 2 Silver
+is-card: true
+choose-if: silver >= 2
+check-quality: wit
+broad-difficulty: 4
+check-success-go-to: gamble_win
+check-failure-go-to: gamble_lose
+on-arrival: silver = silver - 2
+
+A dice game — part luck, part reading your opponent. This combines a **resource cost** (2 Silver, paid via on-arrival) with a **stat check** (Wit vs difficulty 4).
+
+You pay to play, then your Wit determines the outcome. Two mechanics working together.
+
+@scene gamble_win
+title: Winner!
+subtitle: Dice Favour the Clever
+on-arrival: silver = silver + 5
+
+You read the other gambler's tells. The dice fall your way.
+
+Silver: **[+ silver +]**. Net gain: +3 Silver (paid 2, won 5).
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene gamble_lose
+title: Snake Eyes
+subtitle: The Dice Are Cruel
+
+The dice betray you. Your 2 Silver is gone.
+
+Silver: **[+ silver +]**. This demonstrates how **on-arrival costs** are paid regardless of check outcome.
+
+- @merchants_deck: Try again
+- @main_hall: Return to the hall
+
+@scene merchant_card_expensive
+title: Commission a Saga
+subtitle: Costs 8 Silver — High Gate
+is-card: true
+choose-if: silver >= 8
+on-arrival: silver = silver - 8; reputation = reputation + 5; wit = wit + 1
+
+You commission a saga about your deeds. This is a **high-cost card** that most players cannot afford initially. It demonstrates that resource gating can create aspirational goals — something to work toward.
+
+Silver: **[+ silver +]** | Reputation: **[+ reputation +]** | Wit: **[+ wit +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall

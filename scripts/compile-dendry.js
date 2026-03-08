@@ -137,7 +137,11 @@ function compile() {
 				id: block.id,
 				name: block.props.name || block.id,
 				type: block.props.type || 'integer',
-				initial: block.props.initial ? Number(block.props.initial) : 0
+				initial: block.props.initial ? Number(block.props.initial) : 0,
+				min: block.props.min != null ? Number(block.props.min) : undefined,
+				max: block.props.max != null ? Number(block.props.max) : undefined,
+				category: block.props.category,
+				words: block.props.words?.split(',').map((w) => w.trim())
 			};
 		} else if (block.type === 'scene') {
 			const { content, choices } = parseChoices(block.content);
@@ -158,7 +162,13 @@ function compile() {
 				isHand: block.props['is-hand'] === 'true' || undefined,
 				isDeck: block.props['is-deck'] === 'true' || undefined,
 				isCard: block.props['is-card'] === 'true' || undefined,
-				cardImage: block.props['card-image']
+				isPinnedCard: block.props['is-pinned-card'] === 'true' || undefined,
+				cardImage: block.props['card-image'],
+				checkQuality: block.props['check-quality'],
+				broadDifficulty: block.props['broad-difficulty'] ? Number(block.props['broad-difficulty']) : undefined,
+				narrowDifficulty: block.props['narrow-difficulty'] ? Number(block.props['narrow-difficulty']) : undefined,
+				checkSuccessGoTo: block.props['check-success-go-to'],
+				checkFailureGoTo: block.props['check-failure-go-to']
 			};
 		}
 	}

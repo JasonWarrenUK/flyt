@@ -1,0 +1,45 @@
+@quality wit
+name: Wit
+type: integer
+initial: 3
+min: 0
+max: 10
+category: Stats
+
+@quality courage
+name: Courage
+type: integer
+initial: 2
+min: 0
+max: 10
+category: Stats
+
+@quality reputation
+name: Reputation
+type: integer
+initial: 1
+min: 0
+max: 10
+category: Stats
+
+@quality silver
+name: Silver
+type: integer
+initial: 5
+min: 0
+max: 20
+category: Resources
+
+@quality mead
+name: Mead
+type: integer
+initial: 2
+min: 0
+max: 10
+category: Resources
+
+@quality has_rune_stone
+name: Rune Stone
+type: onOff
+initial: 0
+category: Items
