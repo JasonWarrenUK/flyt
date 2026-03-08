@@ -41,7 +41,6 @@ This demonstrates a **successful stat check**. Your Wit and Reputation have incr
 
 Wit is now **[+ wit +]**. Reputation is now **[+ reputation +]**.
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_easy_fail
@@ -55,7 +54,6 @@ This demonstrates a **failed stat check**. Your Reputation has decreased.
 
 Reputation is now **[+ reputation +]**.
 
-- @skalds_deck: Try another card
 - @main_hall: Return to the hall
 
 @scene skald_card_medium
@@ -81,7 +79,6 @@ Brilliant! You decoded the kenning and fired back with one of your own.
 
 Higher difficulty means better rewards on success. Wit +2, Reputation +2.
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_medium_fail
@@ -95,7 +92,6 @@ Higher difficulty also means harsher failure. Wit -1.
 
 Wit is now **[+ wit +]**.
 
-- @skalds_deck: Try again
 - @main_hall: Return to the hall
 
 @scene skald_card_hard
@@ -121,7 +117,6 @@ The hall falls silent, then erupts. You have proven yourself a true skald.
 
 This grants the **Rune Stone** item, which unlocks the Rune Chamber back in the main hall. This demonstrates how card rewards can **unlock new content** via conditional gating.
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_hard_fail
@@ -131,7 +126,6 @@ on-arrival: wit = wit - 2; reputation = reputation - 1
 
 The saga crumbles in your mind. A devastating failure.
 
-- @skalds_deck: Try again
 - @main_hall: Return to the hall
 
 @scene skald_card_heckler
@@ -144,7 +138,6 @@ A rival skald takes the stage and bores the hall with a tedious lay about crop r
 
 Reputation: **[+ reputation +]** | Mead: **[+ mead +]**
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_card_riddlemaster
@@ -168,7 +161,6 @@ The old man smiles. *"You see what others cannot."* He presses three silver coin
 
 Wit: **[+ wit +]** | Reputation: **[+ reputation +]** | Silver: **[+ silver +]**
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_riddlemaster_fail
@@ -180,7 +172,6 @@ The old man shakes his head. *"Bright, but not bright enough."* The hall whisper
 
 Reputation: **[+ reputation +]**
 
-- @skalds_deck: Try again
 - @main_hall: Return to the hall
 
 @scene skald_card_stage_fright
@@ -196,7 +187,6 @@ This event only appears when your **Wit is 3 or lower** — a catch-up mechanic 
 
 Wit: **[+ wit +]** | Mead: **[+ mead +]**
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_card_battle_poet
@@ -220,7 +210,6 @@ You duck a swing and deliver a perfect couplet mid-dodge. The hall has never see
 
 Wit: **[+ wit +]** | Courage: **[+ courage +]** | Reputation: **[+ reputation +]**
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene skald_battle_poet_fail
@@ -232,7 +221,6 @@ You try to rhyme while dodging and end up flat on your back, mid-stanza. At leas
 
 Courage: **[+ courage +]**
 
-- @skalds_deck: Try again
 - @main_hall: Return to the hall
 
 @scene skald_card_timid_verse
@@ -248,5 +236,4 @@ This event only appears when your **Courage is 2 or lower**.
 
 Wit: **[+ wit +]** | Courage: **[+ courage +]**
 
-- @skalds_deck: Draw another card
 - @main_hall: Return to the hall

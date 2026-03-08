@@ -5,12 +5,22 @@
 	let {
 		display,
 		onChoose,
+		onDraw,
+		onPlay,
+		onDiscard,
 		lastCheck
 	}: {
 		display: DisplayContent;
 		onChoose: (id: string) => void;
+		onDraw: (deckId: string) => void;
+		onPlay: (cardId: string) => void;
+		onDiscard: (cardId: string) => void;
 		lastCheck?: CheckResult | null;
 	} = $props();
+
+	const handCards = $derived(display.choices.filter((c) => c.isHandCard));
+	const deckChoices = $derived(display.choices.filter((c) => c.isDeck));
+	const otherChoices = $derived(display.choices.filter((c) => !c.isHandCard && !c.isDeck));
 </script>
 
 <article class="scene" class:is-deck={display.isDeck} class:is-hand={display.isHand}>
@@ -34,8 +44,86 @@
 		{@html display.body}
 	</div>
 
-	{#if display.choices.length > 0}
-		<nav class="choices" class:card-grid={display.isDeck || display.isHand}>
+	{#if display.isHand}
+		<!-- Hand cards section -->
+		<section class="hand-section">
+			<h3 class="section-heading">Your Hand ({display.handCount}/{5})</h3>
+			{#if handCards.length === 0}
+				<p class="empty-hand">Your hand is empty. Draw cards from a deck below.</p>
+			{:else}
+				<div class="card-grid">
+					{#each handCards as card (card.id)}
+						<div class="hand-card" class:disabled={!card.enabled}>
+							<span class="card-icon">&#x1F0A0;</span>
+							<span class="card-label">{card.text}</span>
+							{#if card.checkQuality}
+								<span class="card-check">
+									{card.checkQuality}
+									{card.broadDifficulty != null ? `≥${card.broadDifficulty}` : ''}
+									{card.narrowDifficulty != null ? `≥${card.narrowDifficulty}` : ''}
+								</span>
+							{/if}
+							<div class="card-actions">
+								<button
+									class="card-action play-btn"
+									disabled={!card.enabled}
+									onclick={() => onPlay(card.id)}
+								>
+									Play
+								</button>
+								<button
+									class="card-action discard-btn"
+									onclick={() => onDiscard(card.id)}
+								>
+									Discard
+								</button>
+							</div>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
+
+		<!-- Deck draw section -->
+		{#if deckChoices.length > 0}
+			<section class="decks-section">
+				<h3 class="section-heading">Available Decks</h3>
+				<div class="deck-grid">
+					{#each deckChoices as deck (deck.id)}
+						<button
+							class="deck-draw-btn"
+							disabled={!deck.enabled}
+							onclick={() => onDraw(deck.id)}
+						>
+							<span class="deck-icon">&#x2660;</span>
+							<span class="deck-label">{deck.text}</span>
+							<span class="deck-action">
+								{display.handFull ? 'Hand full' : 'Draw'}
+							</span>
+						</button>
+					{/each}
+				</div>
+			</section>
+		{/if}
+
+		<!-- Other choices (e.g. Rune Chamber) -->
+		{#if otherChoices.length > 0}
+			<nav class="choices">
+				{#each otherChoices as choice (choice.id)}
+					<button
+						class="choice"
+						class:disabled={!choice.enabled}
+						disabled={!choice.enabled}
+						onclick={() => onChoose(choice.id)}
+					>
+						<span class="choice-marker">&loz;</span>
+						{choice.text}
+					</button>
+				{/each}
+			</nav>
+		{/if}
+	{:else if display.choices.length > 0}
+		<nav class="choices" class:card-grid={display.isDeck}>
 			{#each display.choices as choice (choice.id)}
 				{#if choice.isCard}
 					<button
@@ -44,7 +132,7 @@
 						disabled={!choice.enabled}
 						onclick={() => onChoose(choice.id)}
 					>
-						<span class="card-icon">🂠</span>
+						<span class="card-icon">&#x1F0A0;</span>
 						<span class="card-label">{choice.text}</span>
 						{#if choice.checkQuality}
 							<span class="card-check">
@@ -136,6 +224,161 @@
 		font-weight: 600;
 	}
 
+	/* Section headings for hand view */
+	.hand-section,
+	.decks-section {
+		margin-top: var(--space-lg);
+		padding-top: var(--space-lg);
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.section-heading {
+		font-family: var(--font-heading);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: var(--bronze);
+		margin-bottom: var(--space-md);
+	}
+
+	.empty-hand {
+		color: var(--text-secondary);
+		font-style: italic;
+		font-size: 0.95rem;
+	}
+
+	/* Hand cards */
+	.hand-card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-xs);
+		padding: var(--space-md);
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		color: var(--text-primary);
+		background: var(--bg-surface);
+		border: 2px solid var(--bronze-dark);
+		text-align: center;
+		min-height: 140px;
+		justify-content: center;
+		transition: border-color 0.2s ease;
+	}
+
+	.hand-card:hover:not(.disabled) {
+		border-color: var(--bronze-light);
+	}
+
+	.hand-card.disabled {
+		opacity: 0.35;
+		border-style: dashed;
+	}
+
+	.card-actions {
+		display: flex;
+		gap: var(--space-xs);
+		margin-top: var(--space-sm);
+		width: 100%;
+	}
+
+	.card-action {
+		flex: 1;
+		padding: var(--space-xs) var(--space-sm);
+		font-family: var(--font-heading);
+		font-size: 0.65rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		border: 1px solid var(--border-subtle);
+		background: transparent;
+		color: var(--text-secondary);
+	}
+
+	.play-btn {
+		color: var(--bronze-light);
+		border-color: var(--bronze-dark);
+	}
+
+	.play-btn:hover:not(:disabled) {
+		background: rgba(176, 141, 87, 0.15);
+		border-color: var(--bronze-light);
+		color: var(--bronze-light);
+	}
+
+	.play-btn:disabled {
+		opacity: 0.35;
+		cursor: not-allowed;
+	}
+
+	.discard-btn {
+		color: var(--text-secondary);
+	}
+
+	.discard-btn:hover {
+		color: var(--hearth);
+		border-color: var(--hearth);
+		background: rgba(176, 80, 50, 0.1);
+	}
+
+	/* Deck draw buttons */
+	.deck-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: var(--space-md);
+	}
+
+	.deck-draw-btn {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-xs);
+		padding: var(--space-md);
+		font-family: var(--font-body);
+		color: var(--text-secondary);
+		background: transparent;
+		border: 2px dashed var(--bronze-dark);
+		cursor: pointer;
+		text-align: center;
+		transition: all 0.25s ease;
+		min-height: 100px;
+		justify-content: center;
+	}
+
+	.deck-draw-btn:hover:not(:disabled) {
+		border-color: var(--bronze-light);
+		border-style: solid;
+		background: rgba(176, 141, 87, 0.08);
+		color: var(--text-primary);
+	}
+
+	.deck-draw-btn:disabled {
+		opacity: 0.35;
+		cursor: not-allowed;
+	}
+
+	.deck-icon {
+		font-size: 1.5rem;
+		line-height: 1;
+		color: var(--bronze-dark);
+	}
+
+	.deck-label {
+		font-family: var(--font-heading);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		color: var(--bronze);
+	}
+
+	.deck-action {
+		font-family: var(--font-heading);
+		font-size: 0.6rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		color: var(--text-secondary);
+	}
+
 	/* Standard choices */
 	.choices {
 		display: flex;
@@ -190,6 +433,12 @@
 
 	/* Card grid for decks/hands */
 	.choices.card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: var(--space-md);
+	}
+
+	.card-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 		gap: var(--space-md);

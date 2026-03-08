@@ -31,7 +31,6 @@ This card demonstrates a **simple resource cost** using choose-if. If you have n
 
 Mead: **[+ mead +]** | Reputation: **[+ reputation +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_silver
@@ -47,7 +46,6 @@ This demonstrates **buying stat increases** with resources. Locked if Silver < 3
 
 Silver: **[+ silver +]** | Wit: **[+ wit +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_gamble
@@ -74,7 +72,6 @@ You read the other gambler's tells. The dice fall your way.
 
 Silver: **[+ silver +]**. Net gain: +3 Silver (paid 2, won 5).
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene gamble_lose
@@ -85,7 +82,6 @@ The dice betray you. Your 2 Silver is gone.
 
 Silver: **[+ silver +]**. This demonstrates how **on-arrival costs** are paid regardless of check outcome.
 
-- @merchants_deck: Try again
 - @main_hall: Return to the hall
 
 @scene merchant_card_expensive
@@ -99,7 +95,6 @@ You commission a saga about your deeds. This is a **high-cost card** that most p
 
 Silver: **[+ silver +]** | Reputation: **[+ reputation +]** | Wit: **[+ wit +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_peddler
@@ -112,7 +107,6 @@ A peddler stumbles into the hall, half-frozen from the mountain pass. You offer 
 
 Silver: **[+ silver +]** | Mead: **[+ mead +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_feast
@@ -128,7 +122,6 @@ Only visible when **Silver is 10 or higher**.
 
 Silver: **[+ silver +]** | Reputation: **[+ reputation +]** | Mead: **[+ mead +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_begging
@@ -144,7 +137,6 @@ Only visible when **Silver is 2 or lower**.
 
 Silver: **[+ silver +]** | Reputation: **[+ reputation +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_patron
@@ -158,7 +150,6 @@ Word of your deeds has reached the Jarl. A messenger arrives bearing gifts: a po
 
 Silver: **[+ silver +]** | Mead: **[+ mead +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene merchant_card_hustle
@@ -174,5 +165,4 @@ Only visible when **Reputation is 2 or lower**.
 
 Silver: **[+ silver +]** | Reputation: **[+ reputation +]**
 
-- @merchants_deck: Draw another card
 - @main_hall: Return to the hall

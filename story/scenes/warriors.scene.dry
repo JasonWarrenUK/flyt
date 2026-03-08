@@ -39,7 +39,6 @@ You throw the drunkard across the table. The crowd buys you a round.
 
 Courage +1, Silver +2.
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene brawl_fail
@@ -49,7 +48,6 @@ on-arrival: courage = courage - 1; mead = mead - 1
 
 The drunk lands a lucky punch. You lose some mead in the scuffle.
 
-- @warriors_deck: Try again
 - @main_hall: Return to the hall
 
 @scene warrior_card_beast
@@ -73,7 +71,6 @@ on-arrival: courage = courage + 2; reputation = reputation + 2
 
 You slay the beast! Its pelt will make fine armour.
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene beast_fail
@@ -83,7 +80,6 @@ on-arrival: courage = courage - 1; reputation = reputation - 1
 
 The wolf bares its fangs and you retreat. No shame in living to fight again... well, some shame.
 
-- @warriors_deck: Try again
 - @main_hall: Return to the hall
 
 @scene warrior_card_duel
@@ -105,7 +101,6 @@ on-arrival: courage = courage + 3; reputation = reputation + 3; silver = silver 
 
 You stand victorious. The defeated warrior yields his silver and his respect.
 
-- @warriors_deck: Draw another
 - @main_hall: Return to the hall
 
 @scene duel_fail
@@ -115,7 +110,6 @@ on-arrival: courage = courage - 2; silver = silver - 3
 
 You fall. The healers tend your wounds, but your purse is lighter.
 
-- @warriors_deck: Try again
 - @main_hall: Return to the hall
 
 @scene warrior_card_arm_wrestle
@@ -128,7 +122,6 @@ A broad-shouldered farmer challenges you to arm wrestling. Win or lose, it costs
 
 Courage: **[+ courage +]** | Silver: **[+ silver +]**
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene warrior_card_berserker
@@ -152,7 +145,6 @@ You channel the berserker rage and shatter a training post with your bare hands.
 
 Courage: **[+ courage +]** | Reputation: **[+ reputation +]**
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene warrior_berserker_fail
@@ -164,7 +156,6 @@ The rage takes you but you cannot control it. You overturn a table and spill som
 
 Courage: **[+ courage +]** | Reputation: **[+ reputation +]** | Mead: **[+ mead +]**
 
-- @warriors_deck: Try again
 - @main_hall: Return to the hall
 
 @scene warrior_card_shaken
@@ -180,7 +171,6 @@ This event only appears when **Courage is 2 or lower**.
 
 Courage: **[+ courage +]** | Mead: **[+ mead +]**
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene warrior_card_war_chant
@@ -204,7 +194,6 @@ Your voice rings out and the warriors stamp their feet in unison. Knowledge and 
 
 Courage: **[+ courage +]** | Wit: **[+ wit +]** | Reputation: **[+ reputation +]**
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
 
 @scene warrior_war_chant_fail
@@ -216,7 +205,6 @@ You open your mouth but the ancient words flee. The hall stares. Perhaps you did
 
 Wit: **[+ wit +]**
 
-- @warriors_deck: Try again
 - @main_hall: Return to the hall
 
 @scene warrior_card_cornered
@@ -232,5 +220,4 @@ This event only appears when **Wit is 3 or lower**.
 
 Courage: **[+ courage +]**
 
-- @warriors_deck: Draw another card
 - @main_hall: Return to the hall
