@@ -42,4 +42,12 @@ initial: 0
 
 5. **Compile**: Run `npm run compile:dendry` to verify.
 
-6. **Note**: The `QualitiesPanel` component in `src/components/QualitiesPanel.svelte` automatically displays all qualities from game.json — no UI changes needed.
+6. **Note**: The `QualitiesPanel` component automatically displays all qualities grouped by `category`. No UI changes needed.
+
+7. **Usage in scenes**: Qualities can be:
+   - Modified: `on-arrival: quality = quality + 1`
+   - Displayed: `[+ quality +]`
+   - Used in conditions: `view-if: quality >= 5`, `choose-if: quality > 0`
+   - Used in conditional text: `[? if quality >= 3 : text ?]`
+   - Used in difficulty checks: `check-quality: quality`
+   - Used in conditional go-to: `go-to: scene_a if quality >= 5; scene_b`

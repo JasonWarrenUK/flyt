@@ -23,6 +23,7 @@ npm run compile:dendry
 3. If the compile succeeds, verify the output makes sense:
    - Read `static/game.json` and check that `firstScene` matches a scene that exists in `scenes`
    - Check that all choice targets (`options[].id`) reference existing scene IDs
+   - Check that tag choices reference tags that exist in `tagLookup`
    - Report any orphaned or unreachable scenes
 
 4. If compile fails, check:

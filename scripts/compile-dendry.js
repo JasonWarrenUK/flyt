@@ -65,18 +65,37 @@ function parseDryFile(filePath) {
 	return blocks;
 }
 
-/** Parse choice lines from scene content */
+/** Parse choice lines from scene content, supporting choice-level properties and tag choices */
 function parseChoices(lines) {
 	const choices = [];
 	const contentLines = [];
 
-	for (const line of lines) {
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		// Tag-based choice: - #tag_name: Choice text
+		const tagMatch = line.match(/^-\s+#(\S+)\s*:\s*(.+)$/);
+		if (tagMatch) {
+			const choice = { id: '#' + tagMatch[1], title: tagMatch[2].trim(), isTag: true };
+			// Check for indented choice-level properties on following lines
+			parseChoiceProperties(choice, lines, i);
+			choices.push(choice);
+			continue;
+		}
+		// Direct scene choice: - @scene_id: Choice text
 		const choiceMatch = line.match(/^-\s+@(\S+)\s*:\s*(.+)$/);
 		if (choiceMatch) {
-			choices.push({ id: choiceMatch[1], title: choiceMatch[2].trim() });
-		} else {
-			contentLines.push(line);
+			const choice = { id: choiceMatch[1], title: choiceMatch[2].trim() };
+			// Check for indented choice-level properties on following lines
+			parseChoiceProperties(choice, lines, i);
+			choices.push(choice);
+			continue;
 		}
+		// Indented property lines (belong to previous choice) - skip, already handled
+		const indentedProp = line.match(/^\s+(\w[\w-]*)\s*:\s*(.+)$/);
+		if (indentedProp && choices.length > 0) {
+			continue;
+		}
+		contentLines.push(line);
 	}
 
 	return {
@@ -85,10 +104,53 @@ function parseChoices(lines) {
 	};
 }
 
+/** Parse indented properties that follow a choice line */
+function parseChoiceProperties(choice, lines, choiceIndex) {
+	for (let j = choiceIndex + 1; j < lines.length; j++) {
+		const propMatch = lines[j].match(/^\s+(\w[\w-]*)\s*:\s*(.+)$/);
+		if (!propMatch) break;
+		const [, key, value] = propMatch;
+		if (key === 'view-if') choice.viewIf = value.trim();
+		else if (key === 'choose-if') choice.chooseIf = value.trim();
+		else if (key === 'order') choice.order = Number(value);
+		else if (key === 'priority') choice.priority = Number(value);
+		else if (key === 'frequency') choice.frequency = Number(value);
+	}
+}
+
 /** Parse semicolon-separated commands */
 function parseCommands(str) {
 	if (!str) return undefined;
 	return str.split(';').map((s) => s.trim()).filter(Boolean);
+}
+
+/** Parse a go-to value which may be simple or conditional */
+function parseGoTo(str) {
+	if (!str) return undefined;
+	// Check for conditional go-to: "scene_a if condition; scene_b if condition"
+	const parts = str.split(';').map(s => s.trim()).filter(Boolean);
+	if (parts.length === 1 && !parts[0].includes(' if ')) {
+		// Simple go-to
+		return parts[0];
+	}
+	// Conditional go-to array
+	return parts.map(part => {
+		const ifMatch = part.match(/^(\S+)\s+if\s+(.+)$/);
+		if (ifMatch) {
+			return { id: ifMatch[1], predicate: ifMatch[2].trim() };
+		}
+		return { id: part };
+	});
+}
+
+function parseBool(str) {
+	return str === 'true' || undefined;
+}
+
+function parseNum(str) {
+	if (str == null) return undefined;
+	const n = Number(str);
+	return isNaN(n) ? undefined : n;
 }
 
 function compile() {
@@ -104,15 +166,9 @@ function compile() {
 		author: '',
 		firstScene: 'intro',
 		scenes: {},
-		qualities: {}
+		qualities: {},
+		tagLookup: {}
 	};
-
-	// First pass: game.dry metadata
-	for (const block of allBlocks) {
-		if (block.file === 'game.dry' && block.type !== 'scene' && block.type !== 'quality') {
-			// game.dry props are at file level, not in blocks
-		}
-	}
 
 	// Parse game.dry props directly
 	try {
@@ -145,41 +201,85 @@ function compile() {
 			};
 		} else if (block.type === 'scene') {
 			const { content, choices } = parseChoices(block.content);
+			const p = block.props;
 			game.scenes[block.id] = {
 				id: block.id,
-				title: block.props.title,
-				subtitle: block.props.subtitle,
+				title: p.title,
+				subtitle: p.subtitle,
+				unavailableSubtitle: p['unavailable-subtitle'],
 				content,
 				options: choices.length > 0 ? choices : undefined,
-				onArrival: parseCommands(block.props['on-arrival']),
-				onDeparture: parseCommands(block.props['on-departure']),
-				viewIf: block.props['view-if'],
-				chooseIf: block.props['choose-if'],
-				goTo: block.props['go-to'],
-				maxVisits: block.props['max-visits'] ? Number(block.props['max-visits']) : undefined,
-				tags: block.props.tags?.split(',').map((t) => t.trim()),
-				// DendryNexus extensions
-				isHand: block.props['is-hand'] === 'true' || undefined,
-				isDeck: block.props['is-deck'] === 'true' || undefined,
-				isCard: block.props['is-card'] === 'true' || undefined,
-				isPinnedCard: block.props['is-pinned-card'] === 'true' || undefined,
-				cardImage: block.props['card-image'],
-				checkQuality: block.props['check-quality'],
-				broadDifficulty: block.props['broad-difficulty'] ? Number(block.props['broad-difficulty']) : undefined,
-				narrowDifficulty: block.props['narrow-difficulty'] ? Number(block.props['narrow-difficulty']) : undefined,
-				checkSuccessGoTo: block.props['check-success-go-to'],
-				checkFailureGoTo: block.props['check-failure-go-to']
+				onArrival: parseCommands(p['on-arrival']),
+				onDeparture: parseCommands(p['on-departure']),
+				onDisplay: parseCommands(p['on-display']),
+				viewIf: p['view-if'],
+				chooseIf: p['choose-if'],
+				maxVisits: parseNum(p['max-visits']),
+				countVisitsMax: parseNum(p['count-visits-max']),
+				// Navigation
+				goTo: parseGoTo(p['go-to']),
+				goToRef: p['go-to-ref'],
+				setRoot: parseBool(p['set-root']),
+				newPage: parseBool(p['new-page']),
+				gameOver: parseBool(p['game-over']),
+				call: p['call'],
+				// Choice selection
+				order: parseNum(p.order),
+				priority: parseNum(p.priority),
+				frequency: parseNum(p.frequency),
+				minChoices: parseNum(p['min-choices']),
+				maxChoices: parseNum(p['max-choices']),
+				// Tags
+				tags: p.tags?.split(',').map((t) => t.trim()),
+				// DendryNexus card/deck extensions
+				isHand: parseBool(p['is-hand']),
+				isDeck: parseBool(p['is-deck']),
+				isCard: parseBool(p['is-card']),
+				isPinnedCard: parseBool(p['is-pinned-card']),
+				cardImage: p['card-image'],
+				maxCards: parseNum(p['max-cards']),
+				// Difficulty checks
+				checkQuality: p['check-quality'],
+				broadDifficulty: parseNum(p['broad-difficulty']),
+				narrowDifficulty: parseNum(p['narrow-difficulty']),
+				difficultyScaler: parseNum(p['difficulty-scaler']),
+				difficultyIncrement: parseNum(p['difficulty-increment']),
+				checkSuccessGoTo: p['check-success-go-to'],
+				checkFailureGoTo: p['check-failure-go-to']
 			};
+		}
+	}
+
+	// Build tag lookup: tag -> [scene_id, ...]
+	for (const [id, scene] of Object.entries(game.scenes)) {
+		if (scene.tags) {
+			for (const tag of scene.tags) {
+				if (!game.tagLookup[tag]) game.tagLookup[tag] = [];
+				game.tagLookup[tag].push(id);
+			}
+		}
+	}
+
+	// Clean up undefined values to keep JSON tidy
+	for (const scene of Object.values(game.scenes)) {
+		for (const key of Object.keys(scene)) {
+			if (scene[key] === undefined) delete scene[key];
+		}
+	}
+	for (const quality of Object.values(game.qualities)) {
+		for (const key of Object.keys(quality)) {
+			if (quality[key] === undefined) delete quality[key];
 		}
 	}
 
 	const sceneCount = Object.keys(game.scenes).length;
 	const qualityCount = Object.keys(game.qualities).length;
+	const tagCount = Object.keys(game.tagLookup).length;
 
 	// Ensure static/ exists
 	mkdirSync('static', { recursive: true });
 	writeFileSync(OUTPUT_FILE, JSON.stringify(game, null, 2));
-	console.log(`Compiled ${sceneCount} scene(s), ${qualityCount} quality/ies → ${OUTPUT_FILE}`);
+	console.log(`Compiled ${sceneCount} scene(s), ${qualityCount} quality/ies, ${tagCount} tag(s) → ${OUTPUT_FILE}`);
 }
 
 compile();

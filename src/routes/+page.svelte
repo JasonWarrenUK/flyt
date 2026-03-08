@@ -48,6 +48,7 @@
 				onChoose={(id) => engine.choose(id)}
 				onDraw={(deckId) => engine.drawCard(deckId)}
 				onPlay={(cardId) => engine.playCard(cardId)}
+				onPlayPinned={(cardId) => engine.playPinnedCard(cardId)}
 				onDiscard={(cardId) => engine.discardCard(cardId)}
 				lastCheck={engine.lastCheck}
 			/>

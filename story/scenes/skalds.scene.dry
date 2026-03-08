@@ -7,6 +7,7 @@ This is a **deck**. It contains cards that test your **Wit** stat. Each card use
 
 Higher Wit means better odds. Current Wit: **[+ wit +]**
 
+- @skald_card_intro: The Skald's Challenge
 - @skald_card_easy: Easy Verse (Difficulty 3)
 - @skald_card_medium: Complex Kenning (Difficulty 6)
 - @skald_card_hard: Epic Saga (Difficulty 8)
@@ -16,6 +17,16 @@ Higher Wit means better odds. Current Wit: **[+ wit +]**
 - @skald_card_battle_poet: Battle-Poet's Roar
 - @skald_card_timid_verse: A Quiet Verse
 - @main_hall: Return to the hall
+
+@scene skald_card_intro
+title: The Skald's Challenge
+is-card: true
+max-visits: 1
+priority: 2
+
+The **Skald's Deck** tests your *wit* — can you match verse for verse?
+
+- @skalds_deck: Return to the deck
 
 @scene skald_card_easy
 title: Easy Verse

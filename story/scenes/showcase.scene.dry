@@ -1,0 +1,446 @@
+@scene feature_showcase
+title: The Feature Showcase
+subtitle: DendryNexus Mechanics Demo
+new-page: true
+
+Welcome to the **Feature Showcase**. Each path below demonstrates a different DendryNexus engine feature.
+
+[? if reputation >= 5 : *Your reputation precedes you — some paths are easier now.* ?]
+
+[? if silver <= 2 : *Your purse is light. The merchants eye you warily.* ?]
+
+Your current stats — Wit: **[+ wit +]**, Courage: **[+ courage +]**, Silver: **[+ silver +]**, Reputation: **[+ reputation +]**
+
+- @priority_demo: Priority & Frequency (Card Draw Order)
+- @tag_demo_hand: Tag-Based Choices (Deck Built from Tags)
+- @goto_demo: Conditional Go-To (Branching Paths)
+- @gotoref_demo: Go-To-Ref (Dynamic Navigation)
+- @setroot_demo: Set-Root (Default Continue)
+- @call_demo: Call (Run Another Scene's Actions)
+- @conditional_text_demo: Conditional Text Rendering
+- @unavailable_demo: Unavailable Subtitle
+- @difficulty_curve_demo: Custom Difficulty Curves
+- @main_hall: Return to the Hall
+
+@scene priority_demo
+title: Priority & Frequency Demo
+subtitle: Card Draw Order
+is-hand: true
+max-cards: 3
+
+This hand has a deck with **priority** and **frequency** settings. Draw cards and notice:
+
+1. **Priority 3** cards (Urgent) are drawn first
+2. **Priority 2** cards (Important) come next
+3. **Priority 1** cards (Normal) fill remaining slots
+4. Among same-priority cards, **frequency** controls the weighting
+
+- @priority_deck: Draw from the Priority Deck
+- @main_hall: Return to the Hall
+- @feature_showcase: Back to Showcase
+
+@scene priority_deck
+title: Priority Deck
+is-deck: true
+
+- @priority_card_urgent: Urgent Message
+- @priority_card_important_1: Important Notice A
+- @priority_card_important_2: Important Notice B
+- @priority_card_normal_rare: Rare Event
+- @priority_card_normal_common: Common Event
+
+@scene priority_card_urgent
+title: Urgent Message
+subtitle: Priority 3 — Drawn First
+is-card: true
+priority: 3
+max-visits: 1
+on-arrival: reputation = reputation + 1
+
+This card has **priority: 3** — the highest in the deck. It is always drawn before any lower-priority cards. With **max-visits: 1**, it disappears after being played once.
+
+This is how DendryNexus ensures introductory or story-critical cards appear before random content.
+
+Reputation: **[+ reputation +]**
+
+- @priority_demo: Return to hand
+
+@scene priority_card_important_1
+title: Important Notice A
+subtitle: Priority 2
+is-card: true
+priority: 2
+
+This card has **priority: 2**. It will be drawn after all priority-3 cards are exhausted, but before priority-1 cards.
+
+- @priority_demo: Return to hand
+
+@scene priority_card_important_2
+title: Important Notice B
+subtitle: Priority 2
+is-card: true
+priority: 2
+
+Another **priority: 2** card. When multiple cards share the same priority, the engine uses **frequency** to weight which one is drawn.
+
+- @priority_demo: Return to hand
+
+@scene priority_card_normal_rare
+title: Rare Event
+subtitle: Priority 1, Frequency 20
+is-card: true
+priority: 1
+frequency: 20
+
+This card has **frequency: 20** (default is 100). Lower frequency means it's *more likely* to be chosen among same-priority candidates — it effectively has higher draw weight.
+
+- @priority_demo: Return to hand
+
+@scene priority_card_normal_common
+title: Common Event
+subtitle: Priority 1, Frequency 200
+is-card: true
+priority: 1
+frequency: 200
+
+This card has **frequency: 200** (double the default). Higher frequency means it's *less likely* to be chosen — lower draw weight relative to other priority-1 cards.
+
+- @priority_demo: Return to hand
+
+@scene tag_demo_hand
+title: Tag-Based Choices
+subtitle: Deck Built from Tags
+is-hand: true
+max-cards: 4
+
+This hand has a deck that uses **tag-based choices** instead of listing individual scene IDs. The deck contains all scenes tagged with `tavern_event`.
+
+- @tag_deck: Draw from the Tavern Events Deck
+- @feature_showcase: Back to Showcase
+
+@scene tag_deck
+title: Tavern Events
+subtitle: Cards Tagged tavern_event
+is-deck: true
+
+This deck uses `#tavern_event` — it automatically includes every scene in the game with the tag `tavern_event`. Add new cards just by tagging them.
+
+- #tavern_event: Tavern Event
+
+@scene tavern_bard
+title: A Bard Performs
+is-card: true
+tags: tavern_event
+on-arrival: wit = wit + 1
+
+A travelling bard plays a haunting melody. You learn a new turn of phrase.
+
+This card is included in the Tavern Events deck because it has `tags: tavern_event`. It was not listed by ID — the `#tavern_event` syntax pulled it in automatically.
+
+Wit: **[+ wit +]**
+
+- @tag_demo_hand: Return to hand
+
+@scene tavern_fight
+title: A Fight Breaks Out
+is-card: true
+tags: tavern_event
+on-arrival: courage = courage + 1
+
+Two farmers argue over a goat. You step in and separate them before anyone draws steel.
+
+Tagged with `tavern_event` — automatically included in the tag-based deck.
+
+Courage: **[+ courage +]**
+
+- @tag_demo_hand: Return to hand
+
+@scene tavern_merchant
+title: A Merchant Arrives
+is-card: true
+tags: tavern_event
+on-arrival: silver = silver + 1
+
+A trader from the south enters, stamping snow from his boots. He overpays you for directions to the Jarl's hall.
+
+Tagged with `tavern_event` — automatically included in the tag-based deck.
+
+Silver: **[+ silver +]**
+
+- @tag_demo_hand: Return to hand
+
+@scene tavern_rumour
+title: A Whispered Rumour
+is-card: true
+tags: tavern_event
+on-arrival: reputation = reputation + 1
+
+A huscarl leans close and tells you something useful about the Jarl's court. Whether it's true or not, knowing it makes you seem well-connected.
+
+Tagged with `tavern_event` — automatically included.
+
+Reputation: **[+ reputation +]**
+
+- @tag_demo_hand: Return to hand
+
+@scene goto_demo
+title: Conditional Go-To
+subtitle: The Crossroads
+new-page: true
+
+You stand at a crossroads. The path you take depends on your **Courage**.
+
+This scene uses **conditional go-to** — the engine evaluates predicates and automatically routes you to the matching scene without player choice.
+
+Courage is **[+ courage +]**.
+
+- @goto_branch_start: Step forward (routed by courage)
+- @feature_showcase: Back to Showcase
+
+@scene goto_branch_start
+title: Stepping Forward...
+go-to: goto_branch_brave if courage >= 5; goto_branch_cautious if courage >= 3; goto_branch_timid
+
+This scene has three conditional go-to targets. You should never see this text — it auto-routes immediately.
+
+@scene goto_branch_brave
+title: The Bold Path
+subtitle: Courage 5+
+
+Your high **Courage ([+ courage +])** leads you down the bold path without hesitation. The engine chose this route because your Courage is **5 or higher**.
+
+This demonstrates `go-to: scene_a if courage >= 5; scene_b if courage >= 3; scene_c` — multiple conditional targets evaluated in order.
+
+- @feature_showcase: Back to Showcase
+
+@scene goto_branch_cautious
+title: The Measured Path
+subtitle: Courage 3-4
+
+Your moderate **Courage ([+ courage +])** leads you down a careful but steady path. The engine chose this because your Courage is **3-4** (the second predicate matched).
+
+- @feature_showcase: Back to Showcase
+
+@scene goto_branch_timid
+title: The Careful Path
+subtitle: Courage Below 3
+
+Your low **Courage ([+ courage +])** steers you toward the safest route. This is the **fallback** — no predicate, so it matches when nothing else does.
+
+- @feature_showcase: Back to Showcase
+
+@scene gotoref_demo
+title: Go-To-Ref Demo
+subtitle: Dynamic Navigation
+on-arrival: destination = 0
+
+**Go-to-ref** navigates to a scene whose ID is stored in a quality. Choose a destination, then the engine reads the quality value as a scene ID.
+
+This is useful for dynamic routing — e.g. "return to wherever the player came from" or "go to the quest target".
+
+(In this demo, we use regular choices since go-to-ref requires string quality values which our integer-based qualities approximate.)
+
+- @gotoref_result_a: Set destination to "Result A" and go
+- @gotoref_result_b: Set destination to "Result B" and go
+- @feature_showcase: Back to Showcase
+
+@scene gotoref_result_a
+title: Destination A
+subtitle: Go-To-Ref Target
+
+You arrived at **Destination A**. In a full implementation, this would be reached via `go-to-ref: destination_quality` where the quality contains the scene ID string.
+
+The **go-to-ref** feature is most useful when scenes need to remember and return to dynamic locations — like a "return from inventory" mechanic.
+
+- @feature_showcase: Back to Showcase
+
+@scene gotoref_result_b
+title: Destination B
+subtitle: Go-To-Ref Target
+
+You arrived at **Destination B**. A different dynamic destination.
+
+- @feature_showcase: Back to Showcase
+
+@scene setroot_demo
+title: The Camp
+subtitle: Set-Root Demo
+set-root: true
+new-page: true
+
+This scene has **set-root: true**. It is now the "root" scene — if any scene has no choices, a default "Continue..." button appears that leads back here.
+
+The root is like a home base. Try going to the dead-end scene below.
+
+- @setroot_deadend: Enter the Dead End (no choices inside!)
+- @setroot_restore: Restore Hall as Root and Return
+- @feature_showcase: Back to Showcase
+
+@scene setroot_deadend
+title: The Dead End
+subtitle: No Choices Here
+
+This scene has **no choices**. Because "The Camp" was set as root, a "Continue..." button should appear automatically, taking you back there.
+
+This is how DendryNexus handles scenes that would otherwise strand the player.
+
+@scene setroot_restore
+title: Restoring the Hall
+set-root: true
+go-to: feature_showcase
+
+Restoring the Great Hall as the root scene...
+
+@scene call_demo
+title: Call Demo
+subtitle: Run Another Scene's Actions
+call: call_helper
+on-display: silver = silver + 1
+
+This scene uses **call: call_helper** — it runs the `call_helper` scene's on-arrival actions *in addition to* its own, without navigating there.
+
+It also uses **on-display** to add 1 Silver each time the scene is displayed.
+
+The call_helper scene adds +1 Wit silently. Combined with this scene's on-display silver bonus:
+
+Wit: **[+ wit +]** | Silver: **[+ silver +]**
+
+- @feature_showcase: Back to Showcase
+
+@scene call_helper
+title: Helper Scene (Never Visited Directly)
+on-arrival: wit = wit + 1
+
+This scene is never navigated to directly — it exists only to be `call`ed by other scenes, contributing its on-arrival actions.
+
+- @feature_showcase: (You shouldn't see this)
+
+@scene conditional_text_demo
+title: Conditional Text
+subtitle: Dynamic Content Rendering
+new-page: true
+
+This scene demonstrates **conditional text** using the `[? if condition : text ?]` syntax. The text below changes based on your current stats:
+
+[? if wit >= 5 : Your **sharp wit** draws admiring glances from the skalds. ?]
+
+[? if wit <= 2 : The skalds smirk at your clumsy words. ?]
+
+[? if courage >= 5 : Warriors nod with respect as you pass — they recognise a bold spirit. ?]
+
+[? if courage <= 2 : You flinch at loud noises. The warriors pretend not to notice. ?]
+
+[? if silver >= 8 : Your heavy purse clinks with every step. Merchants flock to your side. ?]
+
+[? if silver <= 1 : You count your last coins and wonder where the next meal comes from. ?]
+
+[? if reputation >= 7 : *The hall falls quiet when you speak. Everyone knows your name.* ?]
+
+[? if reputation <= 1 : *Nobody here knows you. You're just another face in the crowd.* ?]
+
+These lines only appear when their conditions are met. Try changing your stats and returning to see different text.
+
+- @feature_showcase: Back to Showcase
+
+@scene unavailable_demo
+title: Unavailable Subtitle Demo
+subtitle: Disabled Choice Messaging
+
+This demonstrates **unavailable-subtitle** — custom text shown when a choice is disabled by `choose-if`.
+
+- @unavailable_locked: Try the Locked Door
+- @feature_showcase: Back to Showcase
+
+@scene unavailable_locked
+title: The Locked Door
+choose-if: has_rune_stone >= 1
+unavailable-subtitle: You need the Rune Stone to enter
+
+Behind the door, ancient secrets await. But first, you need the key.
+
+- @feature_showcase: Back to Showcase
+
+@scene difficulty_curve_demo
+title: Custom Difficulty Curves
+subtitle: Scaler & Increment Tuning
+new-page: true
+
+These cards demonstrate **difficulty-scaler** (for broad checks) and **difficulty-increment** (for narrow checks), which let you tune the difficulty curve per-card.
+
+Default broad scaler is 0.6. Default narrow increment is 0.1.
+
+- @diff_curve_easy_broad: Generous Broad Check (scaler 0.9)
+- @diff_curve_harsh_broad: Harsh Broad Check (scaler 0.3)
+- @diff_curve_easy_narrow: Forgiving Narrow Check (increment 0.2)
+- @diff_curve_harsh_narrow: Punishing Narrow Check (increment 0.05)
+- @feature_showcase: Back to Showcase
+
+@scene diff_curve_easy_broad
+title: Generous Broad Check
+subtitle: Scaler 0.9 — Very Forgiving
+check-quality: wit
+broad-difficulty: 5
+difficulty-scaler: 0.9
+check-success-go-to: diff_curve_success
+check-failure-go-to: diff_curve_failure
+
+This broad check uses **difficulty-scaler: 0.9** (default 0.6). The higher scaler makes success much more likely. Formula: `success = scaler * (stat / difficulty)`.
+
+Wit: **[+ wit +]** vs Difficulty **5** with scaler **0.9**.
+
+@scene diff_curve_harsh_broad
+title: Harsh Broad Check
+subtitle: Scaler 0.3 — Very Punishing
+check-quality: wit
+broad-difficulty: 5
+difficulty-scaler: 0.3
+check-success-go-to: diff_curve_success
+check-failure-go-to: diff_curve_failure
+
+This broad check uses **difficulty-scaler: 0.3** (default 0.6). The lower scaler halves your chances. Same difficulty, much harder.
+
+Wit: **[+ wit +]** vs Difficulty **5** with scaler **0.3**.
+
+@scene diff_curve_easy_narrow
+title: Forgiving Narrow Check
+subtitle: Increment 0.2 — Wide Band
+check-quality: courage
+narrow-difficulty: 5
+difficulty-increment: 0.2
+check-success-go-to: diff_curve_success
+check-failure-go-to: diff_curve_failure
+
+This narrow check uses **difficulty-increment: 0.2** (default 0.1). Each point of stat above/below difficulty shifts success by 20% instead of 10%.
+
+Courage: **[+ courage +]** vs Difficulty **5** with increment **0.2**.
+
+@scene diff_curve_harsh_narrow
+title: Punishing Narrow Check
+subtitle: Increment 0.05 — Tight Band
+check-quality: courage
+narrow-difficulty: 5
+difficulty-increment: 0.05
+check-success-go-to: diff_curve_success
+check-failure-go-to: diff_curve_failure
+
+This narrow check uses **difficulty-increment: 0.05** (default 0.1). Each point of stat only shifts success by 5%, making the check nearly a coin flip regardless of stats.
+
+Courage: **[+ courage +]** vs Difficulty **5** with increment **0.05**.
+
+@scene diff_curve_success
+title: Check Passed!
+subtitle: Success
+
+The check succeeded. The difficulty curve was in your favour.
+
+- @difficulty_curve_demo: Try Another Curve
+- @feature_showcase: Back to Showcase
+
+@scene diff_curve_failure
+title: Check Failed
+subtitle: Failure
+
+The check failed. The difficulty curve was against you.
+
+- @difficulty_curve_demo: Try Another Curve
+- @feature_showcase: Back to Showcase

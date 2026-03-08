@@ -7,6 +7,7 @@ This deck demonstrates **resource-gated cards** — each card costs Silver or Me
 
 Current Silver: **[+ silver +]** | Current Mead: **[+ mead +]**
 
+- @merchant_card_intro: The Merchant's Offer
 - @merchant_card_mead: Buy a Round (costs 1 Mead)
 - @merchant_card_silver: Hire a Skald (costs 3 Silver)
 - @merchant_card_gamble: Gamble (costs 2 Silver, random outcome)
@@ -17,6 +18,16 @@ Current Silver: **[+ silver +]** | Current Mead: **[+ mead +]**
 - @merchant_card_patron: A Jarl's Patronage
 - @merchant_card_hustle: Desperate Hustle
 - @main_hall: Return to the hall
+
+@scene merchant_card_intro
+title: The Merchant's Offer
+is-card: true
+max-visits: 1
+priority: 2
+
+The **Merchant's Deck** requires *silver* — everything has its price.
+
+- @merchants_deck: Return to the deck
 
 @scene merchant_card_mead
 title: Buy a Round

@@ -2,33 +2,61 @@
  * Types representing DendryNexus compiled game data (game.json).
  *
  * These mirror the structure output by `dendrynexus compile`.
- * Expand as needed when integrating more engine features.
+ * See docs/dendrynexus-reference.md for full feature documentation.
  */
 
 export interface GameScene {
 	id: string;
 	title?: string;
 	subtitle?: string;
+	unavailableSubtitle?: string;
 	content?: string;
 	options?: SceneOption[];
 	tags?: string[];
 	onArrival?: string[];
 	onDeparture?: string[];
+	onDisplay?: string[];
 	viewIf?: string;
 	chooseIf?: string;
-	goTo?: string;
 	maxVisits?: number;
+	countVisitsMax?: number;
+
+	/** Navigation */
+	goTo?: string | ConditionalGoTo[];
+	goToRef?: string;
+	setRoot?: boolean;
+	newPage?: boolean;
+	gameOver?: boolean;
+	call?: string;
+
+	/** Choice selection */
+	order?: number;
+	priority?: number;
+	frequency?: number;
+	minChoices?: number;
+	maxChoices?: number;
+
 	/** DendryNexus card/deck extensions */
 	isHand?: boolean;
 	isDeck?: boolean;
 	isCard?: boolean;
 	isPinnedCard?: boolean;
 	cardImage?: string;
+	maxCards?: number;
+
+	/** Difficulty checks */
 	checkQuality?: string;
 	broadDifficulty?: number;
 	narrowDifficulty?: number;
+	difficultyScaler?: number;
+	difficultyIncrement?: number;
 	checkSuccessGoTo?: string;
 	checkFailureGoTo?: string;
+}
+
+export interface ConditionalGoTo {
+	id: string;
+	predicate?: string;
 }
 
 export interface SceneOption {
@@ -37,6 +65,9 @@ export interface SceneOption {
 	viewIf?: string;
 	chooseIf?: string;
 	order?: number;
+	priority?: number;
+	frequency?: number;
+	isTag?: boolean;
 }
 
 export interface QualityDefinition {
@@ -53,6 +84,7 @@ export interface QualityDefinition {
 export interface CompiledGame {
 	scenes: Record<string, GameScene>;
 	qualities: Record<string, QualityDefinition>;
+	tagLookup: Record<string, string[]>;
 	firstScene: string;
 	title: string;
 	author?: string;
@@ -63,15 +95,17 @@ export interface HandCard {
 	fromDeck: string;
 }
 
-export const HAND_CAPACITY = 5;
-
 export interface GameState {
 	currentSceneId: string;
 	qualities: Record<string, number>;
 	visits: Record<string, number>;
 	history: string[];
-	hand: HandCard[];
-	discard: string[];
+	rootSceneId: string;
+	/** Per-hand-scene card state */
+	hands: Record<string, HandCard[]>;
+	discards: Record<string, string[]>;
+	lastDrawnCard: HandCard | null;
+	lastPlayedCard: string | null;
 }
 
 export interface DisplayContent {
@@ -83,7 +117,9 @@ export interface DisplayContent {
 	isDeck?: boolean;
 	isCard?: boolean;
 	handCount?: number;
+	maxCards?: number;
 	handFull?: boolean;
+	newPage?: boolean;
 }
 
 export interface DisplayChoice {
@@ -91,11 +127,15 @@ export interface DisplayChoice {
 	text: string;
 	enabled: boolean;
 	visible: boolean;
+	subtitle?: string;
 	isCard?: boolean;
 	isDeck?: boolean;
 	isHandCard?: boolean;
+	isPinnedCard?: boolean;
 	fromDeck?: string;
 	checkQuality?: string;
 	broadDifficulty?: number;
 	narrowDifficulty?: number;
+	difficultyLabel?: string;
+	successProb?: number;
 }

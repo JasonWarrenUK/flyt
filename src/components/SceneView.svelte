@@ -7,6 +7,7 @@
 		onChoose,
 		onDraw,
 		onPlay,
+		onPlayPinned,
 		onDiscard,
 		lastCheck
 	}: {
@@ -14,13 +15,15 @@
 		onChoose: (id: string) => void;
 		onDraw: (deckId: string) => void;
 		onPlay: (cardId: string) => void;
+		onPlayPinned: (cardId: string) => void;
 		onDiscard: (cardId: string) => void;
 		lastCheck?: CheckResult | null;
 	} = $props();
 
 	const handCards = $derived(display.choices.filter((c) => c.isHandCard));
 	const deckChoices = $derived(display.choices.filter((c) => c.isDeck));
-	const otherChoices = $derived(display.choices.filter((c) => !c.isHandCard && !c.isDeck));
+	const pinnedChoices = $derived(display.choices.filter((c) => c.isPinnedCard && !c.isHandCard));
+	const otherChoices = $derived(display.choices.filter((c) => !c.isHandCard && !c.isDeck && !c.isPinnedCard));
 </script>
 
 <article class="scene" class:is-deck={display.isDeck} class:is-hand={display.isHand}>
@@ -47,7 +50,7 @@
 	{#if display.isHand}
 		<!-- Hand cards section -->
 		<section class="hand-section">
-			<h3 class="section-heading">Your Hand ({display.handCount}/{5})</h3>
+			<h3 class="section-heading">Your Hand ({display.handCount}/{display.maxCards ?? 5})</h3>
 			{#if handCards.length === 0}
 				<p class="empty-hand">Your hand is empty. Draw cards from a deck below.</p>
 			{:else}
@@ -56,7 +59,11 @@
 						<div class="hand-card" class:disabled={!card.enabled}>
 							<span class="card-icon">&#x1F0A0;</span>
 							<span class="card-label">{card.text}</span>
-							{#if card.checkQuality}
+							{#if card.difficultyLabel}
+								<span class="card-difficulty {card.difficultyLabel.replace(/\s+/g, '-')}">
+									{card.checkQuality}: {card.difficultyLabel}
+								</span>
+							{:else if card.checkQuality}
 								<span class="card-check">
 									{card.checkQuality}
 									{card.broadDifficulty != null ? `≥${card.broadDifficulty}` : ''}
@@ -98,8 +105,36 @@
 							<span class="deck-icon">&#x2660;</span>
 							<span class="deck-label">{deck.text}</span>
 							<span class="deck-action">
-								{display.handFull ? 'Hand full' : 'Draw'}
+								{deck.subtitle ?? (display.handFull ? 'Hand full' : 'Draw')}
 							</span>
+						</button>
+					{/each}
+				</div>
+			</section>
+		{/if}
+
+		<!-- Pinned cards section -->
+		{#if pinnedChoices.length > 0}
+			<section class="pinned-section">
+				<h3 class="section-heading">Always Available</h3>
+				<div class="card-grid">
+					{#each pinnedChoices as card (card.id)}
+						<button
+							class="pinned-card"
+							class:disabled={!card.enabled}
+							disabled={!card.enabled}
+							onclick={() => onPlayPinned(card.id)}
+						>
+							<span class="card-icon pinned-icon">&#x1F4CC;</span>
+							<span class="card-label">{card.text}</span>
+							{#if card.difficultyLabel}
+								<span class="card-difficulty {card.difficultyLabel.replace(/\s+/g, '-')}">
+									{card.checkQuality}: {card.difficultyLabel}
+								</span>
+							{/if}
+							{#if card.subtitle}
+								<span class="card-subtitle">{card.subtitle}</span>
+							{/if}
 						</button>
 					{/each}
 				</div>
@@ -134,7 +169,11 @@
 					>
 						<span class="card-icon">&#x1F0A0;</span>
 						<span class="card-label">{choice.text}</span>
-						{#if choice.checkQuality}
+						{#if choice.difficultyLabel}
+							<span class="card-difficulty {choice.difficultyLabel.replace(/\s+/g, '-')}">
+								{choice.checkQuality}: {choice.difficultyLabel}
+							</span>
+						{:else if choice.checkQuality}
 							<span class="card-check">
 								{choice.checkQuality}
 								{choice.broadDifficulty != null ? `≥${choice.broadDifficulty}` : ''}
@@ -150,11 +189,16 @@
 						onclick={() => onChoose(choice.id)}
 					>
 						<span class="choice-marker">&loz;</span>
-						{choice.text}
+						<span class="choice-text">{choice.text}</span>
+						{#if choice.subtitle && !choice.enabled}
+							<span class="choice-subtitle">{choice.subtitle}</span>
+						{/if}
 					</button>
 				{/if}
 			{/each}
 		</nav>
+	{:else if display.isCard}
+		<!-- Card scenes auto-navigate via checks, no end marker needed -->
 	{:else}
 		<div class="scene-end">
 			<span class="end-mark">&#x2736;</span>
@@ -226,7 +270,8 @@
 
 	/* Section headings for hand view */
 	.hand-section,
-	.decks-section {
+	.decks-section,
+	.pinned-section {
 		margin-top: var(--space-lg);
 		padding-top: var(--space-lg);
 		border-top: 1px solid var(--border-subtle);
@@ -319,6 +364,49 @@
 		color: var(--hearth);
 		border-color: var(--hearth);
 		background: rgba(176, 80, 50, 0.1);
+	}
+
+	/* Pinned cards */
+	.pinned-card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-xs);
+		padding: var(--space-md);
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		color: var(--text-primary);
+		background: var(--bg-surface);
+		border: 2px solid var(--bronze);
+		cursor: pointer;
+		text-align: center;
+		min-height: 120px;
+		justify-content: center;
+		transition: all 0.25s ease;
+		border-style: double;
+		border-width: 3px;
+	}
+
+	.pinned-card:hover:not(:disabled) {
+		border-color: var(--bronze-light);
+		background: rgba(176, 141, 87, 0.1);
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	}
+
+	.pinned-card.disabled {
+		opacity: 0.35;
+		cursor: not-allowed;
+	}
+
+	.pinned-icon {
+		font-size: 1.2rem !important;
+	}
+
+	.card-subtitle {
+		font-size: 0.7rem;
+		color: var(--text-secondary);
+		font-style: italic;
 	}
 
 	/* Deck draw buttons */
@@ -431,6 +519,13 @@
 		color: var(--hearth-glow);
 	}
 
+	.choice-subtitle {
+		font-size: 0.75rem;
+		color: var(--text-secondary);
+		font-style: italic;
+		margin-left: auto;
+	}
+
 	/* Card grid for decks/hands */
 	.choices.card-grid {
 		display: grid;
@@ -498,6 +593,45 @@
 		letter-spacing: 0.1em;
 		color: var(--bronze-dark);
 		font-family: var(--font-heading);
+	}
+
+	/* Difficulty label styling */
+	.card-difficulty {
+		font-size: 0.6rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-family: var(--font-heading);
+		padding: 1px 6px;
+		border: 1px solid;
+	}
+
+	.card-difficulty.straightforward,
+	.card-difficulty.low-risk {
+		color: var(--bronze-light);
+		border-color: var(--bronze-dark);
+	}
+
+	.card-difficulty.very-modest,
+	.card-difficulty.modest {
+		color: var(--bronze);
+		border-color: var(--bronze-dark);
+	}
+
+	.card-difficulty.chancy,
+	.card-difficulty.very-chancy {
+		color: var(--hearth-glow);
+		border-color: var(--hearth-glow);
+	}
+
+	.card-difficulty.tough,
+	.card-difficulty.high-risk {
+		color: var(--hearth);
+		border-color: var(--hearth);
+	}
+
+	.card-difficulty.almost-impossible {
+		color: var(--ember);
+		border-color: var(--ember);
 	}
 
 	/* End marker */
