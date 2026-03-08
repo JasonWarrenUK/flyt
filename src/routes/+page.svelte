@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 
 	const engine = new FlytEngine();
+	let statsOpen = $state(false);
 
 	onMount(() => {
 		engine.load('/game.json');
@@ -26,6 +27,20 @@
 		<p class="hint">Run <code>npm run compile:dendry</code> to compile the story files.</p>
 	</div>
 {:else if engine.display}
+	<aside class="mobile-stats-bar">
+		<button class="mobile-stats-toggle" onclick={() => statsOpen = !statsOpen}>
+			<span class="toggle-label">Qualities</span>
+			<span class="toggle-arrow">{statsOpen ? '▲' : '▼'}</span>
+		</button>
+		{#if statsOpen}
+			<div class="mobile-stats-content">
+				<QualitiesPanel qualities={engine.qualityList} />
+				<button class="restart-btn" onclick={() => engine.restart()}>
+					Begin Anew
+				</button>
+			</div>
+		{/if}
+	</aside>
 	<div class="game-layout">
 		<div class="scene-column">
 			<SceneView display={engine.display} onChoose={(id) => engine.choose(id)} lastCheck={engine.lastCheck} />
@@ -106,14 +121,52 @@
 		border-color: var(--border-accent);
 	}
 
+	.mobile-stats-bar {
+		display: none;
+	}
+
 	@media (max-width: 768px) {
 		.game-layout {
 			grid-template-columns: 1fr;
 		}
 
 		.qualities-column {
-			position: static;
-			order: -1;
+			display: none;
+		}
+
+		.mobile-stats-bar {
+			display: block;
+			position: sticky;
+			top: 0;
+			z-index: 100;
+			background: var(--bg-surface);
+			border-bottom: 1px solid var(--border-subtle);
+		}
+
+		.mobile-stats-toggle {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			padding: var(--space-sm) var(--space-md);
+			background: transparent;
+			border: none;
+			cursor: pointer;
+			font-family: var(--font-heading);
+			font-size: 0.75rem;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--bronze);
+		}
+
+		.toggle-arrow {
+			font-size: 0.6rem;
+			color: var(--text-secondary);
+		}
+
+		.mobile-stats-content {
+			padding: 0 var(--space-md) var(--space-md);
+			border-top: 1px solid var(--border-subtle);
 		}
 	}
 </style>
