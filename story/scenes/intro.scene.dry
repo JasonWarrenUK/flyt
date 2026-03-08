@@ -1,0 +1,187 @@
+@scene intro
+title: The Mead-Hall
+subtitle: A Challenge is Issued
+
+The fire crackles in the long hearth of Jarl Sigurd's hall. Smoke curls
+between the carved pillars, each one wound with serpents and staring eyes.
+The benches are packed. Warriors, thralls, and ring-givers alike have come
+for the *blót-feast* — and for the entertainment that follows.
+
+**Grettir Foul-Tongue** rises from his bench across the hall. He is broad,
+red-bearded, and grinning like a man who has already won. He points a
+thick finger at you.
+
+"You there — the one who sits silent as a stone! They say you have a
+quick tongue. I say you have no tongue at all. Prove me wrong, or crawl
+back to whatever farm birthed you."
+
+The hall goes quiet. All eyes turn to you.
+
+- @accept_challenge: Stand and meet his gaze.
+- @drink_first: Reach for the mead-horn first.
+- @study_opponent: Study Grettir carefully before responding.
+
+@scene accept_challenge
+title: Words Like Iron
+subtitle: The Flyt Begins
+on-arrival: renown = renown + 1
+
+You rise. The bench scrapes against stone. You do not hurry. Let him wait.
+
+"Grettir," you say, loud enough for the rafters. "Your tongue is *foul*,
+that much is true. But a foul tongue in a fool's mouth cuts nothing but
+the air."
+
+A murmur runs through the hall. Someone laughs. Grettir's grin tightens.
+
+The flyt has begun.
+
+- @sharp_wit: Press the attack with a cutting verse.
+- @measured_response: Let him speak next — measure his weaknesses.
+
+@scene drink_first
+title: Mead-Courage
+subtitle: Liquid Boldness
+on-arrival: mead = mead + 2; wit = wit + 1
+
+You lift the horn. The mead is dark and sweet, thick with honey.
+It burns going down, and warmth spreads through your chest like
+embers catching.
+
+The hall watches. Grettir snorts. "Needs drink to find his courage!
+A dog that must be fed before it barks."
+
+But the mead has settled your nerves. Words come easier now.
+
+- @accept_challenge: Now — stand and answer him.
+- @study_opponent: Watch him over the rim of the horn.
+
+@scene study_opponent
+title: Reading the Foe
+subtitle: Eyes Sharp as Flint
+on-arrival: wit = wit + 1
+
+You do not rise. Not yet. Instead, you watch Grettir — the way he
+shifts his weight, the way his eyes flick to the Jarl's seat. He wants
+approval. He *needs* it.
+
+There — a tremor in his hand. He's gripping the edge of the table.
+Grettir Foul-Tongue is nervous beneath the bluster.
+
+Good. Nervous men make mistakes.
+
+- @accept_challenge: Now rise, armed with knowledge.
+- @drink_first: Take a drink while you consider your approach.
+
+@scene sharp_wit
+title: A Verse Like a Blade
+subtitle: The Crowd Roars
+on-arrival: crowd = crowd + 2; opponent_composure = opponent_composure - 2
+
+You step forward and speak in the old meter, the *dróttkvætt*:
+
+"*Grettir gapes and bellows,*
+*a bull with no horns to gore.*
+*His words are wind from the wrong end —*
+*the hall knows the smell well.*"
+
+The hall *erupts*. Fists pound tables. Even the Jarl's lips twitch.
+Grettir's face darkens like a storm rolling in from the sea.
+
+- @grettir_responds: Wait for Grettir's counter.
+
+@scene measured_response
+title: The Patient Blade
+subtitle: Let the Fool Speak
+on-arrival: wit = wit + 1
+
+You fold your arms and wait. "Go on, Grettir. Surely you have more than
+one insult in that great empty head of yours."
+
+Grettir sputters, then finds his footing. He launches into a verse — crude,
+forceful, but lacking craft. The crowd listens but does not cheer.
+
+You've given him rope. Now watch him hang himself with it.
+
+- @grettir_responds: Listen to his clumsy verse, then strike.
+
+@scene grettir_responds
+title: Grettir Strikes Back
+subtitle: Foul Words
+
+Grettir steps closer, ruddy face twisted. His verse comes rough and loud:
+
+"*This whelp from nowhere,*
+*thin as a winter branch.*
+*No ring on his arm, no scar on his shield —*
+*what glory has he ever grasped?*"
+
+The hall murmurs. It wasn't bad. Some nod. You feel the crowd's favour
+waver, like a flame in a draft.
+
+Your move.
+
+- @devastating_reply: Unleash your finest verse.
+- @appeal_to_crowd: Turn to the crowd, not to Grettir.
+
+@scene devastating_reply
+title: The Killing Blow
+subtitle: Silence Falls
+on-arrival: crowd = crowd + 3; opponent_composure = opponent_composure - 3; renown = renown + 3
+
+You smile. You've been saving this.
+
+"*Grettir boasts of scars and rings,*
+*but who here has seen them?*
+*He won his name not in battle*
+*but by fouling every hall he's entered.*
+*Even the dogs leave when he speaks —*
+*they've heard better howling from the wind.*"
+
+Silence. Then the hall breaks open with roaring laughter. A warrior
+slams his cup so hard the table cracks. The Jarl himself claps once —
+the highest praise.
+
+Grettir stands frozen, mouth open, face draining of colour.
+
+The flyt is over. You have won.
+
+- @victory: Claim your victory.
+
+@scene appeal_to_crowd
+title: The People's Voice
+subtitle: Turning the Tide
+on-arrival: crowd = crowd + 2; renown = renown + 1
+
+You turn your back on Grettir — the deepest insult — and address
+the crowd directly.
+
+"Friends! You've heard Grettir's verse. He speaks of my lack of scars.
+But I ask you — is it *glory* to be scarred, or merely proof that
+you weren't quick enough to dodge?"
+
+Laughter ripples through the benches. You've made them yours.
+
+- @devastating_reply: Now finish him.
+
+@scene victory
+title: Victor
+subtitle: A Name Earned
+
+The Jarl rises. The hall falls silent.
+
+"Well spoken," says Sigurd Iron-Hand. "Grettir — sit down. You've been
+bested by a sharper tongue. And you —" he looks at you — "you've earned
+a place at this table. Come. Drink with us."
+
+Grettir slinks back to his bench, humiliated. As you take your seat
+among warriors and ring-givers, you feel the weight of new **renown**
+settling on your shoulders like a cloak.
+
+Your wit: **[+ wit +]**. Your renown: **[+ renown +]**. The crowd's
+favour: **[+ crowd +]**.
+
+This is only the beginning. There will be other halls, other challengers,
+other contests of words sharp as iron.
+
+*The flyt is won. The saga continues.*

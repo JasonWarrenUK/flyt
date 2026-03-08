@@ -1,0 +1,159 @@
+/*
+ * Flyt — Norse Bronze/Iron Age Aesthetic
+ *
+ * Palette drawn from: aged bronze, dark iron, parchment, hearth-fire,
+ * birch bark, and deep northern forest.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+	/* Core palette */
+	--bronze: #b08d57;
+	--bronze-light: #d4a96a;
+	--bronze-dark: #7a5c2e;
+	--iron: #4a4a4a;
+	--iron-dark: #2a2a2a;
+	--parchment: #f0e6d0;
+	--parchment-dark: #d9c9a3;
+	--hearth: #c44b1a;
+	--hearth-glow: #e8732a;
+	--ember: #8b2500;
+	--forest: #2d3b2d;
+	--shadow: #1a1a1a;
+	--bone: #e8dcc8;
+
+	/* Semantic tokens */
+	--bg-primary: var(--shadow);
+	--bg-surface: var(--iron-dark);
+	--bg-surface-raised: var(--iron);
+	--text-primary: var(--parchment);
+	--text-secondary: var(--parchment-dark);
+	--text-heading: var(--bronze-light);
+	--text-accent: var(--hearth-glow);
+	--border-subtle: var(--bronze-dark);
+	--border-accent: var(--bronze);
+
+	/* Typography */
+	--font-heading: 'Cinzel', serif;
+	--font-body: 'Cormorant Garamond', serif;
+
+	/* Spacing */
+	--space-xs: 0.25rem;
+	--space-sm: 0.5rem;
+	--space-md: 1rem;
+	--space-lg: 2rem;
+	--space-xl: 3rem;
+}
+
+/* Reset & base */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-size: 18px;
+}
+
+body {
+	font-family: var(--font-body);
+	font-weight: 400;
+	line-height: 1.7;
+	color: var(--text-primary);
+	background-color: var(--bg-primary);
+	min-height: 100vh;
+
+	/* Subtle texture */
+	background-image:
+		radial-gradient(ellipse at 50% 0%, rgba(176, 141, 87, 0.06) 0%, transparent 60%),
+		radial-gradient(ellipse at 50% 100%, rgba(196, 75, 26, 0.04) 0%, transparent 50%);
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+	font-family: var(--font-heading);
+	color: var(--text-heading);
+	letter-spacing: 0.05em;
+	line-height: 1.3;
+}
+
+h1 {
+	font-size: 2rem;
+	font-weight: 900;
+	text-transform: uppercase;
+}
+
+h2 {
+	font-size: 1.4rem;
+	font-weight: 700;
+}
+
+h3 {
+	font-size: 1.1rem;
+	font-weight: 700;
+}
+
+/* Links */
+a {
+	color: var(--bronze-light);
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+a:hover {
+	color: var(--hearth-glow);
+}
+
+/* Prose */
+p {
+	margin-bottom: var(--space-md);
+}
+
+em {
+	font-style: italic;
+	color: var(--text-secondary);
+}
+
+strong {
+	font-weight: 600;
+	color: var(--bronze-light);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--bronze-dark);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--bronze);
+}
+
+/* Selection */
+::selection {
+	background: var(--bronze-dark);
+	color: var(--parchment);
+}
+
+/* Knotwork border utility */
+.knotwork-border {
+	border: 2px solid var(--border-accent);
+	border-image: repeating-linear-gradient(
+		90deg,
+		var(--bronze-dark) 0px,
+		var(--bronze) 4px,
+		var(--bronze-dark) 8px
+	) 2;
+}
