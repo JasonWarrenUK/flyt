@@ -7,6 +7,7 @@ This deck tests your **Courage**. These cards use **narrow difficulty checks** â
 
 Current Courage: **[+ courage +]**
 
+- @warrior_card_intro: The Warrior's Challenge
 - @warrior_card_brawl: Tavern Brawl (Difficulty 3)
 - @warrior_card_beast: Face the Beast (Difficulty 5)
 - @warrior_card_duel: Holmgang Duel (Difficulty 7)
@@ -16,6 +17,15 @@ Current Courage: **[+ courage +]**
 - @warrior_card_war_chant: War Chant
 - @warrior_card_cornered: Cornered Rat
 - @main_hall: Return to the hall
+
+@scene warrior_card_intro
+title: The Warrior's Challenge
+is-card: true
+max-visits: 1
+
+The **Warrior's Deck** tests your *courage* â€” do you dare face what lies within?
+
+- @warriors_deck: Return to the deck
 
 @scene warrior_card_brawl
 title: Tavern Brawl

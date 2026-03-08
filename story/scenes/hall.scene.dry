@@ -4,15 +4,9 @@ subtitle: Choose a Deck
 is-hand: true
 on-arrival: reputation = reputation + 1
 
-The hall stretches before you. Three decks of cards sit on the long oak table, each representing a different challenge.
-
-The **Skald's Deck** tests your *wit* — can you match verse for verse?
-
-The **Warrior's Deck** tests your *courage* — do you dare face what lies within?
-
-The **Merchant's Deck** requires *silver* — everything has its price.
-
 Your Reputation is now **[+ reputation +]**.
+
+The hall stretches before you. Three decks of cards sit on the long oak table, each representing a different challenge.
 
 - @skalds_deck: Draw from the Skald's Deck (Wit challenges)
 - @warriors_deck: Draw from the Warrior's Deck (Courage challenges)
