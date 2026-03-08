@@ -11,6 +11,11 @@ Current Silver: **[+ silver +]** | Current Mead: **[+ mead +]**
 - @merchant_card_silver: Hire a Skald (costs 3 Silver)
 - @merchant_card_gamble: Gamble (costs 2 Silver, random outcome)
 - @merchant_card_expensive: Commission a Saga (costs 8 Silver)
+- @merchant_card_peddler: Wandering Peddler
+- @merchant_card_feast: Lavish Feast
+- @merchant_card_begging: Hard Times
+- @merchant_card_patron: A Jarl's Patronage
+- @merchant_card_hustle: Desperate Hustle
 - @main_hall: Return to the hall
 
 @scene merchant_card_mead
@@ -93,6 +98,81 @@ on-arrival: silver = silver - 8; reputation = reputation + 5; wit = wit + 1
 You commission a saga about your deeds. This is a **high-cost card** that most players cannot afford initially. It demonstrates that resource gating can create aspirational goals — something to work toward.
 
 Silver: **[+ silver +]** | Reputation: **[+ reputation +]** | Wit: **[+ wit +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_peddler
+title: Wandering Peddler
+subtitle: No Check — Random Event
+is-card: true
+on-arrival: silver = silver + 2; mead = mead + 1
+
+A peddler stumbles into the hall, half-frozen from the mountain pass. You offer him a seat by the fire. In gratitude, he shares his wares at a steep discount — you come away with extra silver and a skin of mead.
+
+Silver: **[+ silver +]** | Mead: **[+ mead +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_feast
+title: Lavish Feast
+subtitle: Requires High Silver
+is-card: true
+view-if: silver >= 10
+on-arrival: silver = silver - 6; reputation = reputation + 3; mead = mead + 2
+
+Your wealth is the talk of the hall. You have enough to throw a feast — and everyone who matters will attend. The tables groan with roasted boar and the mead flows freely. The skalds will sing of your generosity.
+
+Only visible when **Silver is 10 or higher**.
+
+Silver: **[+ silver +]** | Reputation: **[+ reputation +]** | Mead: **[+ mead +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_begging
+title: Hard Times
+subtitle: Requires Low Silver
+is-card: true
+view-if: silver <= 2
+on-arrival: silver = silver + 3; reputation = reputation - 1
+
+Your purse is nearly empty and the merchants can see it. A trader takes pity and offers you work hauling crates from the docks. It's honest but humble labour — your reputation takes a small knock, but your pockets are heavier.
+
+Only visible when **Silver is 2 or lower**.
+
+Silver: **[+ silver +]** | Reputation: **[+ reputation +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_patron
+title: A Jarl's Patronage
+subtitle: Requires High Reputation
+is-card: true
+view-if: reputation >= 6
+on-arrival: silver = silver + 5; mead = mead + 2
+
+Word of your deeds has reached the Jarl. A messenger arrives bearing gifts: a pouch of silver and fine mead, with an invitation to the Jarl's court. Only those with **Reputation 6+** attract such attention.
+
+Silver: **[+ silver +]** | Mead: **[+ mead +]**
+
+- @merchants_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene merchant_card_hustle
+title: Desperate Hustle
+subtitle: Requires Low Reputation
+is-card: true
+view-if: reputation <= 2
+on-arrival: silver = silver + 2; reputation = reputation + 1
+
+Nobody knows your name, which means nobody watches your hands. You work the crowd at the market, running small errands and striking shrewd bargains that a more reputable person could never get away with. Anonymity has its advantages.
+
+Only visible when **Reputation is 2 or lower**.
+
+Silver: **[+ silver +]** | Reputation: **[+ reputation +]**
 
 - @merchants_deck: Draw another card
 - @main_hall: Return to the hall

@@ -10,6 +10,11 @@ Higher Wit means better odds. Current Wit: **[+ wit +]**
 - @skald_card_easy: Easy Verse (Difficulty 3)
 - @skald_card_medium: Complex Kenning (Difficulty 6)
 - @skald_card_hard: Epic Saga (Difficulty 8)
+- @skald_card_heckler: Heckle the Skald
+- @skald_card_riddlemaster: The Riddle-Master's Challenge
+- @skald_card_stage_fright: Fumbling for Words
+- @skald_card_battle_poet: Battle-Poet's Roar
+- @skald_card_timid_verse: A Quiet Verse
 - @main_hall: Return to the hall
 
 @scene skald_card_easy
@@ -127,4 +132,121 @@ on-arrival: wit = wit - 2; reputation = reputation - 1
 The saga crumbles in your mind. A devastating failure.
 
 - @skalds_deck: Try again
+- @main_hall: Return to the hall
+
+@scene skald_card_heckler
+title: Heckle the Skald
+subtitle: No Check — Random Event
+is-card: true
+on-arrival: reputation = reputation + 1; mead = mead - 1
+
+A rival skald takes the stage and bores the hall with a tedious lay about crop rotation. You shout a cutting remark from the back bench. The hall erupts with laughter, and someone steals your mead in the commotion.
+
+Reputation: **[+ reputation +]** | Mead: **[+ mead +]**
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_card_riddlemaster
+title: The Riddle-Master's Challenge
+subtitle: Requires High Wit
+is-card: true
+view-if: wit >= 6
+check-quality: wit
+broad-difficulty: 7
+check-success-go-to: skald_riddlemaster_win
+check-failure-go-to: skald_riddlemaster_fail
+
+An ancient skald with milky eyes approaches. *"I have a riddle for one whose mind burns bright,"* he rasps. Your **Wit ([+ wit +])** must be sharp indeed — this challenge is only revealed to those with **Wit 6 or higher**.
+
+@scene skald_riddlemaster_win
+title: Riddle Unravelled!
+subtitle: Success
+on-arrival: wit = wit + 2; reputation = reputation + 2; silver = silver + 3
+
+The old man smiles. *"You see what others cannot."* He presses three silver coins into your palm and whispers a secret verse that sharpens your mind further.
+
+Wit: **[+ wit +]** | Reputation: **[+ reputation +]** | Silver: **[+ silver +]**
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_riddlemaster_fail
+title: The Riddle Stands
+subtitle: Failure
+on-arrival: reputation = reputation - 1
+
+The old man shakes his head. *"Bright, but not bright enough."* The hall whispers.
+
+Reputation: **[+ reputation +]**
+
+- @skalds_deck: Try again
+- @main_hall: Return to the hall
+
+@scene skald_card_stage_fright
+title: Fumbling for Words
+subtitle: Requires Low Wit
+is-card: true
+view-if: wit <= 3
+on-arrival: wit = wit + 2; mead = mead + 1
+
+Your lack of confidence is plain to see. An older skald takes pity on you and draws you aside. Over a horn of mead, she teaches you the basics of kenning construction. *"Everyone stumbles before they stride,"* she says.
+
+This event only appears when your **Wit is 3 or lower** — a catch-up mechanic for struggling players.
+
+Wit: **[+ wit +]** | Mead: **[+ mead +]**
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_card_battle_poet
+title: Battle-Poet's Roar
+subtitle: Requires High Courage
+is-card: true
+view-if: courage >= 5
+check-quality: wit
+broad-difficulty: 5
+check-success-go-to: skald_battle_poet_win
+check-failure-go-to: skald_battle_poet_fail
+
+Your reputation as a fighter precedes you. A warrior-poet challenges you to compose a verse *while sparring*. Only those with **Courage 5+** are bold enough to accept.
+
+@scene skald_battle_poet_win
+title: Sword and Verse!
+subtitle: Success
+on-arrival: wit = wit + 1; courage = courage + 1; reputation = reputation + 2
+
+You duck a swing and deliver a perfect couplet mid-dodge. The hall has never seen anything like it.
+
+Wit: **[+ wit +]** | Courage: **[+ courage +]** | Reputation: **[+ reputation +]**
+
+- @skalds_deck: Draw another card
+- @main_hall: Return to the hall
+
+@scene skald_battle_poet_fail
+title: Split Focus
+subtitle: Failure
+on-arrival: courage = courage - 1
+
+You try to rhyme while dodging and end up flat on your back, mid-stanza. At least the crowd is entertained.
+
+Courage: **[+ courage +]**
+
+- @skalds_deck: Try again
+- @main_hall: Return to the hall
+
+@scene skald_card_timid_verse
+title: A Quiet Verse
+subtitle: Requires Low Courage
+is-card: true
+view-if: courage <= 2
+on-arrival: wit = wit + 1; courage = courage + 1
+
+You lack the nerve to perform before the crowd, so you mutter a verse under your breath. The skald beside you overhears and nods approvingly. *"Good bones in that verse. Speak louder next time."* The small encouragement steadies your nerves.
+
+This event only appears when your **Courage is 2 or lower**.
+
+Wit: **[+ wit +]** | Courage: **[+ courage +]**
+
+- @skalds_deck: Draw another card
 - @main_hall: Return to the hall
