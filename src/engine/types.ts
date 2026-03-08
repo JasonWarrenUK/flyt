@@ -58,11 +58,20 @@ export interface CompiledGame {
 	author?: string;
 }
 
+export interface HandCard {
+	id: string;
+	fromDeck: string;
+}
+
+export const HAND_CAPACITY = 5;
+
 export interface GameState {
 	currentSceneId: string;
 	qualities: Record<string, number>;
 	visits: Record<string, number>;
 	history: string[];
+	hand: HandCard[];
+	discard: string[];
 }
 
 export interface DisplayContent {
@@ -73,6 +82,8 @@ export interface DisplayContent {
 	isHand?: boolean;
 	isDeck?: boolean;
 	isCard?: boolean;
+	handCount?: number;
+	handFull?: boolean;
 }
 
 export interface DisplayChoice {
@@ -82,6 +93,8 @@ export interface DisplayChoice {
 	visible: boolean;
 	isCard?: boolean;
 	isDeck?: boolean;
+	isHandCard?: boolean;
+	fromDeck?: string;
 	checkQuality?: string;
 	broadDifficulty?: number;
 	narrowDifficulty?: number;

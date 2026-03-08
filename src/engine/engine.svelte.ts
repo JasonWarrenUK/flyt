@@ -13,8 +13,11 @@ import type {
 	GameState,
 	DisplayContent,
 	DisplayChoice,
-	GameScene
+	GameScene,
+	HandCard
 } from './types.js';
+
+import { HAND_CAPACITY } from './types.js';
 
 export interface CheckResult {
 	quality: string;
@@ -32,7 +35,9 @@ export class FlytEngine {
 		currentSceneId: '',
 		qualities: {},
 		visits: {},
-		history: []
+		history: [],
+		hand: [],
+		discard: []
 	});
 	loading = $state(true);
 	error: string | null = $state(null);
@@ -46,6 +51,10 @@ export class FlytEngine {
 	display: DisplayContent | null = $derived.by(() => {
 		const scene = this.currentScene;
 		if (!scene) return null;
+
+		if (scene.isHand) {
+			return this.buildHandDisplay(scene);
+		}
 
 		const choices: DisplayChoice[] = (scene.options ?? []).map((opt) => {
 			const targetScene = this.game?.scenes[opt.id];
@@ -110,7 +119,9 @@ export class FlytEngine {
 			currentSceneId: this.game.firstScene,
 			qualities,
 			visits: { [this.game.firstScene]: 1 },
-			history: [this.game.firstScene]
+			history: [this.game.firstScene],
+			hand: [],
+			discard: []
 		};
 		this.lastCheck = null;
 
@@ -203,7 +214,14 @@ export class FlytEngine {
 
 	private executeArrival(): void {
 		const scene = this.currentScene;
-		if (!scene?.onArrival) return;
+		if (!scene) return;
+
+		// Reset discard pile when returning to hand so cards can be drawn again
+		if (scene.isHand) {
+			this.state.discard = [];
+		}
+
+		if (!scene.onArrival) return;
 		for (const cmd of scene.onArrival) {
 			this.executeCommand(cmd);
 		}
@@ -324,6 +342,128 @@ export class FlytEngine {
 			.map((p) => `<p>${p.trim()}</p>`)
 			.join('');
 		return html;
+	}
+
+	/** Build display content for a hand scene, merging deck choices and hand cards. */
+	private buildHandDisplay(scene: GameScene): DisplayContent {
+		const deckChoices: DisplayChoice[] = [];
+		const otherChoices: DisplayChoice[] = [];
+
+		for (const opt of scene.options ?? []) {
+			const target = this.game?.scenes[opt.id];
+			if (!target) continue;
+
+			const visible =
+				this.evaluateCondition(opt.viewIf) && this.evaluateCondition(target.viewIf);
+			if (!visible) continue;
+
+			if (target.isDeck) {
+				const eligible = this.getEligibleCards(opt.id);
+				deckChoices.push({
+					id: opt.id,
+					text: opt.title ?? opt.id,
+					enabled: this.state.hand.length < HAND_CAPACITY && eligible.length > 0,
+					visible: true,
+					isDeck: true,
+					isCard: false,
+					isHandCard: false
+				});
+			} else {
+				otherChoices.push({
+					id: opt.id,
+					text: opt.title ?? opt.id,
+					enabled:
+						this.evaluateCondition(opt.chooseIf) &&
+						this.evaluateCondition(target.chooseIf),
+					visible: true,
+					isDeck: false,
+					isCard: false,
+					isHandCard: false
+				});
+			}
+		}
+
+		const handChoices: DisplayChoice[] = [];
+		for (const handCard of this.state.hand) {
+			const cardScene = this.game?.scenes[handCard.id];
+			if (!cardScene) continue;
+			handChoices.push({
+				id: handCard.id,
+				text: cardScene.title ?? handCard.id,
+				enabled: this.evaluateCondition(cardScene.chooseIf),
+				visible: true,
+				isCard: true,
+				isDeck: false,
+				isHandCard: true,
+				fromDeck: handCard.fromDeck,
+				checkQuality: cardScene.checkQuality,
+				broadDifficulty: cardScene.broadDifficulty,
+				narrowDifficulty: cardScene.narrowDifficulty
+			});
+		}
+
+		return {
+			title: scene.title ?? scene.id,
+			subtitle: scene.subtitle,
+			body: this.renderContent(scene.content ?? ''),
+			choices: [...handChoices, ...deckChoices, ...otherChoices],
+			isHand: true,
+			handCount: this.state.hand.length,
+			handFull: this.state.hand.length >= HAND_CAPACITY
+		};
+	}
+
+	/** Get cards eligible to be drawn from a deck (not in hand or discard, passing conditions). */
+	private getEligibleCards(deckId: string): GameScene[] {
+		if (!this.game) return [];
+		const deck = this.game.scenes[deckId];
+		if (!deck?.isDeck || !deck.options) return [];
+
+		const handIds = new Set(this.state.hand.map((c) => c.id));
+		const discardIds = new Set(this.state.discard);
+
+		return deck.options
+			.map((opt) => this.game!.scenes[opt.id])
+			.filter(
+				(scene): scene is GameScene =>
+					scene != null &&
+					scene.isCard === true &&
+					!handIds.has(scene.id) &&
+					!discardIds.has(scene.id) &&
+					this.evaluateCondition(scene.viewIf) &&
+					this.evaluateCondition(scene.chooseIf)
+			);
+	}
+
+	/** Draw a random card from a deck into the player's hand. */
+	drawCard(deckId: string): void {
+		if (!this.game) return;
+		if (this.state.hand.length >= HAND_CAPACITY) return;
+
+		const eligible = this.getEligibleCards(deckId);
+		if (eligible.length === 0) return;
+
+		const card = eligible[Math.floor(Math.random() * eligible.length)];
+		this.state.hand = [...this.state.hand, { id: card.id, fromDeck: deckId }];
+	}
+
+	/** Play a card from the hand — removes it and navigates to the card scene. */
+	playCard(cardId: string): void {
+		const idx = this.state.hand.findIndex((c) => c.id === cardId);
+		if (idx === -1) return;
+
+		this.state.hand = this.state.hand.filter((_, i) => i !== idx);
+		this.state.discard = [...this.state.discard, cardId];
+		this.choose(cardId);
+	}
+
+	/** Discard a card from the hand without playing it. */
+	discardCard(cardId: string): void {
+		const idx = this.state.hand.findIndex((c) => c.id === cardId);
+		if (idx === -1) return;
+
+		this.state.hand = this.state.hand.filter((_, i) => i !== idx);
+		this.state.discard = [...this.state.discard, cardId];
 	}
 
 	restart(): void {

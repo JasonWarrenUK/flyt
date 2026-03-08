@@ -43,7 +43,14 @@
 	</aside>
 	<div class="game-layout">
 		<div class="scene-column">
-			<SceneView display={engine.display} onChoose={(id) => engine.choose(id)} lastCheck={engine.lastCheck} />
+			<SceneView
+				display={engine.display}
+				onChoose={(id) => engine.choose(id)}
+				onDraw={(deckId) => engine.drawCard(deckId)}
+				onPlay={(cardId) => engine.playCard(cardId)}
+				onDiscard={(cardId) => engine.discardCard(cardId)}
+				lastCheck={engine.lastCheck}
+			/>
 		</div>
 		<aside class="qualities-column">
 			<QualitiesPanel qualities={engine.qualityList} />
