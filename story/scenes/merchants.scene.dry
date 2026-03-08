@@ -23,6 +23,7 @@ Current Silver: **[+ silver +]** | Current Mead: **[+ mead +]**
 title: The Merchant's Offer
 is-card: true
 max-visits: 1
+priority: 2
 
 The **Merchant's Deck** requires *silver* — everything has its price.
 

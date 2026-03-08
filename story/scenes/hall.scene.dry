@@ -1,17 +1,39 @@
 @scene main_hall
 title: The Great Hall
-subtitle: Choose a Deck
+subtitle: Draw Your Cards
 is-hand: true
+max-cards: 5
+set-root: true
 on-arrival: reputation = reputation + 1
 
 Your Reputation is now **[+ reputation +]**.
+
+[? if has_rune_stone >= 1 : The Rune Stone pulses warmly in your pouch. ?]
+
+[? if reputation >= 8 : The hall watches you with reverence. Your name is on every tongue. ?]
 
 The hall stretches before you. Three decks of cards sit on the long oak table, each representing a different challenge.
 
 - @skalds_deck: Draw from the Skald's Deck (Wit challenges)
 - @warriors_deck: Draw from the Warrior's Deck (Courage challenges)
 - @merchants_deck: Draw from the Merchant's Deck (Costs silver)
+- @rest_by_fire: Rest by the Fire
 - @rune_chamber: Enter the Rune Chamber (requires Rune Stone)
+- @feature_showcase: Visit the Feature Showcase
+
+@scene rest_by_fire
+title: Rest by the Fire
+subtitle: Always Available
+is-pinned-card: true
+on-arrival: mead = mead + 1
+
+You sit by the great hearth and warm your bones. A thrall brings you a horn of mead without being asked.
+
+This is a **pinned card** — it always appears in the "Always Available" section, not drawn from any deck. It doesn't take a hand slot.
+
+Mead: **[+ mead +]**
+
+- @main_hall: Return to the hall
 
 @scene rune_chamber
 title: The Rune Chamber

@@ -11,7 +11,7 @@
 	<div class="check-details">
 		<span class="check-stat">{result.quality}: {result.qualityValue}</span>
 		<span class="check-vs">vs</span>
-		<span class="check-diff">Difficulty {result.difficulty} ({result.type})</span>
+		<span class="check-diff">Difficulty {result.difficulty} ({result.type}{result.difficultyLabel ? ` — ${result.difficultyLabel}` : ''})</span>
 	</div>
 	<div class="check-roll">
 		Needed ≤{result.threshold}%, rolled {result.roll}%
