@@ -3,6 +3,7 @@
 	import SceneView from '$components/SceneView.svelte';
 	import QualitiesPanel from '$components/QualitiesPanel.svelte';
 	import GameMenu from '$components/GameMenu.svelte';
+	import ArenaMap from '$components/ArenaMap.svelte';
 
 	const engine = new FlytEngine();
 	let statsOpen = $state(false);
@@ -44,6 +45,9 @@
 		</button>
 		{#if statsOpen}
 			<div class="mobile-stats-content">
+				{#if activeGame === 'contest'}
+					<ArenaMap qualities={engine.state.qualities} />
+				{/if}
 				<QualitiesPanel qualities={engine.qualityList} />
 				<button class="restart-btn" onclick={() => engine.restart()}>
 					Begin Anew
@@ -67,6 +71,9 @@
 			/>
 		</div>
 		<aside class="qualities-column">
+			{#if activeGame === 'contest'}
+				<ArenaMap qualities={engine.state.qualities} />
+			{/if}
 			<QualitiesPanel qualities={engine.qualityList} />
 			<button class="restart-btn" onclick={() => engine.restart()}>
 				Begin Anew
