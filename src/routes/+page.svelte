@@ -2,21 +2,31 @@
 	import { FlytEngine } from '$engine';
 	import SceneView from '$components/SceneView.svelte';
 	import QualitiesPanel from '$components/QualitiesPanel.svelte';
-	import { onMount } from 'svelte';
+	import GameMenu from '$components/GameMenu.svelte';
 
 	const engine = new FlytEngine();
 	let statsOpen = $state(false);
+	let activeGame: string | null = $state(null);
 
-	onMount(() => {
-		engine.load('/game.json');
-	});
+	function selectGame(gameId: string) {
+		activeGame = gameId;
+		engine.load(`/${gameId}.json`);
+	}
+
+	function returnToMenu() {
+		activeGame = null;
+		statsOpen = false;
+		engine.reset();
+	}
 </script>
 
 <svelte:head>
-	<title>Flyt — {engine.display?.title ?? 'Loading...'}</title>
+	<title>Flyt — {activeGame ? (engine.display?.title ?? 'Loading...') : 'A Game of Kennings'}</title>
 </svelte:head>
 
-{#if engine.loading}
+{#if !activeGame}
+	<GameMenu onSelect={selectGame} />
+{:else if engine.loading}
 	<div class="loading">
 		<p>The skalds gather...</p>
 	</div>
@@ -38,6 +48,9 @@
 				<button class="restart-btn" onclick={() => engine.restart()}>
 					Begin Anew
 				</button>
+				<button class="restart-btn" onclick={returnToMenu}>
+					Return to Menu
+				</button>
 			</div>
 		{/if}
 	</aside>
@@ -57,6 +70,9 @@
 			<QualitiesPanel qualities={engine.qualityList} />
 			<button class="restart-btn" onclick={() => engine.restart()}>
 				Begin Anew
+			</button>
+			<button class="restart-btn" onclick={returnToMenu}>
+				Return to Menu
 			</button>
 		</aside>
 	</div>

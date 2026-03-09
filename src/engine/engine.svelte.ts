@@ -838,4 +838,23 @@ export class FlytEngine {
 	restart(): void {
 		this.initState();
 	}
+
+	/** Reset engine to pre-load state (for returning to menu) */
+	reset(): void {
+		this.game = null;
+		this.state = {
+			currentSceneId: '',
+			qualities: {},
+			visits: {},
+			history: [],
+			rootSceneId: '',
+			hands: {},
+			discards: {},
+			lastDrawnCard: null,
+			lastPlayedCard: null
+		};
+		this.loading = false;
+		this.error = null;
+		this.lastCheck = null;
+	}
 }
