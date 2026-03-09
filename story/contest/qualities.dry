@@ -1,0 +1,95 @@
+@quality turn
+name: Turn
+type: integer
+initial: 0
+min: 0
+max: 99
+category: Time
+
+@quality inner_zone
+name: Position
+type: integer
+initial: 1
+min: 0
+max: 3
+category: Location
+
+@quality middle_zone
+name: Surroundings
+type: integer
+initial: 0
+min: 0
+max: 6
+category: Location
+
+@quality outer_zone
+name: Horizon
+type: integer
+initial: 0
+min: 0
+max: 4
+category: Location
+
+@quality loc_thane
+name: Thane
+type: integer
+initial: 1
+min: 0
+max: 6
+category: Crowd
+
+@quality loc_rival
+name: Rival Skald
+type: integer
+initial: 4
+min: 0
+max: 6
+category: Crowd
+
+@quality loc_shieldmaiden
+name: Shieldmaiden
+type: integer
+initial: 6
+min: 0
+max: 6
+category: Crowd
+
+@quality loc_merchant
+name: Merchant
+type: integer
+initial: 0
+min: 0
+max: 6
+category: Crowd
+
+@quality loc_seer
+name: Seer
+type: integer
+initial: 0
+min: 0
+max: 6
+category: Crowd
+
+@quality loc_jarl
+name: Jarl
+type: integer
+initial: 0
+min: 0
+max: 4
+category: Beyond
+
+@quality loc_warband
+name: Warband
+type: integer
+initial: 0
+min: 0
+max: 4
+category: Beyond
+
+@quality loc_shipwright
+name: Shipwright
+type: integer
+initial: 0
+min: 0
+max: 4
+category: Beyond
