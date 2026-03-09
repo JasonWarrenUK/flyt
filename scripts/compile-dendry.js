@@ -1,17 +1,15 @@
 /**
- * Compiles .dry story files into a game.json that the Svelte engine can consume.
+ * Compiles .dry story files into JSON that the Svelte engine can consume.
  *
- * This is a lightweight compiler for development. When DendryNexus is installed,
- * this can be replaced with `dendrynexus compile` for full feature support.
+ * Supports multiple subgames: each subdirectory of story/ is compiled into
+ * its own static/<name>.json. Falls back to compiling story/ as a single
+ * game.json if no subdirectories contain game.dry files.
  *
  * Usage: node scripts/compile-dendry.js
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, existsSync } from 'fs';
 import { join, relative } from 'path';
-
-const STORY_DIR = 'story';
-const OUTPUT_FILE = 'static/game.json';
 
 /** Recursively find all .dry files */
 function findDryFiles(dir) {
@@ -28,7 +26,7 @@ function findDryFiles(dir) {
 }
 
 /** Parse a single .dry file into scene/quality blocks */
-function parseDryFile(filePath) {
+function parseDryFile(filePath, storyDir) {
 	const content = readFileSync(filePath, 'utf-8');
 	const blocks = [];
 	let current = null;
@@ -37,7 +35,7 @@ function parseDryFile(filePath) {
 		const sceneLine = line.match(/^@(scene|quality)\s+(\S+)/);
 		if (sceneLine) {
 			if (current) blocks.push(current);
-			current = { type: sceneLine[1], id: sceneLine[2], props: {}, content: [], file: relative(STORY_DIR, filePath) };
+			current = { type: sceneLine[1], id: sceneLine[2], props: {}, content: [], file: relative(storyDir, filePath) };
 			continue;
 		}
 
@@ -45,7 +43,7 @@ function parseDryFile(filePath) {
 		const bareScene = line.match(/^@(\w+)\s*$/);
 		if (bareScene && !current) {
 			if (current) blocks.push(current);
-			current = { type: 'scene', id: bareScene[1], props: {}, content: [], file: relative(STORY_DIR, filePath) };
+			current = { type: 'scene', id: bareScene[1], props: {}, content: [], file: relative(storyDir, filePath) };
 			continue;
 		}
 
@@ -153,13 +151,14 @@ function parseNum(str) {
 	return isNaN(n) ? undefined : n;
 }
 
-function compile() {
-	console.log('Compiling Dendry story files...');
+/** Compile a single story directory into an output JSON file */
+function compileStory(storyDir, outputFile) {
+	console.log(`\nCompiling ${storyDir} → ${outputFile}...`);
 
-	const files = findDryFiles(STORY_DIR);
+	const files = findDryFiles(storyDir);
 	console.log(`Found ${files.length} .dry file(s)`);
 
-	const allBlocks = files.flatMap(parseDryFile);
+	const allBlocks = files.flatMap(f => parseDryFile(f, storyDir));
 
 	const game = {
 		title: 'Flyt',
@@ -172,7 +171,7 @@ function compile() {
 
 	// Parse game.dry props directly
 	try {
-		const gameDry = readFileSync(join(STORY_DIR, 'game.dry'), 'utf-8');
+		const gameDry = readFileSync(join(storyDir, 'game.dry'), 'utf-8');
 		for (const line of gameDry.split('\n')) {
 			const prop = line.match(/^(\w[\w-]*)\s*:\s*(.+)$/);
 			if (prop) {
@@ -278,8 +277,27 @@ function compile() {
 
 	// Ensure static/ exists
 	mkdirSync('static', { recursive: true });
-	writeFileSync(OUTPUT_FILE, JSON.stringify(game, null, 2));
-	console.log(`Compiled ${sceneCount} scene(s), ${qualityCount} quality/ies, ${tagCount} tag(s) → ${OUTPUT_FILE}`);
+	writeFileSync(outputFile, JSON.stringify(game, null, 2));
+	console.log(`Compiled ${sceneCount} scene(s), ${qualityCount} quality/ies, ${tagCount} tag(s) → ${outputFile}`);
 }
 
-compile();
+/** Discover and compile all subgame directories */
+function compileAll() {
+	console.log('Compiling Dendry story files...');
+
+	const storyRoot = 'story';
+	const subdirs = readdirSync(storyRoot)
+		.filter(entry => statSync(join(storyRoot, entry)).isDirectory())
+		.filter(entry => existsSync(join(storyRoot, entry, 'game.dry')));
+
+	if (subdirs.length === 0) {
+		// Fallback: compile story/ as a single game (backward compat)
+		compileStory(storyRoot, 'static/game.json');
+	} else {
+		for (const subdir of subdirs) {
+			compileStory(join(storyRoot, subdir), `static/${subdir}.json`);
+		}
+	}
+}
+
+compileAll();
