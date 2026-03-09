@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS, ZONES, areAdjacent, type Zone } from '$engine/arena.js';
+
 	let { qualities }: { qualities: Record<string, number> } = $props();
 
 	const CX = 120;
@@ -54,60 +56,80 @@
 		};
 	}
 
-	// Middle-circle entities: quality name → label + abbreviation
-	const middleEntities: { quality: string; label: string; abbr: string }[] = [
-		{ quality: 'loc_thane', label: 'Thane', abbr: 'T' },
-		{ quality: 'loc_rival', label: 'Rival Skald', abbr: 'R' },
-		{ quality: 'loc_shieldmaiden', label: 'Shieldmaiden', abbr: 'S' },
-		{ quality: 'loc_merchant', label: 'Merchant', abbr: 'M' },
-		{ quality: 'loc_seer', label: 'Seer', abbr: 'V' }
+	// Entity definitions: quality name → display info + which ring they occupy
+	interface Entity { quality: string; label: string; abbr: string; ring: 'middle' | 'outer' }
+
+	const entities: Entity[] = [
+		// Middle-circle entities (value 1–6 = sector index)
+		{ quality: 'loc_thane', label: 'Thane', abbr: 'T', ring: 'middle' },
+		{ quality: 'loc_rival', label: 'Rival Skald', abbr: 'R', ring: 'middle' },
+		{ quality: 'loc_shieldmaiden', label: 'Shieldmaiden', abbr: 'S', ring: 'middle' },
+		{ quality: 'loc_merchant', label: 'Merchant', abbr: 'M', ring: 'middle' },
+		{ quality: 'loc_seer', label: 'Seer', abbr: 'V', ring: 'middle' },
+		// Outer-circle entities (value 1–4 = quarter index)
+		{ quality: 'loc_jarl', label: 'Jarl', abbr: 'J', ring: 'outer' },
+		{ quality: 'loc_warband', label: 'Warband', abbr: 'W', ring: 'outer' },
+		{ quality: 'loc_shipwright', label: 'Shipwright', abbr: 'Sh', ring: 'outer' },
 	];
 
-	// Outer-circle entities
-	const outerEntities: { quality: string; label: string; abbr: string }[] = [
-		{ quality: 'loc_jarl', label: 'Jarl', abbr: 'J' },
-		{ quality: 'loc_warband', label: 'Warband', abbr: 'W' },
-		{ quality: 'loc_shipwright', label: 'Shipwright', abbr: 'Sh' }
-	];
+	/** Build a tooltip showing the entity name, zone label, and adjacent zones */
+	function entityTooltip(ent: Entity, zone: Zone): string {
+		const adj = zone.adjacent.map(id => ZONES[id]?.label ?? id).join(', ');
+		return `${ent.label} — ${zone.label}\nAdjacent: ${adj}`;
+	}
 
-	// Compute visible middle entities with positions
-	const middleMarkers = $derived.by(() => {
-		const markers: { x: number; y: number; abbr: string; label: string }[] = [];
-		// Track how many entities are in each sector for offset stacking
-		const sectorCounts: Record<number, number> = {};
-		for (const ent of middleEntities) {
-			const sector = qualities[ent.quality] ?? 0;
-			if (sector < 1 || sector > 6) continue;
-			const count = sectorCounts[sector] ?? 0;
-			sectorCounts[sector] = count + 1;
-			const angle = sectorAngle(sector);
-			// Offset stacked entities slightly along the radius
-			const offset = count * 10 - 4;
-			const pos = posOnRing(angle, R_MIDDLE - offset);
-			markers.push({ ...pos, abbr: ent.abbr, label: ent.label });
-		}
-		return markers;
-	});
+	interface Marker { x: number; y: number; abbr: string; tooltip: string; ring: 'middle' | 'outer' }
 
-	// Compute visible outer entities with positions
-	const outerMarkers = $derived.by(() => {
-		const markers: { x: number; y: number; abbr: string; label: string }[] = [];
-		const quarterCounts: Record<number, number> = {};
-		for (const ent of outerEntities) {
-			const quarter = qualities[ent.quality] ?? 0;
-			if (quarter < 1 || quarter > 4) continue;
-			const count = quarterCounts[quarter] ?? 0;
-			quarterCounts[quarter] = count + 1;
-			const angle = quarterAngle(quarter);
+	// Compute all visible entity markers with positions and adjacency tooltips
+	const entityMarkers = $derived.by(() => {
+		const markers: Marker[] = [];
+		const slotCounts: Record<string, number> = {}; // "middle:3" → count for stacking
+
+		for (const ent of entities) {
+			const index = qualities[ent.quality] ?? 0;
+			const maxIndex = ent.ring === 'middle' ? 6 : 4;
+			if (index < 1 || index > maxIndex) continue;
+
+			const zone = ZONES[`${ent.ring[0]}${index}`];
+			if (!zone) continue;
+
+			const slotKey = `${ent.ring}:${index}`;
+			const count = slotCounts[slotKey] ?? 0;
+			slotCounts[slotKey] = count + 1;
+
+			const angle = ent.ring === 'middle' ? sectorAngle(index) : quarterAngle(index);
+			const baseRadius = ent.ring === 'middle' ? R_MIDDLE : R_OUTER;
 			const offset = count * 10 - 4;
-			const pos = posOnRing(angle, R_OUTER - offset);
-			markers.push({ ...pos, abbr: ent.abbr, label: ent.label });
+			const pos = posOnRing(angle, baseRadius - offset);
+
+			markers.push({
+				...pos,
+				abbr: ent.abbr,
+				tooltip: entityTooltip(ent, zone),
+				ring: ent.ring,
+			});
 		}
 		return markers;
 	});
 
 	const playerZone = $derived(qualities['inner_zone'] ?? 1);
 	const turn = $derived(qualities['turn'] ?? 0);
+
+	// Player zone tooltip with adjacency
+	const playerTooltip = $derived.by(() => {
+		const zone = ZONES[`i${playerZone}`];
+		if (!zone) return 'You';
+		const adj = zone.adjacent.map(id => ZONES[id]?.label ?? id).join(', ');
+		return `You — ${zone.label}\nAdjacent: ${adj}`;
+	});
+
+	// Opponent tooltip (always zone 3)
+	const opponentTooltip = $derived.by(() => {
+		const zone = ZONES['i3'];
+		if (!zone) return 'Opponent';
+		const adj = zone.adjacent.map(id => ZONES[id]?.label ?? id).join(', ');
+		return `Opponent — ${zone.label}\nAdjacent: ${adj}`;
+	});
 
 	// Inner circle chord divider constants
 	const CHORD_OFFSET = R_INNER * 0.22;
@@ -144,29 +166,19 @@
 
 		<!-- Player marker -->
 		<circle cx={CX} cy={innerZoneY[playerZone] ?? innerZoneY[1]} r="5" class="marker marker-player">
-			<title>You</title>
+			<title>{playerTooltip}</title>
 		</circle>
 
 		<!-- Opponent marker (always zone 3) -->
 		<circle cx={CX} cy={innerZoneY[3]} r="5" class="marker marker-opponent">
-			<title>Opponent</title>
+			<title>{opponentTooltip}</title>
 		</circle>
 
-		<!-- Middle circle entity markers -->
-		{#each middleMarkers as m (m.label)}
+		<!-- Entity markers (middle + outer) -->
+		{#each entityMarkers as m (m.tooltip)}
 			<g class="entity-group">
-				<circle cx={m.x} cy={m.y} r="7" class="marker marker-entity">
-					<title>{m.label}</title>
-				</circle>
-				<text x={m.x} y={m.y} class="entity-label">{m.abbr}</text>
-			</g>
-		{/each}
-
-		<!-- Outer circle entity markers -->
-		{#each outerMarkers as m (m.label)}
-			<g class="entity-group">
-				<circle cx={m.x} cy={m.y} r="7" class="marker marker-beyond">
-					<title>{m.label}</title>
+				<circle cx={m.x} cy={m.y} r="7" class="marker {m.ring === 'middle' ? 'marker-entity' : 'marker-beyond'}">
+					<title>{m.tooltip}</title>
 				</circle>
 				<text x={m.x} y={m.y} class="entity-label">{m.abbr}</text>
 			</g>
