@@ -65,7 +65,7 @@ function displayDifficulty(successProb: number): string {
 
 // ── Engine ───────────────────────────────────────────────────────────
 
-export class FlytEngine {
+export class RiffleEngine {
 	game: CompiledGame | null = $state(null);
 	state: GameState = $state({
 		currentSceneId: '',
