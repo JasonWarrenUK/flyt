@@ -39,7 +39,7 @@ scripts/
 src/
   engine/                       # Svelte 5 reactive engine wrapper
     types.ts                    # TypeScript interfaces for game data
-    engine.svelte.ts            # FlytEngine class (reactive game state)
+    engine.svelte.ts            # RiffleEngine class (reactive game state)
     index.ts                    # Barrel export
   components/                   # UI components
     SceneView.svelte            # Renders current scene + choices
@@ -232,7 +232,7 @@ npm run check             # TypeScript + Svelte type checking
 
 ## Engine Architecture
 
-`FlytEngine` (in `src/engine/engine.svelte.ts`) is a class using Svelte 5 runes:
+`RiffleEngine` (in `src/engine/engine.svelte.ts`) is a class using Svelte 5 runes:
 - `game: CompiledGame | null` — loaded game data ($state)
 - `state: GameState` — current scene, qualities, visits, history, per-hand card state ($state)
 - `currentScene` — derived from state.currentSceneId ($derived)

@@ -1,0 +1,26 @@
+name: Sync Riffle Engine
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/engine/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Flyt
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push engine directory to Riffle repo
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.RIFFLE_SYNC_TOKEN }}
+          external_repository: JasonWarrenUK/riffle
+          publish_dir: ./src/engine
+          publish_branch: main
+          commit_message: "sync: update from flyt@${{ github.sha }}"
+          enable_jekyll: true

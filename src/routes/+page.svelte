@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { FlytEngine } from '$engine';
+	import { RiffleEngine } from '$engine';
 	import SceneView from '$components/SceneView.svelte';
 	import QualitiesPanel from '$components/QualitiesPanel.svelte';
 	import GameMenu from '$components/GameMenu.svelte';
 	import ArenaMap from '$components/ArenaMap.svelte';
 
-	const engine = new FlytEngine();
+	const engine = new RiffleEngine();
 	let statsOpen = $state(false);
 	let activeGame: string | null = $state(null);
 
