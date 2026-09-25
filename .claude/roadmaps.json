@@ -10,8 +10,20 @@
 				"name": "Entity State",
 				"goal": "Model per-NPC state (patience, mood, attention) for spectator entities",
 				"tasks": [
-					{ "id": "1ES.1", "description": "Design per-entity state schema (patience, mood, attention) for spectator NPCs", "status": "todo", "dependsOn": [] },
-					{ "id": "1ES.2", "description": "Extend qualities.dry / engine types to model per-NPC entity bundles (Thane, rival, shieldmaiden, merchant, seer, jarl, warband, shipwright)", "status": "blocked", "dependsOn": ["1ES.1"] }
+					{
+						"id": "1ES.1",
+						"description": "Design per-entity state schema (patience, mood, attention) for spectator NPCs",
+						"status": "todo",
+						"dependsOn": []
+					},
+					{
+						"id": "1ES.2",
+						"description": "Extend qualities.dry / engine types to model per-NPC entity bundles (Thane, rival, shieldmaiden, merchant, seer, jarl, warband, shipwright)",
+						"status": "blocked",
+						"dependsOn": [
+							"1ES.1"
+						]
+					}
 				]
 			},
 			{
@@ -19,12 +31,53 @@
 				"name": "Phrase Engine",
 				"goal": "Build the chained phrase-slot mechanic, extending DendryNexus card mechanics, with unlock conditions and diegetic acclaim judging",
 				"tasks": [
-					{ "id": "2PE.1", "description": "Design phrase-chain data model (subject / response-to-opponent / observed-detail slots) atop DendryNexus card mechanics", "status": "blocked", "dependsOn": ["1ES.1"] },
-					{ "id": "2PE.2", "description": "Implement phrase-slot selection UI (extends card/hand rendering for chained, non-reversible choices)", "status": "blocked", "dependsOn": ["2PE.1"] },
-					{ "id": "2PE.3", "description": "Implement unlock-condition resolution (opponent's move + observed events + player history determine available phrase options)", "status": "blocked", "dependsOn": ["2PE.1"] },
-					{ "id": "2PE.4", "description": "Implement diegetic acclaim judging (no visible score; world-state narrative reveals relative success/failure each attempt)", "status": "blocked", "dependsOn": ["2PE.2", "2PE.3"] },
-					{ "id": "2PE.5", "description": "Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)", "status": "todo", "dependsOn": [], "notes": "Informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3" },
-					{ "id": "2PE.6", "description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?", "status": "todo", "dependsOn": [], "notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking." }
+					{
+						"id": "2PE.1",
+						"description": "Design phrase-chain data model (subject / response-to-opponent / observed-detail slots) atop DendryNexus card mechanics",
+						"status": "blocked",
+						"dependsOn": [
+							"1ES.1"
+						]
+					},
+					{
+						"id": "2PE.2",
+						"description": "Implement phrase-slot selection UI (extends card/hand rendering for chained, non-reversible choices)",
+						"status": "blocked",
+						"dependsOn": [
+							"2PE.1"
+						]
+					},
+					{
+						"id": "2PE.3",
+						"description": "Implement unlock-condition resolution (opponent's move + observed events + player history determine available phrase options)",
+						"status": "blocked",
+						"dependsOn": [
+							"2PE.1"
+						]
+					},
+					{
+						"id": "2PE.4",
+						"description": "Implement diegetic acclaim judging (no visible score; world-state narrative reveals relative success/failure each attempt)",
+						"status": "blocked",
+						"dependsOn": [
+							"2PE.2",
+							"2PE.3"
+						]
+					},
+					{
+						"id": "2PE.5",
+						"description": "Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)",
+						"status": "todo",
+						"dependsOn": [],
+						"notes": "Informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3"
+					},
+					{
+						"id": "2PE.6",
+						"description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?",
+						"status": "todo",
+						"dependsOn": [],
+						"notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking."
+					}
 				]
 			},
 			{
@@ -32,8 +85,23 @@
 				"name": "World/Observation Content",
 				"goal": "Author the 'look around' layer: spectator movement, world events, and the time/information trade-off",
 				"tasks": [
-					{ "id": "3WC.1", "description": "Author spectator movement/event content per zone (arrivals, departures, natural events) driving entity state over time", "status": "blocked", "dependsOn": ["1ES.2"] },
-					{ "id": "3WC.2", "description": "Implement 'look around' action with time-cost trade-off (crowd impatience accrues per look, gated by per-entity patience from M1)", "status": "blocked", "dependsOn": ["1ES.2", "3WC.1"] }
+					{
+						"id": "3WC.1",
+						"description": "Author spectator movement/event content per zone (arrivals, departures, natural events) driving entity state over time",
+						"status": "blocked",
+						"dependsOn": [
+							"1ES.2"
+						]
+					},
+					{
+						"id": "3WC.2",
+						"description": "Implement 'look around' action with time-cost trade-off (crowd impatience accrues per look, gated by per-entity patience from M1)",
+						"status": "blocked",
+						"dependsOn": [
+							"1ES.2",
+							"3WC.1"
+						]
+					}
 				]
 			},
 			{
@@ -41,9 +109,33 @@
 				"name": "Duel Content",
 				"goal": "Author the actual 3-round flyting duel using the finished phrase engine and world content",
 				"tasks": [
-					{ "id": "4DC.1", "description": "Author opponent's flyt-attack content for round 1-3 openers", "status": "blocked", "dependsOn": ["2PE.4"] },
-					{ "id": "4DC.2", "description": "Author player phrase-option content (randomly-surfaced phrases, opponent-adaptation responses, observation-derived options) referencing M3 world content", "status": "blocked", "dependsOn": ["3WC.1", "3WC.2", "2PE.4"] },
-					{ "id": "4DC.3", "description": "Wire full 3-round duel flow end to end and playtest (player established as laughably inept tonally throughout)", "status": "blocked", "dependsOn": ["4DC.1", "4DC.2"] }
+					{
+						"id": "4DC.1",
+						"description": "Author opponent's flyt-attack content for round 1-3 openers",
+						"status": "blocked",
+						"dependsOn": [
+							"2PE.4"
+						]
+					},
+					{
+						"id": "4DC.2",
+						"description": "Author player phrase-option content (randomly-surfaced phrases, opponent-adaptation responses, observation-derived options) referencing M3 world content",
+						"status": "blocked",
+						"dependsOn": [
+							"3WC.1",
+							"3WC.2",
+							"2PE.4"
+						]
+					},
+					{
+						"id": "4DC.3",
+						"description": "Wire full 3-round duel flow end to end and playtest (player established as laughably inept tonally throughout)",
+						"status": "blocked",
+						"dependsOn": [
+							"4DC.1",
+							"4DC.2"
+						]
+					}
 				]
 			},
 			{
@@ -51,9 +143,25 @@
 				"name": "Audit",
 				"goal": "Establish the actual state of Great Hall's 94 scenes before deciding what to fix",
 				"tasks": [
-					{ "id": "5AU.1", "description": "Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)", "status": "todo", "dependsOn": [] },
-					{ "id": "5AU.2", "description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)", "status": "todo", "dependsOn": [] },
-					{ "id": "5AU.3", "description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)", "status": "todo", "dependsOn": [], "notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity" }
+					{
+						"id": "5AU.1",
+						"description": "Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)",
+						"status": "todo",
+						"dependsOn": []
+					},
+					{
+						"id": "5AU.2",
+						"description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)",
+						"status": "todo",
+						"dependsOn": []
+					},
+					{
+						"id": "5AU.3",
+						"description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)",
+						"status": "todo",
+						"dependsOn": [],
+						"notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity"
+					}
 				]
 			},
 			{
@@ -61,8 +169,24 @@
 				"name": "Remediation",
 				"goal": "Fix what the audit finds",
 				"tasks": [
-					{ "id": "6RM.1", "description": "Triage audit findings into a fix list (tonal fixes, structural fixes, missing-feature-coverage gaps)", "status": "blocked", "dependsOn": ["5AU.1", "5AU.2", "5AU.3"] },
-					{ "id": "6RM.2", "description": "Implement remediation fixes from triage", "status": "blocked", "dependsOn": ["6RM.1"] }
+					{
+						"id": "6RM.1",
+						"description": "Triage audit findings into a fix list (tonal fixes, structural fixes, missing-feature-coverage gaps)",
+						"status": "blocked",
+						"dependsOn": [
+							"5AU.1",
+							"5AU.2",
+							"5AU.3"
+						]
+					},
+					{
+						"id": "6RM.2",
+						"description": "Implement remediation fixes from triage",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1"
+						]
+					}
 				]
 			},
 			{
@@ -70,8 +194,20 @@
 				"name": "Progress Tracking",
 				"goal": "Let the player see how much Great Hall content remains",
 				"tasks": [
-					{ "id": "7PT.1", "description": "Design progress-tracking UX (global vs per-deck, visible vs hidden, where it surfaces in the UI)", "status": "todo", "dependsOn": [] },
-					{ "id": "7PT.2", "description": "Implement progress-tracking feature per design", "status": "blocked", "dependsOn": ["7PT.1"] }
+					{
+						"id": "7PT.1",
+						"description": "Design progress-tracking UX (global vs per-deck, visible vs hidden, where it surfaces in the UI)",
+						"status": "todo",
+						"dependsOn": []
+					},
+					{
+						"id": "7PT.2",
+						"description": "Implement progress-tracking feature per design",
+						"status": "blocked",
+						"dependsOn": [
+							"7PT.1"
+						]
+					}
 				]
 			},
 			{
@@ -79,8 +215,21 @@
 				"name": "Clean Extraction",
 				"goal": "Finish pulling all engine code into the Riffle repo, with nothing Flyt-specific left behind",
 				"tasks": [
-					{ "id": "8EX.1", "description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there", "status": "todo", "dependsOn": [] },
-					{ "id": "8EX.2", "description": "Remove/generalise Flyt-specific remnants from Riffle", "status": "blocked", "dependsOn": ["8EX.1"] }
+					{
+						"id": "8EX.1",
+						"description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there",
+						"status": "done",
+						"dependsOn": []
+					},
+					{
+						"id": "8EX.2",
+						"description": "Remove/generalise Flyt-specific remnants from Riffle",
+						"status": "todo",
+						"dependsOn": [
+							"8EX.1"
+						],
+						"notes": "Findings and recommended disposition per item: docs/reports/RIFFLE_AUDIT.md"
+					}
 				]
 			},
 			{
@@ -88,7 +237,14 @@
 				"name": "Detach Auto-Sync",
 				"goal": "Remove the current one-way auto-sync mechanism between Flyt and Riffle",
 				"tasks": [
-					{ "id": "9DS.1", "description": "Remove auto-sync hook/workflow between Flyt and Riffle repos", "status": "blocked", "dependsOn": ["M8"] }
+					{
+						"id": "9DS.1",
+						"description": "Remove auto-sync hook/workflow between Flyt and Riffle repos",
+						"status": "blocked",
+						"dependsOn": [
+							"M8"
+						]
+					}
 				]
 			},
 			{
@@ -96,8 +252,22 @@
 				"name": "Invert to Consumption",
 				"goal": "Flyt installs/imports Riffle as a dependency instead of housing the engine directly",
 				"tasks": [
-					{ "id": "10IC.1", "description": "Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD)", "status": "blocked", "dependsOn": ["M9"] },
-					{ "id": "10IC.2", "description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly", "status": "blocked", "dependsOn": ["10IC.1"] }
+					{
+						"id": "10IC.1",
+						"description": "Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD)",
+						"status": "blocked",
+						"dependsOn": [
+							"M9"
+						]
+					},
+					{
+						"id": "10IC.2",
+						"description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly",
+						"status": "blocked",
+						"dependsOn": [
+							"10IC.1"
+						]
+					}
 				]
 			}
 		]

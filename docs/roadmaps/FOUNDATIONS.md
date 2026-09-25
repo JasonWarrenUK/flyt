@@ -82,8 +82,10 @@ Groundwork across all three areas of the project before either subgame is conten
 
 **Goal:** Finish pulling all engine code into the Riffle repo, with nothing Flyt-specific left behind
 
-- [ ] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there
-- [ ] **8EX.2**: Remove/generalise Flyt-specific remnants from Riffle _(blocked: depends on 8EX.1)_
+- [x] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there _(done)_
+  - Note: findings and recommended disposition per item in docs/reports/RIFFLE_AUDIT.md
+- [ ] **8EX.2**: Remove/generalise Flyt-specific remnants from Riffle
+  - Note: findings and recommended disposition per item: docs/reports/RIFFLE_AUDIT.md
 
 ---
 
@@ -189,6 +191,7 @@ graph LR
 	M9 --> 10IC.1
 	10IC.1 --> 10IC.2
 	10IC.2 --> M10
-	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.1 todo
-	class 10IC.1,10IC.2,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,9DS.1 blocked
+	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.2 todo
+	class 10IC.1,10IC.2,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,9DS.1 blocked
+	class 8EX.1 done
 ```

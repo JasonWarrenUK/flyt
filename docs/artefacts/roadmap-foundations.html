@@ -21,156 +21,168 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Roadmap — Foundations</title>
-<link rel="stylesheet" href="https://unpkg.com/reasonable-colors@0.4.0/reasonable-colors.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-	/* Milestone — sky (structural, steel-blue half of the terminal gradient) */
-	--color-milestone:       var(--color-sky-4);
-	--color-milestone-bg:    var(--color-sky-1);
-	--color-milestone-text:  var(--color-sky-6);
+	/* Palette: the roadmap system's own fixed status table (see roadmap.py
+	   STATUS_STYLE); literal hexes so the artefact is self-contained.
+	   Milestone — sky (structural, steel-blue half of the terminal gradient) */
+	--color-milestone:       #007590;
+	--color-milestone-bg:    #e3f7ff;
+	--color-milestone-text:  #001f28;
 	/* Primary accent — pink (warm half of the gradient; never a status) */
-	--color-primary:         var(--color-pink-4);
-	--color-primary-bg:      var(--color-pink-1);
-	--color-primary-text:    var(--color-pink-6);
+	--color-primary:         #d2008f;
+	--color-primary-bg:      #fff7fb;
+	--color-primary-text:    #4b0030;
 	/* Status semantics: green finished, gray blank, red stop, purple parked,
 	   cinnamon shelved, faded gray struck, yellow external */
-	--color-done:            var(--color-green-4);
-	--color-done-bg:         var(--color-green-1);
-	--color-todo:            var(--color-gray-4);
-	--color-todo-bg:         var(--color-gray-1);
-	--color-blocked:         var(--color-red-4);
-	--color-blocked-bg:      var(--color-red-1);
-	--color-paused:          var(--color-purple-4);
-	--color-paused-bg:       var(--color-purple-1);
-	--color-deferred:        var(--color-cinnamon-4);
-	--color-deferred-bg:     var(--color-cinnamon-1);
-	--color-out-of-scope:    var(--color-gray-3);
-	--color-out-of-scope-bg: var(--color-gray-1);
-	--color-gate:            var(--color-yellow-4);
-	--color-gate-bg:         var(--color-yellow-1);
-	/* Milestone-level derived state (see roadmap-conventions.md): azure is
-	   unclaimed by task status and distinct from sky (structural), so a
-	   part-done milestone reads as "live" rather than the same gray as
-	   untouched work. */
-	--color-in-progress:     var(--color-azure-4);
-	--color-in-progress-bg:  var(--color-azure-1);
+	--color-done:            #008217;
+	--color-done-bg:         #e0ffd9;
+	--color-todo:            #6f6f6f;
+	--color-todo-bg:         #f6f6f6;
+	--color-blocked:         #e0002b;
+	--color-blocked-bg:      #fff8f6;
+	--color-paused:          #b01fe3;
+	--color-paused-bg:       #fdf4ff;
+	--color-deferred:        #ac5c00;
+	--color-deferred-bg:     #fff8f3;
+	--color-out-of-scope:    #8b8b8b;
+	--color-out-of-scope-bg: #f6f6f6;
+	--color-gate:            #7d6f00;
+	--color-gate-bg:         #fff9e5;
+	/* In progress (see roadmap-conventions.md): azure marks a claimed task
+	   still in play and the milestone state it drives, the way milestone
+	   states share their task-status hues. Distinct from sky (structural),
+	   though close enough that diagram labels also carry a marker. */
+	--color-in-progress:     #0071af;
+	--color-in-progress-bg:  #e8f2ff;
 	/* Dev-chip palette: assignee is free-text with no roster (never
 	   inferred), so chips are coloured by a stable hash, never a hardcoded
 	   name map. Disjoint from every status/milestone/gate hue above. */
-	--color-dev-teal:        var(--color-teal-4);
-	--color-dev-teal-bg:     var(--color-teal-1);
-	--color-dev-lime:        var(--color-lime-4);
-	--color-dev-lime-bg:     var(--color-lime-1);
-	--color-dev-magenta:     var(--color-magenta-4);
-	--color-dev-magenta-bg:  var(--color-magenta-1);
-	--color-dev-indigo:      var(--color-indigo-4);
-	--color-dev-indigo-bg:   var(--color-indigo-1);
-	--color-dev-amber:       var(--color-amber-4);
-	--color-dev-amber-bg:    var(--color-amber-1);
-	--color-dev-rose:        var(--color-rose-4);
-	--color-dev-rose-bg:     var(--color-rose-1);
+	--color-dev-teal:        #007c6e;
+	--color-dev-teal-bg:     #d7fff7;
+	--color-dev-lime:        #677600;
+	--color-dev-lime-bg:     #f7ffac;
+	--color-dev-magenta:     #ca00b6;
+	--color-dev-magenta-bg:  #fff3fc;
+	--color-dev-indigo:      #0061fc;
+	--color-dev-indigo-bg:   #f3f3ff;
+	--color-dev-amber:       #926700;
+	--color-dev-amber-bg:    #fff8ef;
+	--color-dev-rose:        #db0072;
+	--color-dev-rose-bg:     #fff7f9;
 
-	--bg: var(--color-gray-1);
+	--bg: #f6f6f6;
 	--surface: #ffffff;
-	--text: var(--color-gray-6);
-	--muted: var(--color-gray-4);
-	--line: var(--color-gray-2);
+	--text: #222222;
+	--muted: #6f6f6f;
+	--line: #e2e2e2;
 	--grid-line: rgba(0, 117, 144, 0.06);
+	/* Mermaid chrome (edge stroke, arrowhead, edge-label backing) that the
+	   diagram's own classDefs don't cover — see the render script below for
+	   why this can't just be mermaid's base-theme default. */
+	--diagram-line: #6f6f6f;
+	--diagram-edge-label-bg: #ffffff;
+	--diagram-text: var(--text);
 }
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme="light"]) {
-		--color-milestone:       var(--color-sky-2);
-		--color-milestone-bg:    var(--color-sky-6);
-		--color-milestone-text:  var(--color-sky-1);
-		--color-primary:         var(--color-pink-2);
-		--color-primary-bg:      var(--color-pink-6);
-		--color-primary-text:    var(--color-pink-1);
-		--color-done:            var(--color-green-2);
-		--color-done-bg:         var(--color-green-6);
-		--color-todo:            var(--color-gray-3);
-		--color-todo-bg:         var(--color-gray-6);
-		--color-blocked:         var(--color-red-2);
-		--color-blocked-bg:      var(--color-red-6);
-		--color-paused:          var(--color-purple-2);
-		--color-paused-bg:       var(--color-purple-6);
-		--color-deferred:        var(--color-cinnamon-2);
-		--color-deferred-bg:     var(--color-cinnamon-6);
-		--color-out-of-scope:    var(--color-gray-5);
-		--color-out-of-scope-bg: var(--color-gray-6);
-		--color-gate:            var(--color-yellow-2);
-		--color-gate-bg:         var(--color-yellow-6);
-		--color-in-progress:     var(--color-azure-2);
-		--color-in-progress-bg:  var(--color-azure-6);
-		--color-dev-teal:        var(--color-teal-2);
-		--color-dev-teal-bg:     var(--color-teal-6);
-		--color-dev-lime:        var(--color-lime-2);
-		--color-dev-lime-bg:     var(--color-lime-6);
-		--color-dev-magenta:     var(--color-magenta-2);
-		--color-dev-magenta-bg:  var(--color-magenta-6);
-		--color-dev-indigo:      var(--color-indigo-2);
-		--color-dev-indigo-bg:   var(--color-indigo-6);
-		--color-dev-amber:       var(--color-amber-2);
-		--color-dev-amber-bg:    var(--color-amber-6);
-		--color-dev-rose:        var(--color-rose-2);
-		--color-dev-rose-bg:     var(--color-rose-6);
+		--color-milestone:       #aee9ff;
+		--color-milestone-bg:    #001f28;
+		--color-milestone-text:  #e3f7ff;
+		--color-primary:         #ffdcec;
+		--color-primary-bg:      #4b0030;
+		--color-primary-text:    #fff7fb;
+		--color-done:            #72ff6c;
+		--color-done-bg:         #062800;
+		--color-todo:            #8b8b8b;
+		--color-todo-bg:         #222222;
+		--color-blocked:         #ffddd8;
+		--color-blocked-bg:      #530003;
+		--color-paused:          #f7d9ff;
+		--color-paused-bg:       #3a004f;
+		--color-deferred:        #ffdfc6;
+		--color-deferred-bg:     #371d00;
+		--color-out-of-scope:    #3e3e3e;
+		--color-out-of-scope-bg: #222222;
+		--color-gate:            #ffe53e;
+		--color-gate-bg:         #292300;
+		--color-in-progress:     #c6e0ff;
+		--color-in-progress-bg:  #001c30;
+		--color-dev-teal:        #00ffe4;
+		--color-dev-teal-bg:     #002722;
+		--color-dev-lime:        #d5f200;
+		--color-dev-lime-bg:     #222600;
+		--color-dev-magenta:     #ffd7f6;
+		--color-dev-magenta-bg:  #44003c;
+		--color-dev-indigo:      #deddff;
+		--color-dev-indigo-bg:   #001649;
+		--color-dev-amber:       #ffe0b2;
+		--color-dev-amber-bg:    #302100;
+		--color-dev-rose:        #ffdce5;
+		--color-dev-rose-bg:     #4c0023;
 
 		--bg: #121216;
 		--surface: #1b1b21;
-		--text: var(--color-gray-1);
-		--muted: var(--color-gray-3);
-		--line: var(--color-gray-5);
+		--text: #f6f6f6;
+		--muted: #8b8b8b;
+		--line: #3e3e3e;
 		--grid-line: rgba(174, 233, 255, 0.05);
+		--diagram-line: #8b8b8b;
+		--diagram-edge-label-bg: var(--surface);
+		--diagram-text: var(--text);
 	}
 }
 /* Third theming state: an explicit toggle wins in both directions, even
-   against a light OS preference. No toggle UI ships today, but the contract
-   is the same three-state shape every other artefact uses (see
-   library/references/artefact-conventions.md), so a future toggle just
-   works. */
+   against a light OS preference. The masthead ships the light/system/dark
+   control from library/references/artefact-conventions.md; this block is
+   what it writes to when a reader picks light or dark explicitly. */
 :root[data-theme="dark"] {
-	--color-milestone:       var(--color-sky-2);
-	--color-milestone-bg:    var(--color-sky-6);
-	--color-milestone-text:  var(--color-sky-1);
-	--color-primary:         var(--color-pink-2);
-	--color-primary-bg:      var(--color-pink-6);
-	--color-primary-text:    var(--color-pink-1);
-	--color-done:            var(--color-green-2);
-	--color-done-bg:         var(--color-green-6);
-	--color-todo:            var(--color-gray-3);
-	--color-todo-bg:         var(--color-gray-6);
-	--color-blocked:         var(--color-red-2);
-	--color-blocked-bg:      var(--color-red-6);
-	--color-paused:          var(--color-purple-2);
-	--color-paused-bg:       var(--color-purple-6);
-	--color-deferred:        var(--color-cinnamon-2);
-	--color-deferred-bg:     var(--color-cinnamon-6);
-	--color-out-of-scope:    var(--color-gray-5);
-	--color-out-of-scope-bg: var(--color-gray-6);
-	--color-gate:            var(--color-yellow-2);
-	--color-gate-bg:         var(--color-yellow-6);
-	--color-in-progress:     var(--color-azure-2);
-	--color-in-progress-bg:  var(--color-azure-6);
-	--color-dev-teal:        var(--color-teal-2);
-	--color-dev-teal-bg:     var(--color-teal-6);
-	--color-dev-lime:        var(--color-lime-2);
-	--color-dev-lime-bg:     var(--color-lime-6);
-	--color-dev-magenta:     var(--color-magenta-2);
-	--color-dev-magenta-bg:  var(--color-magenta-6);
-	--color-dev-indigo:      var(--color-indigo-2);
-	--color-dev-indigo-bg:   var(--color-indigo-6);
-	--color-dev-amber:       var(--color-amber-2);
-	--color-dev-amber-bg:    var(--color-amber-6);
-	--color-dev-rose:        var(--color-rose-2);
-	--color-dev-rose-bg:     var(--color-rose-6);
+	--color-milestone:       #aee9ff;
+	--color-milestone-bg:    #001f28;
+	--color-milestone-text:  #e3f7ff;
+	--color-primary:         #ffdcec;
+	--color-primary-bg:      #4b0030;
+	--color-primary-text:    #fff7fb;
+	--color-done:            #72ff6c;
+	--color-done-bg:         #062800;
+	--color-todo:            #8b8b8b;
+	--color-todo-bg:         #222222;
+	--color-blocked:         #ffddd8;
+	--color-blocked-bg:      #530003;
+	--color-paused:          #f7d9ff;
+	--color-paused-bg:       #3a004f;
+	--color-deferred:        #ffdfc6;
+	--color-deferred-bg:     #371d00;
+	--color-out-of-scope:    #3e3e3e;
+	--color-out-of-scope-bg: #222222;
+	--color-gate:            #ffe53e;
+	--color-gate-bg:         #292300;
+	--color-in-progress:     #c6e0ff;
+	--color-in-progress-bg:  #001c30;
+	--color-dev-teal:        #00ffe4;
+	--color-dev-teal-bg:     #002722;
+	--color-dev-lime:        #d5f200;
+	--color-dev-lime-bg:     #222600;
+	--color-dev-magenta:     #ffd7f6;
+	--color-dev-magenta-bg:  #44003c;
+	--color-dev-indigo:      #deddff;
+	--color-dev-indigo-bg:   #001649;
+	--color-dev-amber:       #ffe0b2;
+	--color-dev-amber-bg:    #302100;
+	--color-dev-rose:        #ffdce5;
+	--color-dev-rose-bg:     #4c0023;
 
 	--bg: #121216;
 	--surface: #1b1b21;
-	--text: var(--color-gray-1);
-	--muted: var(--color-gray-3);
-	--line: var(--color-gray-5);
+	--text: #f6f6f6;
+	--muted: #8b8b8b;
+	--line: #3e3e3e;
 	--grid-line: rgba(174, 233, 255, 0.05);
+	--diagram-line: #8b8b8b;
+	--diagram-edge-label-bg: var(--surface);
+	--diagram-text: var(--text);
 }
 
 * { box-sizing: border-box; }
@@ -195,8 +207,20 @@ nav a { display: block; padding: 0.35rem 0.6rem; color: var(--muted); text-decor
 nav a:hover, nav a.active { color: var(--color-milestone); border-left-color: var(--color-milestone); }
 main { flex: 1; min-width: 0; padding: 2rem 0 4rem; }
 
+header.page { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 header.page h1 { font-size: 1.6rem; font-weight: 600; margin: 0 0 0.2rem; }
 header.page .meta { font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; color: var(--muted); }
+
+.theme-toggle { display: flex; gap: 0.15rem; margin-left: auto; flex: none; }
+.theme-toggle button {
+	font: 600 0.8rem "IBM Plex Mono", monospace; line-height: 1;
+	color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+	border-radius: 3px; padding: 0.3rem 0.55rem; cursor: pointer;
+}
+.theme-toggle button:hover { color: var(--text); border-color: var(--color-milestone); }
+.theme-toggle button:focus-visible { outline: 2px solid var(--color-milestone); outline-offset: 2px; }
+.theme-toggle button[aria-pressed="true"] { color: var(--color-milestone-text); background: var(--color-milestone-bg); border-color: var(--color-milestone); }
+@media print { .theme-toggle { display: none; } }
 
 section { margin-top: 2.5rem; }
 h2 {
@@ -284,8 +308,10 @@ li.oos { text-decoration: line-through; color: var(--muted); }
 .legend .keynote { flex-basis: 100%; }
 
 .nextup li:not(.nextup-devgroup) { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem; padding: 0.3rem 0; }
-.nextup-devgroup { display: block; padding: 0; margin-top: 1rem; }
-.nextup-devgroup:first-child { margin-top: 0; }
+/* li.nextup-devgroup, not .nextup-devgroup: .group li (display:flex) would
+   otherwise outrank it and lay a heading out beside its own list */
+.nextup li.nextup-devgroup { display: block; padding: 0; margin-top: 1rem; }
+.nextup li.nextup-devgroup:first-child { margin-top: 0; }
 .nextup-devgroup h4 { margin: 0 0 0.4rem; font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .signal { color: var(--muted); font-size: 0.78rem; font-family: "IBM Plex Mono", monospace; margin-left: auto; }
 
@@ -301,6 +327,37 @@ li.oos { text-decoration: line-through; color: var(--muted); }
 </style>
 </head>
 <body>
+<script>
+(function () {
+	var KEY = 'theme';
+	var root = document.documentElement;
+	function read() {
+		try { return localStorage.getItem(KEY) || 'system'; }
+		catch (e) { return 'system'; }
+	}
+	function write(mode) {
+		try { localStorage.setItem(KEY, mode); }
+		catch (e) { /* private window, blocked storage, preview capture: ignore */ }
+	}
+	function apply(mode) {
+		if (mode === 'system') root.removeAttribute('data-theme');
+		else root.setAttribute('data-theme', mode);
+		document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+			b.setAttribute('aria-pressed', String(b.dataset.setTheme === mode));
+		});
+	}
+	apply(read());
+	document.addEventListener('DOMContentLoaded', function () {
+		apply(read());
+		document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+			b.addEventListener('click', function () {
+				write(b.dataset.setTheme);
+				apply(b.dataset.setTheme);
+			});
+		});
+	});
+})();
+</script>
 <div class="layout">
 	<nav>
 		<a href="#overview">Overview</a>
@@ -310,8 +367,15 @@ li.oos { text-decoration: line-through; color: var(--muted); }
 	</nav>
 	<main>
 		<header class="page">
-			<h1 id="pageTitle">Foundations</h1>
-			<div class="meta" id="meta"></div>
+			<div>
+				<h1 id="pageTitle">Foundations</h1>
+				<div class="meta" id="meta"></div>
+			</div>
+			<div class="theme-toggle" role="group" aria-label="Colour theme">
+				<button type="button" data-set-theme="light"  aria-pressed="false">☀</button>
+				<button type="button" data-set-theme="system" aria-pressed="true">◐</button>
+				<button type="button" data-set-theme="dark"   aria-pressed="false">☾</button>
+			</div>
 		</header>
 		<div id="validation"></div>
 
@@ -339,6 +403,7 @@ li.oos { text-decoration: line-through; color: var(--muted); }
 			</div>
 			<div class="legend">
 				<span class="key"><i class="sw" style="background:var(--color-todo-bg);border-color:var(--color-todo)"></i>todo</span>
+				<span class="key"><i class="sw" style="background:var(--color-in-progress-bg);border-color:var(--color-in-progress)"></i>in progress ▸</span>
 				<span class="key"><i class="sw" style="background:var(--color-blocked-bg);border-color:var(--color-blocked);border-width:2px"></i>blocked</span>
 				<span class="key"><i class="sw" style="background:var(--color-paused-bg);border-color:var(--color-paused);border-style:dashed"></i>paused</span>
 				<span class="key"><i class="sw" style="background:var(--color-deferred-bg);border-color:var(--color-deferred);border-style:dashed"></i>deferred</span>
@@ -356,7 +421,7 @@ li.oos { text-decoration: line-through; color: var(--muted); }
 	</main>
 </div>
 
-<script id="roadmap-data" type="application/json">{"project": "flyt", "phase": "Foundations", "generated": "2026-08-25T21:01:20", "stats": {"phase": "Foundations", "total": 25, "byStatus": {"done": 0, "todo": 8, "blocked": 17, "paused": 0, "deferred": 0, "out_of_scope": 0}, "invalid": [], "donePct": 0, "milestonesTotal": 10, "milestonesDone": 0, "milestones": [{"id": "M1", "name": "Entity State", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 1, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M2", "name": "Phrase Engine", "total": 6, "done": 0, "byStatus": {"done": 0, "todo": 2, "blocked": 4, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M3", "name": "World/Observation Content", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 2, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M4", "name": "Duel Content", "total": 3, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 3, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M5", "name": "Audit", "total": 3, "done": 0, "byStatus": {"done": 0, "todo": 3, "blocked": 0, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "todo"}, {"id": "M6", "name": "Remediation", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 2, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M7", "name": "Progress Tracking", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 1, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M8", "name": "Clean Extraction", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 1, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M9", "name": "Detach Auto-Sync", "total": 1, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}, {"id": "M10", "name": "Invert to Consumption", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 2, "paused": 0, "deferred": 0, "out_of_scope": 0}, "donePct": 0, "state": "blocked"}]}, "tasks": [{"id": "1ES.1", "description": "Design per-entity state schema (patience, mood, attention) for spectator NPCs", "status": "todo", "dependsOn": [], "milestone": "M1", "notes": "", "assignee": ""}, {"id": "1ES.2", "description": "Extend qualities.dry / engine types to model per-NPC entity bundles (Thane, rival, shieldmaiden, merchant, seer, jarl, warband, shipwright)", "status": "blocked", "dependsOn": ["1ES.1"], "milestone": "M1", "notes": "", "assignee": ""}, {"id": "2PE.1", "description": "Design phrase-chain data model (subject / response-to-opponent / observed-detail slots) atop DendryNexus card mechanics", "status": "blocked", "dependsOn": ["1ES.1"], "milestone": "M2", "notes": "", "assignee": ""}, {"id": "2PE.2", "description": "Implement phrase-slot selection UI (extends card/hand rendering for chained, non-reversible choices)", "status": "blocked", "dependsOn": ["2PE.1"], "milestone": "M2", "notes": "", "assignee": ""}, {"id": "2PE.3", "description": "Implement unlock-condition resolution (opponent's move + observed events + player history determine available phrase options)", "status": "blocked", "dependsOn": ["2PE.1"], "milestone": "M2", "notes": "", "assignee": ""}, {"id": "2PE.4", "description": "Implement diegetic acclaim judging (no visible score; world-state narrative reveals relative success/failure each attempt)", "status": "blocked", "dependsOn": ["2PE.2", "2PE.3"], "milestone": "M2", "notes": "", "assignee": ""}, {"id": "2PE.5", "description": "Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)", "status": "todo", "dependsOn": [], "milestone": "M2", "notes": "Informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3", "assignee": ""}, {"id": "2PE.6", "description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?", "status": "todo", "dependsOn": [], "milestone": "M2", "notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking.", "assignee": ""}, {"id": "3WC.1", "description": "Author spectator movement/event content per zone (arrivals, departures, natural events) driving entity state over time", "status": "blocked", "dependsOn": ["1ES.2"], "milestone": "M3", "notes": "", "assignee": ""}, {"id": "3WC.2", "description": "Implement 'look around' action with time-cost trade-off (crowd impatience accrues per look, gated by per-entity patience from M1)", "status": "blocked", "dependsOn": ["1ES.2", "3WC.1"], "milestone": "M3", "notes": "", "assignee": ""}, {"id": "4DC.1", "description": "Author opponent's flyt-attack content for round 1-3 openers", "status": "blocked", "dependsOn": ["2PE.4"], "milestone": "M4", "notes": "", "assignee": ""}, {"id": "4DC.2", "description": "Author player phrase-option content (randomly-surfaced phrases, opponent-adaptation responses, observation-derived options) referencing M3 world content", "status": "blocked", "dependsOn": ["3WC.1", "3WC.2", "2PE.4"], "milestone": "M4", "notes": "", "assignee": ""}, {"id": "4DC.3", "description": "Wire full 3-round duel flow end to end and playtest (player established as laughably inept tonally throughout)", "status": "blocked", "dependsOn": ["4DC.1", "4DC.2"], "milestone": "M4", "notes": "", "assignee": ""}, {"id": "5AU.1", "description": "Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)", "status": "todo", "dependsOn": [], "milestone": "M5", "notes": "", "assignee": ""}, {"id": "5AU.2", "description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)", "status": "todo", "dependsOn": [], "milestone": "M5", "notes": "", "assignee": ""}, {"id": "5AU.3", "description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)", "status": "todo", "dependsOn": [], "milestone": "M5", "notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity", "assignee": ""}, {"id": "6RM.1", "description": "Triage audit findings into a fix list (tonal fixes, structural fixes, missing-feature-coverage gaps)", "status": "blocked", "dependsOn": ["5AU.1", "5AU.2", "5AU.3"], "milestone": "M6", "notes": "", "assignee": ""}, {"id": "6RM.2", "description": "Implement remediation fixes from triage", "status": "blocked", "dependsOn": ["6RM.1"], "milestone": "M6", "notes": "", "assignee": ""}, {"id": "7PT.1", "description": "Design progress-tracking UX (global vs per-deck, visible vs hidden, where it surfaces in the UI)", "status": "todo", "dependsOn": [], "milestone": "M7", "notes": "", "assignee": ""}, {"id": "7PT.2", "description": "Implement progress-tracking feature per design", "status": "blocked", "dependsOn": ["7PT.1"], "milestone": "M7", "notes": "", "assignee": ""}, {"id": "8EX.1", "description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there", "status": "todo", "dependsOn": [], "milestone": "M8", "notes": "", "assignee": ""}, {"id": "8EX.2", "description": "Remove/generalise Flyt-specific remnants from Riffle", "status": "blocked", "dependsOn": ["8EX.1"], "milestone": "M8", "notes": "", "assignee": ""}, {"id": "9DS.1", "description": "Remove auto-sync hook/workflow between Flyt and Riffle repos", "status": "blocked", "dependsOn": ["M8"], "milestone": "M9", "notes": "", "assignee": ""}, {"id": "10IC.1", "description": "Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD)", "status": "blocked", "dependsOn": ["M9"], "milestone": "M10", "notes": "", "assignee": ""}, {"id": "10IC.2", "description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly", "status": "blocked", "dependsOn": ["10IC.1"], "milestone": "M10", "notes": "", "assignee": ""}], "ready": {"phase": "Foundations", "candidates": [{"id": "1ES.1", "description": "Design per-entity state schema (patience, mood, attention) for spectator NPCs", "milestone": "M1", "milestoneName": "Entity State", "milestoneDonePct": 0, "directDependents": 2, "transitiveUnblocks": 10, "isMilestoneSink": false, "notes": "", "assignee": ""}, {"id": "8EX.1", "description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there", "milestone": "M8", "milestoneName": "Clean Extraction", "milestoneDonePct": 0, "directDependents": 2, "transitiveUnblocks": 4, "isMilestoneSink": false, "notes": "", "assignee": ""}, {"id": "5AU.1", "description": "Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)", "milestone": "M5", "milestoneName": "Audit", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 2, "isMilestoneSink": true, "notes": "", "assignee": ""}, {"id": "5AU.2", "description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)", "milestone": "M5", "milestoneName": "Audit", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 2, "isMilestoneSink": true, "notes": "", "assignee": ""}, {"id": "5AU.3", "description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)", "milestone": "M5", "milestoneName": "Audit", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 2, "isMilestoneSink": true, "notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity", "assignee": ""}, {"id": "7PT.1", "description": "Design progress-tracking UX (global vs per-deck, visible vs hidden, where it surfaces in the UI)", "milestone": "M7", "milestoneName": "Progress Tracking", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 1, "isMilestoneSink": false, "notes": "", "assignee": ""}, {"id": "2PE.5", "description": "Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)", "milestone": "M2", "milestoneName": "Phrase Engine", "milestoneDonePct": 0, "directDependents": 0, "transitiveUnblocks": 0, "isMilestoneSink": true, "notes": "Informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3", "assignee": ""}, {"id": "2PE.6", "description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?", "milestone": "M2", "milestoneName": "Phrase Engine", "milestoneDonePct": 0, "directDependents": 0, "transitiveUnblocks": 0, "isMilestoneSink": true, "notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking.", "assignee": ""}]}, "mermaid": "graph TD\n\tclassDef todo fill:var(--color-todo-bg),stroke:var(--color-todo),color:var(--color-todo)\n\tclassDef blocked fill:var(--color-blocked-bg),stroke:var(--color-blocked),color:var(--color-blocked),stroke-width:2px\n\tclassDef paused fill:var(--color-paused-bg),stroke:var(--color-paused),color:var(--color-paused),stroke-dasharray:4 3\n\tclassDef deferred fill:var(--color-deferred-bg),stroke:var(--color-deferred),color:var(--color-deferred),stroke-dasharray:2 4,font-style:italic\n\tclassDef done fill:var(--color-done-bg),stroke:var(--color-done),color:var(--color-done)\n\tclassDef outOfScope fill:var(--color-out-of-scope-bg),stroke:var(--color-out-of-scope),color:var(--color-out-of-scope),stroke-dasharray:2 2\n\tclassDef mile fill:var(--color-milestone-bg),stroke:var(--color-milestone),color:var(--color-milestone),font-weight:bold\n\tclassDef external fill:var(--color-gate-bg),stroke:var(--color-gate),color:var(--color-gate),stroke-dasharray:4 3,font-style:italic\n\t1ES.1[\"1ES.1: Design per-entity state schema (patience…\"]\n\t1ES.2[\"1ES.2: Extend qualities.dry / engine types to m…\"]\n\tM1[\"M1: Entity State\"]:::mile\n\t2PE.1[\"2PE.1: Design phrase-chain data model (subject…\"]\n\t2PE.2[\"2PE.2: Implement phrase-slot selection UI (exte…\"]\n\t2PE.3[\"2PE.3: Implement unlock-condition resolution (o…\"]\n\t2PE.4[\"2PE.4: Implement diegetic acclaim judging (no v…\"]\n\t2PE.5[\"2PE.5: Design/document round end conditions (fa…\"]\n\t2PE.6[\"2PE.6: Open question: should the phrase engine…\"]\n\tM2[\"M2: Phrase Engine\"]:::mile\n\t3WC.1[\"3WC.1: Author spectator movement/event content…\"]\n\t3WC.2[\"3WC.2: Implement 'look around' action with time…\"]\n\tM3[\"M3: World/Observation Content\"]:::mile\n\t4DC.1[\"4DC.1: Author opponent's flyt-attack content fo…\"]\n\t4DC.2[\"4DC.2: Author player phrase-option content (ran…\"]\n\t4DC.3[\"4DC.3: Wire full 3-round duel flow end to end a…\"]\n\tM4[\"M4: Duel Content\"]:::mile\n\t5AU.1[\"5AU.1: Narrative/tonal coherence read-through o…\"]\n\t5AU.2[\"5AU.2: Structural/mechanical cohesion check acr…\"]\n\t5AU.3[\"5AU.3: DendryNexus feature-coverage audit again…\"]\n\tM5[\"M5: Audit\"]:::mile\n\t6RM.1[\"6RM.1: Triage audit findings into a fix list (t…\"]\n\t6RM.2[\"6RM.2: Implement remediation fixes from triage\"]\n\tM6[\"M6: Remediation\"]:::mile\n\t7PT.1[\"7PT.1: Design progress-tracking UX (global vs p…\"]\n\t7PT.2[\"7PT.2: Implement progress-tracking feature per…\"]\n\tM7[\"M7: Progress Tracking\"]:::mile\n\t8EX.1[\"8EX.1: Audit Riffle repo for remaining Flyt-spe…\"]\n\t8EX.2[\"8EX.2: Remove/generalise Flyt-specific remnants…\"]\n\tM8[\"M8: Clean Extraction\"]:::mile\n\t9DS.1[\"9DS.1: Remove auto-sync hook/workflow between F…\"]\n\tM9[\"M9: Detach Auto-Sync\"]:::mile\n\t10IC.1[\"10IC.1: Publish/package Riffle so it's installa…\"]\n\t10IC.2[\"10IC.2: Update Flyt's src/engine/ to import fro…\"]\n\tM10[\"M10: Invert to Consumption\"]:::mile\n\t1ES.1 --\u003e 1ES.2\n\t1ES.1 --\u003e 2PE.1\n\t1ES.2 --\u003e M1\n\t1ES.2 --\u003e 3WC.1\n\t1ES.2 --\u003e 3WC.2\n\t2PE.1 --\u003e 2PE.2\n\t2PE.1 --\u003e 2PE.3\n\t2PE.2 --\u003e 2PE.4\n\t2PE.3 --\u003e 2PE.4\n\t2PE.4 --\u003e M2\n\t2PE.4 --\u003e 4DC.1\n\t2PE.4 --\u003e 4DC.2\n\t2PE.5 --\u003e M2\n\t2PE.6 --\u003e M2\n\t3WC.1 --\u003e 3WC.2\n\t3WC.1 --\u003e 4DC.2\n\t3WC.2 --\u003e M3\n\t3WC.2 --\u003e 4DC.2\n\t4DC.1 --\u003e 4DC.3\n\t4DC.2 --\u003e 4DC.3\n\t4DC.3 --\u003e M4\n\t5AU.1 --\u003e M5\n\t5AU.1 --\u003e 6RM.1\n\t5AU.2 --\u003e M5\n\t5AU.2 --\u003e 6RM.1\n\t5AU.3 --\u003e M5\n\t5AU.3 --\u003e 6RM.1\n\t6RM.1 --\u003e 6RM.2\n\t6RM.2 --\u003e M6\n\t7PT.1 --\u003e 7PT.2\n\t7PT.2 --\u003e M7\n\t8EX.1 --\u003e 8EX.2\n\t8EX.2 --\u003e M8\n\tM8 --\u003e 9DS.1\n\t9DS.1 --\u003e M9\n\tM9 --\u003e 10IC.1\n\t10IC.1 --\u003e 10IC.2\n\t10IC.2 --\u003e M10\n\tclass 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.1 todo\n\tclass 10IC.1,10IC.2,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,9DS.1 blocked", "validation": [], "devColours": {}, "depKinds": {"1ES.1": {"kind": "task", "status": "todo"}, "1ES.2": {"kind": "task", "status": "blocked"}, "2PE.1": {"kind": "task", "status": "blocked"}, "2PE.2": {"kind": "task", "status": "blocked"}, "2PE.3": {"kind": "task", "status": "blocked"}, "2PE.4": {"kind": "task", "status": "blocked"}, "2PE.5": {"kind": "task", "status": "todo"}, "2PE.6": {"kind": "task", "status": "todo"}, "3WC.1": {"kind": "task", "status": "blocked"}, "3WC.2": {"kind": "task", "status": "blocked"}, "4DC.1": {"kind": "task", "status": "blocked"}, "4DC.2": {"kind": "task", "status": "blocked"}, "4DC.3": {"kind": "task", "status": "blocked"}, "5AU.1": {"kind": "task", "status": "todo"}, "5AU.2": {"kind": "task", "status": "todo"}, "5AU.3": {"kind": "task", "status": "todo"}, "6RM.1": {"kind": "task", "status": "blocked"}, "6RM.2": {"kind": "task", "status": "blocked"}, "7PT.1": {"kind": "task", "status": "todo"}, "7PT.2": {"kind": "task", "status": "blocked"}, "8EX.1": {"kind": "task", "status": "todo"}, "8EX.2": {"kind": "task", "status": "blocked"}, "9DS.1": {"kind": "task", "status": "blocked"}, "10IC.1": {"kind": "task", "status": "blocked"}, "10IC.2": {"kind": "task", "status": "blocked"}, "M1": {"kind": "milestone"}, "M2": {"kind": "milestone"}, "M3": {"kind": "milestone"}, "M4": {"kind": "milestone"}, "M5": {"kind": "milestone"}, "M6": {"kind": "milestone"}, "M7": {"kind": "milestone"}, "M8": {"kind": "milestone"}, "M9": {"kind": "milestone"}, "M10": {"kind": "milestone"}}}</script>
+<script id="roadmap-data" type="application/json">{"project": "flyt", "phase": "Foundations", "generated": "2026-09-25T19:08:29", "stats": {"phase": "Foundations", "total": 25, "byStatus": {"done": 1, "todo": 8, "blocked": 16, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "invalid": [], "donePct": 4, "milestonesTotal": 10, "milestonesDone": 0, "milestones": [{"id": "M1", "name": "Entity State", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 1, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M2", "name": "Phrase Engine", "total": 6, "done": 0, "byStatus": {"done": 0, "todo": 2, "blocked": 4, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M3", "name": "World/Observation Content", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 2, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M4", "name": "Duel Content", "total": 3, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 3, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M5", "name": "Audit", "total": 3, "done": 0, "byStatus": {"done": 0, "todo": 3, "blocked": 0, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "todo"}, {"id": "M6", "name": "Remediation", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 2, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M7", "name": "Progress Tracking", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 1, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M8", "name": "Clean Extraction", "total": 2, "done": 1, "byStatus": {"done": 1, "todo": 1, "blocked": 0, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 50, "state": "inProgress"}, {"id": "M9", "name": "Detach Auto-Sync", "total": 1, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 1, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}, {"id": "M10", "name": "Invert to Consumption", "total": 2, "done": 0, "byStatus": {"done": 0, "todo": 0, "blocked": 2, "paused": 0, "deferred": 0, "out_of_scope": 0}, "inProgress": 0, "donePct": 0, "state": "blocked"}]}, "tasks": [{"id": "1ES.1", "description": "Design per-entity state schema (patience, mood, attention) for spectator NPCs", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M1", "notes": "", "assignee": "", "started": ""}, {"id": "1ES.2", "description": "Extend qualities.dry / engine types to model per-NPC entity bundles (Thane, rival, shieldmaiden, merchant, seer, jarl, warband, shipwright)", "status": "blocked", "display": "blocked", "dependsOn": ["1ES.1"], "milestone": "M1", "notes": "", "assignee": "", "started": ""}, {"id": "2PE.1", "description": "Design phrase-chain data model (subject / response-to-opponent / observed-detail slots) atop DendryNexus card mechanics", "status": "blocked", "display": "blocked", "dependsOn": ["1ES.1"], "milestone": "M2", "notes": "", "assignee": "", "started": ""}, {"id": "2PE.2", "description": "Implement phrase-slot selection UI (extends card/hand rendering for chained, non-reversible choices)", "status": "blocked", "display": "blocked", "dependsOn": ["2PE.1"], "milestone": "M2", "notes": "", "assignee": "", "started": ""}, {"id": "2PE.3", "description": "Implement unlock-condition resolution (opponent's move + observed events + player history determine available phrase options)", "status": "blocked", "display": "blocked", "dependsOn": ["2PE.1"], "milestone": "M2", "notes": "", "assignee": "", "started": ""}, {"id": "2PE.4", "description": "Implement diegetic acclaim judging (no visible score; world-state narrative reveals relative success/failure each attempt)", "status": "blocked", "display": "blocked", "dependsOn": ["2PE.2", "2PE.3"], "milestone": "M2", "notes": "", "assignee": "", "started": ""}, {"id": "2PE.5", "description": "Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M2", "notes": "Informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3", "assignee": "", "started": ""}, {"id": "2PE.6", "description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M2", "notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking.", "assignee": "", "started": ""}, {"id": "3WC.1", "description": "Author spectator movement/event content per zone (arrivals, departures, natural events) driving entity state over time", "status": "blocked", "display": "blocked", "dependsOn": ["1ES.2"], "milestone": "M3", "notes": "", "assignee": "", "started": ""}, {"id": "3WC.2", "description": "Implement 'look around' action with time-cost trade-off (crowd impatience accrues per look, gated by per-entity patience from M1)", "status": "blocked", "display": "blocked", "dependsOn": ["1ES.2", "3WC.1"], "milestone": "M3", "notes": "", "assignee": "", "started": ""}, {"id": "4DC.1", "description": "Author opponent's flyt-attack content for round 1-3 openers", "status": "blocked", "display": "blocked", "dependsOn": ["2PE.4"], "milestone": "M4", "notes": "", "assignee": "", "started": ""}, {"id": "4DC.2", "description": "Author player phrase-option content (randomly-surfaced phrases, opponent-adaptation responses, observation-derived options) referencing M3 world content", "status": "blocked", "display": "blocked", "dependsOn": ["3WC.1", "3WC.2", "2PE.4"], "milestone": "M4", "notes": "", "assignee": "", "started": ""}, {"id": "4DC.3", "description": "Wire full 3-round duel flow end to end and playtest (player established as laughably inept tonally throughout)", "status": "blocked", "display": "blocked", "dependsOn": ["4DC.1", "4DC.2"], "milestone": "M4", "notes": "", "assignee": "", "started": ""}, {"id": "5AU.1", "description": "Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M5", "notes": "", "assignee": "", "started": ""}, {"id": "5AU.2", "description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M5", "notes": "", "assignee": "", "started": ""}, {"id": "5AU.3", "description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M5", "notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity", "assignee": "", "started": ""}, {"id": "6RM.1", "description": "Triage audit findings into a fix list (tonal fixes, structural fixes, missing-feature-coverage gaps)", "status": "blocked", "display": "blocked", "dependsOn": ["5AU.1", "5AU.2", "5AU.3"], "milestone": "M6", "notes": "", "assignee": "", "started": ""}, {"id": "6RM.2", "description": "Implement remediation fixes from triage", "status": "blocked", "display": "blocked", "dependsOn": ["6RM.1"], "milestone": "M6", "notes": "", "assignee": "", "started": ""}, {"id": "7PT.1", "description": "Design progress-tracking UX (global vs per-deck, visible vs hidden, where it surfaces in the UI)", "status": "todo", "display": "todo", "dependsOn": [], "milestone": "M7", "notes": "", "assignee": "", "started": ""}, {"id": "7PT.2", "description": "Implement progress-tracking feature per design", "status": "blocked", "display": "blocked", "dependsOn": ["7PT.1"], "milestone": "M7", "notes": "", "assignee": "", "started": ""}, {"id": "8EX.1", "description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there", "status": "done", "display": "done", "dependsOn": [], "milestone": "M8", "notes": "", "assignee": "", "started": ""}, {"id": "8EX.2", "description": "Remove/generalise Flyt-specific remnants from Riffle", "status": "todo", "display": "todo", "dependsOn": ["8EX.1"], "milestone": "M8", "notes": "Findings and recommended disposition per item: docs/reports/RIFFLE_AUDIT.md", "assignee": "", "started": ""}, {"id": "9DS.1", "description": "Remove auto-sync hook/workflow between Flyt and Riffle repos", "status": "blocked", "display": "blocked", "dependsOn": ["M8"], "milestone": "M9", "notes": "", "assignee": "", "started": ""}, {"id": "10IC.1", "description": "Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD)", "status": "blocked", "display": "blocked", "dependsOn": ["M9"], "milestone": "M10", "notes": "", "assignee": "", "started": ""}, {"id": "10IC.2", "description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly", "status": "blocked", "display": "blocked", "dependsOn": ["10IC.1"], "milestone": "M10", "notes": "", "assignee": "", "started": ""}], "ready": {"phase": "Foundations", "candidates": [{"id": "1ES.1", "description": "Design per-entity state schema (patience, mood, attention) for spectator NPCs", "milestone": "M1", "milestoneName": "Entity State", "milestoneDonePct": 0, "directDependents": 2, "transitiveUnblocks": 10, "isMilestoneSink": false, "notes": "", "assignee": ""}, {"id": "8EX.2", "description": "Remove/generalise Flyt-specific remnants from Riffle", "milestone": "M8", "milestoneName": "Clean Extraction", "milestoneDonePct": 50, "directDependents": 1, "transitiveUnblocks": 3, "isMilestoneSink": true, "notes": "Findings and recommended disposition per item: docs/reports/RIFFLE_AUDIT.md", "assignee": ""}, {"id": "5AU.1", "description": "Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)", "milestone": "M5", "milestoneName": "Audit", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 2, "isMilestoneSink": true, "notes": "", "assignee": ""}, {"id": "5AU.2", "description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)", "milestone": "M5", "milestoneName": "Audit", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 2, "isMilestoneSink": true, "notes": "", "assignee": ""}, {"id": "5AU.3", "description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)", "milestone": "M5", "milestoneName": "Audit", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 2, "isMilestoneSink": true, "notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity", "assignee": ""}, {"id": "7PT.1", "description": "Design progress-tracking UX (global vs per-deck, visible vs hidden, where it surfaces in the UI)", "milestone": "M7", "milestoneName": "Progress Tracking", "milestoneDonePct": 0, "directDependents": 1, "transitiveUnblocks": 1, "isMilestoneSink": false, "notes": "", "assignee": ""}, {"id": "2PE.5", "description": "Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)", "milestone": "M2", "milestoneName": "Phrase Engine", "milestoneDonePct": 0, "directDependents": 0, "transitiveUnblocks": 0, "isMilestoneSink": true, "notes": "Informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3", "assignee": ""}, {"id": "2PE.6", "description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?", "milestone": "M2", "milestoneName": "Phrase Engine", "milestoneDonePct": 0, "directDependents": 0, "transitiveUnblocks": 0, "isMilestoneSink": true, "notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking.", "assignee": ""}], "claimed": []}, "mermaid": "graph TD\n\tclassDef todo fill:var(--color-todo-bg),stroke:var(--color-todo),color:var(--color-todo)\n\tclassDef inProgress fill:var(--color-in-progress-bg),stroke:var(--color-in-progress),color:var(--color-in-progress)\n\tclassDef blocked fill:var(--color-blocked-bg),stroke:var(--color-blocked),color:var(--color-blocked),stroke-width:2px\n\tclassDef paused fill:var(--color-paused-bg),stroke:var(--color-paused),color:var(--color-paused),stroke-dasharray:4 3\n\tclassDef deferred fill:var(--color-deferred-bg),stroke:var(--color-deferred),color:var(--color-deferred),stroke-dasharray:2 4,font-style:italic\n\tclassDef done fill:var(--color-done-bg),stroke:var(--color-done),color:var(--color-done)\n\tclassDef outOfScope fill:var(--color-out-of-scope-bg),stroke:var(--color-out-of-scope),color:var(--color-out-of-scope),stroke-dasharray:2 2\n\tclassDef mile fill:var(--color-milestone-bg),stroke:var(--color-milestone),color:var(--color-milestone),font-weight:bold\n\tclassDef external fill:var(--color-gate-bg),stroke:var(--color-gate),color:var(--color-gate),stroke-dasharray:4 3,font-style:italic\n\t1ES.1[\"1ES.1: Design per-entity state schema (patience…\"]\n\t1ES.2[\"1ES.2: Extend qualities.dry / engine types to m…\"]\n\tM1[\"M1: Entity State\"]:::mile\n\t2PE.1[\"2PE.1: Design phrase-chain data model (subject…\"]\n\t2PE.2[\"2PE.2: Implement phrase-slot selection UI (exte…\"]\n\t2PE.3[\"2PE.3: Implement unlock-condition resolution (o…\"]\n\t2PE.4[\"2PE.4: Implement diegetic acclaim judging (no v…\"]\n\t2PE.5[\"2PE.5: Design/document round end conditions (fa…\"]\n\t2PE.6[\"2PE.6: Open question: should the phrase engine…\"]\n\tM2[\"M2: Phrase Engine\"]:::mile\n\t3WC.1[\"3WC.1: Author spectator movement/event content…\"]\n\t3WC.2[\"3WC.2: Implement 'look around' action with time…\"]\n\tM3[\"M3: World/Observation Content\"]:::mile\n\t4DC.1[\"4DC.1: Author opponent's flyt-attack content fo…\"]\n\t4DC.2[\"4DC.2: Author player phrase-option content (ran…\"]\n\t4DC.3[\"4DC.3: Wire full 3-round duel flow end to end a…\"]\n\tM4[\"M4: Duel Content\"]:::mile\n\t5AU.1[\"5AU.1: Narrative/tonal coherence read-through o…\"]\n\t5AU.2[\"5AU.2: Structural/mechanical cohesion check acr…\"]\n\t5AU.3[\"5AU.3: DendryNexus feature-coverage audit again…\"]\n\tM5[\"M5: Audit\"]:::mile\n\t6RM.1[\"6RM.1: Triage audit findings into a fix list (t…\"]\n\t6RM.2[\"6RM.2: Implement remediation fixes from triage\"]\n\tM6[\"M6: Remediation\"]:::mile\n\t7PT.1[\"7PT.1: Design progress-tracking UX (global vs p…\"]\n\t7PT.2[\"7PT.2: Implement progress-tracking feature per…\"]\n\tM7[\"M7: Progress Tracking\"]:::mile\n\t8EX.2[\"8EX.2: Remove/generalise Flyt-specific remnants…\"]\n\tM8[\"M8: Clean Extraction\"]:::mile\n\t9DS.1[\"9DS.1: Remove auto-sync hook/workflow between F…\"]\n\tM9[\"M9: Detach Auto-Sync\"]:::mile\n\t10IC.1[\"10IC.1: Publish/package Riffle so it's installa…\"]\n\t10IC.2[\"10IC.2: Update Flyt's src/engine/ to import fro…\"]\n\tM10[\"M10: Invert to Consumption\"]:::mile\n\t1ES.1 --\u003e 1ES.2\n\t1ES.1 --\u003e 2PE.1\n\t1ES.2 --\u003e M1\n\t1ES.2 --\u003e 3WC.1\n\t1ES.2 --\u003e 3WC.2\n\t2PE.1 --\u003e 2PE.2\n\t2PE.1 --\u003e 2PE.3\n\t2PE.2 --\u003e 2PE.4\n\t2PE.3 --\u003e 2PE.4\n\t2PE.4 --\u003e M2\n\t2PE.4 --\u003e 4DC.1\n\t2PE.4 --\u003e 4DC.2\n\t2PE.5 --\u003e M2\n\t2PE.6 --\u003e M2\n\t3WC.1 --\u003e 3WC.2\n\t3WC.1 --\u003e 4DC.2\n\t3WC.2 --\u003e M3\n\t3WC.2 --\u003e 4DC.2\n\t4DC.1 --\u003e 4DC.3\n\t4DC.2 --\u003e 4DC.3\n\t4DC.3 --\u003e M4\n\t5AU.1 --\u003e M5\n\t5AU.1 --\u003e 6RM.1\n\t5AU.2 --\u003e M5\n\t5AU.2 --\u003e 6RM.1\n\t5AU.3 --\u003e M5\n\t5AU.3 --\u003e 6RM.1\n\t6RM.1 --\u003e 6RM.2\n\t6RM.2 --\u003e M6\n\t7PT.1 --\u003e 7PT.2\n\t7PT.2 --\u003e M7\n\t8EX.2 --\u003e M8\n\tM8 --\u003e 9DS.1\n\t9DS.1 --\u003e M9\n\tM9 --\u003e 10IC.1\n\t10IC.1 --\u003e 10IC.2\n\t10IC.2 --\u003e M10\n\tclass 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.2 todo\n\tclass 10IC.1,10IC.2,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,9DS.1 blocked", "validation": [], "devColours": {}, "depKinds": {"1ES.1": {"kind": "task", "status": "todo", "display": "todo"}, "1ES.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "2PE.1": {"kind": "task", "status": "blocked", "display": "blocked"}, "2PE.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "2PE.3": {"kind": "task", "status": "blocked", "display": "blocked"}, "2PE.4": {"kind": "task", "status": "blocked", "display": "blocked"}, "2PE.5": {"kind": "task", "status": "todo", "display": "todo"}, "2PE.6": {"kind": "task", "status": "todo", "display": "todo"}, "3WC.1": {"kind": "task", "status": "blocked", "display": "blocked"}, "3WC.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "4DC.1": {"kind": "task", "status": "blocked", "display": "blocked"}, "4DC.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "4DC.3": {"kind": "task", "status": "blocked", "display": "blocked"}, "5AU.1": {"kind": "task", "status": "todo", "display": "todo"}, "5AU.2": {"kind": "task", "status": "todo", "display": "todo"}, "5AU.3": {"kind": "task", "status": "todo", "display": "todo"}, "6RM.1": {"kind": "task", "status": "blocked", "display": "blocked"}, "6RM.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "7PT.1": {"kind": "task", "status": "todo", "display": "todo"}, "7PT.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "8EX.1": {"kind": "task", "status": "done", "display": "done"}, "8EX.2": {"kind": "task", "status": "todo", "display": "todo"}, "9DS.1": {"kind": "task", "status": "blocked", "display": "blocked"}, "10IC.1": {"kind": "task", "status": "blocked", "display": "blocked"}, "10IC.2": {"kind": "task", "status": "blocked", "display": "blocked"}, "M1": {"kind": "milestone"}, "M2": {"kind": "milestone"}, "M3": {"kind": "milestone"}, "M4": {"kind": "milestone"}, "M5": {"kind": "milestone"}, "M6": {"kind": "milestone"}, "M7": {"kind": "milestone"}, "M8": {"kind": "milestone"}, "M9": {"kind": "milestone"}, "M10": {"kind": "milestone"}}}</script>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
 
@@ -380,10 +445,13 @@ if (DATA.validation && DATA.validation.length) {
 /* Milestone-level state (distinct from task status): computed server-side by
    roadmap.py's milestone_state() and carried as m.state, so the artefact
    never re-derives it and cannot disagree with the CLI's own stats/render
-   paths. States: deferred, done, inProgress, todo, blocked, paused. */
+   paths. States: deferred, done, inProgress, todo, blocked, paused. The
+   same map colours dependency chips by a task's display status, which adds
+   in_progress (a claimed task) and out_of_scope. */
 const STATE_VAR = {
 	deferred: "deferred", done: "done", inProgress: "in-progress",
 	todo: "todo", blocked: "blocked", paused: "paused",
+	in_progress: "in-progress", out_of_scope: "out-of-scope",
 };
 const STATE_RANK = { inProgress: 0, todo: 1, done: 2, blocked: 3, paused: 4, deferred: 5 };
 /* Overview cards and Milestones details share this one ordering, computed
@@ -406,7 +474,7 @@ const devChip = assignee => {
 const depChip = id => {
 	const k = DATA.depKinds?.[id];
 	if (!k) return `<span class="chip">${esc(id)}</span>`;
-	const varName = k.kind === "task" ? STATE_VAR[k.status] ?? "todo"
+	const varName = k.kind === "task" ? STATE_VAR[k.display ?? k.status] ?? "todo"
 		: k.kind === "milestone" ? "milestone" : "gate";
 	return `<span class="chip" style="--chip-fg:var(--color-${varName});--chip-bg:var(--color-${varName}-bg)">${esc(id)}</span>`;
 };
@@ -430,6 +498,7 @@ document.getElementById("milestone-cards").innerHTML = sortedMilestones.map(m =>
    reader scanning top-to-bottom sees the same priority twice, not two
    different orderings of the same data. */
 const GROUPS = [
+	["in_progress", "▸ In Progress",  "in-progress"],
 	["todo",        "○ To Do",        "todo"],
 	["blocked",     "✗ Blocked",      "blocked"],
 	["paused",      "⏸ Paused",       "paused"],
@@ -444,7 +513,7 @@ for (const t of DATA.tasks) (tasksByMilestone[t.milestone] ??= []).push(t);
 document.getElementById("milestone-details").innerHTML = sortedMilestones.map(m => {
 	const tasks = tasksByMilestone[m.id] || [];
 	const groups = GROUPS.map(([status, label, varName]) => {
-		const members = tasks.filter(t => t.status === status);
+		const members = tasks.filter(t => (t.display ?? t.status) === status);
 		if (!members.length) return "";
 		const items = members.map(t => {
 			const deps = (t.dependsOn && t.dependsOn.length)
@@ -473,20 +542,23 @@ try {
 	mermaid.registerLayoutLoaders(elkLayouts);
 	layout = "elk";
 } catch { /* CDN unreachable — fall back */ }
-mermaid.initialize({
-	startOnLoad: false,
-	theme: "base",
-	layout,
-	themeVariables: {
-		fontSize: "16px",
-		fontFamily: '"IBM Plex Mono", monospace',
-	},
-});
 /* Mermaid 11's classDef parser rejects var(--x), so the semantic variables
    are resolved to concrete colours before rendering, and the graph re-renders
    when the colour scheme flips so it keeps tracking the page theme. A render
    failure is contained to the diagram shell — the sections after it must
-   still populate. */
+   still populate.
+
+   Node fills/strokes come entirely from the classDefs above (resolved via
+   the var() replace below), but mermaid's "base" theme still supplies its
+   own defaults for everything a classDef doesn't touch — edge stroke,
+   arrowhead fill, edge-label background. Those defaults assume a white
+   canvas, so left alone they render near-black on the dark surface. Fixing
+   that means passing --diagram-line/--diagram-edge-label-bg/--diagram-text
+   through as themeVariables — and critically, mermaid.initialize() must be
+   called again on every render (not once at module load) reading the
+   *currently resolved* values, or a colour-scheme flip silently keeps the
+   load-time edge colours and the explicit data-theme toggle below never
+   takes effect at all (matchMedia doesn't fire for it). */
 const wrap = document.getElementById("wrap");
 const shell = document.getElementById("shell");
 const diagram = document.getElementById("diagram");
@@ -495,8 +567,21 @@ let scale = 1, tx = 0, ty = 0;
 const apply = () => { if (svgEl) svgEl.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; };
 const renderGraph = async () => {
 	const rootStyle = getComputedStyle(document.documentElement);
-	const src = DATA.mermaid.replace(/var\((--[\w-]+)\)/g,
-		(_, name) => rootStyle.getPropertyValue(name).trim() || "#888888");
+	const cssVar = name => rootStyle.getPropertyValue(name).trim() || "#888888";
+	mermaid.initialize({
+		startOnLoad: false,
+		theme: "base",
+		layout,
+		themeVariables: {
+			fontSize: "16px",
+			fontFamily: '"IBM Plex Mono", monospace',
+			background: cssVar("--surface"),
+			lineColor: cssVar("--diagram-line"),
+			edgeLabelBackground: cssVar("--diagram-edge-label-bg"),
+			textColor: cssVar("--diagram-text"),
+		},
+	});
+	const src = DATA.mermaid.replace(/var\((--[\w-]+)\)/g, (_, name) => cssVar(name));
 	try {
 		const { svg } = await mermaid.render("roadmap-graph", src);
 		diagram.innerHTML = svg;
@@ -511,6 +596,12 @@ const renderGraph = async () => {
 };
 await renderGraph();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderGraph);
+/* Covers the explicit data-theme toggle (no UI ships today, but the
+   three-state contract says a future one must just work — see the CSS
+   comment above :root[data-theme="dark"]). matchMedia only fires for the OS
+   preference, so the attribute needs its own watcher. */
+new MutationObserver(renderGraph).observe(document.documentElement,
+	{ attributes: true, attributeFilter: ["data-theme"] });
 
 /* Zoom/pan: buttons, ctrl+wheel, drag; expand toggles a fixed overlay */
 const zoom = f => { scale = Math.min(4, Math.max(0.25, scale * f)); apply(); };
@@ -545,7 +636,7 @@ const candidateLi = c => `
 		<span class="signal">unblocks ${c.transitiveUnblocks}${c.isMilestoneSink ? " · completes milestone" : ""}</span>
 	</li>`;
 const readyAssignees = new Set(DATA.ready.candidates.map(c => c.assignee).filter(Boolean));
-document.getElementById("ready").innerHTML = !DATA.ready.candidates.length
+const readyHtml = !DATA.ready.candidates.length
 	? "<li>No unblocked tasks: clear a blocker or a gate.</li>"
 	: readyAssignees.size > 1
 	? [...readyAssignees].sort().map(dev => `
@@ -557,6 +648,22 @@ document.getElementById("ready").innerHTML = !DATA.ready.candidates.length
 				<ul style="list-style:none;margin:0;padding:0">${DATA.ready.candidates.filter(c => !c.assignee).map(candidateLi).join("")}</ul>
 			</li>` : "")
 	: DATA.ready.candidates.map(candidateLi).join("");
+/* Claims in play lead, since someone is already on them; the ready set then
+   gets its own heading so the two lists never read as one. A parked claim
+   (paused/deferred wins over a claim) stays in its Milestones group. */
+const claimLi = c => `
+	<li>
+		<span class="tid">${esc(c.id)}</span>${devChip(c.assignee)}
+		<span class="tasktext">${esc(c.description)}</span>
+		<span class="signal">since ${esc(c.started)}${c.status === "todo" ? "" : ` · ${esc(c.status)}`}</span>
+	</li>`;
+const claimed = (DATA.ready.claimed ?? []).filter(c => c.display === "in_progress");
+document.getElementById("ready").innerHTML = claimed.length
+	? `<li class="nextup-devgroup"><h4 style="color:var(--color-in-progress)">▸ In progress</h4>
+		<ul style="list-style:none;margin:0;padding:0">${claimed.map(claimLi).join("")}</ul></li>
+		<li class="nextup-devgroup"><h4>Ready</h4>
+		<ul style="list-style:none;margin:0;padding:0">${readyHtml}</ul></li>`
+	: readyHtml;
 
 /* Nav highlight */
 const links = [...document.querySelectorAll("nav a")];
