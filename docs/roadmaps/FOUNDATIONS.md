@@ -82,8 +82,18 @@ Groundwork across all three areas of the project before either subgame is conten
 
 **Goal:** Finish pulling all engine code into the Riffle repo, with nothing Flyt-specific left behind
 
-- [ ] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there
-- [ ] **8EX.2**: Remove/generalise Flyt-specific remnants from Riffle _(blocked: depends on 8EX.1)_
+- [x] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there _(done)_
+  - Note: findings and recommended disposition per item in docs/reports/RIFFLE_AUDIT.md
+- [ ] **8EX.2**: Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle _(blocked: depends on 8EX.4)_
+  - Note: docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
+- [ ] **8EX.3**: Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md _(blocked: depends on 8EX.2)_
+  - Note: docs/reports/RIFFLE_AUDIT.md F2
+- [ ] **8EX.4**: Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land
+  - Note: docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first
+- [ ] **8EX.5**: Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent _(blocked: depends on 8EX.4)_
+  - Note: docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
+- [ ] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(blocked: depends on 8EX.4)_
+  - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
 
 ---
 
@@ -101,6 +111,8 @@ Groundwork across all three areas of the project before either subgame is conten
 
 - [ ] **10IC.1**: Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD) _(blocked: depends on M9)_
 - [ ] **10IC.2**: Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly _(blocked: depends on 10IC.1)_
+- [ ] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(blocked: depends on 10IC.1)_
+  - Note: docs/reports/RIFFLE_AUDIT.md, reverse-direction section
 
 ---
 
@@ -109,6 +121,7 @@ Groundwork across all three areas of the project before either subgame is conten
 ```mermaid
 graph LR
 	classDef todo fill:#f6f6f6,stroke:#6f6f6f,color:#6f6f6f
+	classDef inProgress fill:#e8f2ff,stroke:#0071af,color:#0071af
 	classDef blocked fill:#fff8f6,stroke:#e0002b,color:#e0002b,stroke-width:2px
 	classDef paused fill:#fdf4ff,stroke:#b01fe3,color:#b01fe3,stroke-dasharray:4 3
 	classDef deferred fill:#fff8f3,stroke:#ac5c00,color:#ac5c00,stroke-dasharray:2 4,font-style:italic
@@ -144,12 +157,17 @@ graph LR
 	7PT.2["7PT.2: Implement progress-tracking feature per…"]
 	M7["M7: Progress Tracking"]:::mile
 	8EX.1["8EX.1: Audit Riffle repo for remaining Flyt-spe…"]
-	8EX.2["8EX.2: Remove/generalise Flyt-specific remnants…"]
+	8EX.4["8EX.4: Reconcile Riffle's README (hand-edited o…"]
+	8EX.2["8EX.2: Move arena.ts out of src/engine/ into a…"]
+	8EX.3["8EX.3: Remove the arena re-export from src/engi…"]
+	8EX.5["8EX.5: Fix doc comments in types.ts and engine.…"]
+	8EX.6["8EX.6: Reword the CompiledGame doc comment in t…"]
 	M8["M8: Clean Extraction"]:::mile
 	9DS.1["9DS.1: Remove auto-sync hook/workflow between F…"]
 	M9["M9: Detach Auto-Sync"]:::mile
 	10IC.1["10IC.1: Publish/package Riffle so it's installa…"]
 	10IC.2["10IC.2: Update Flyt's src/engine/ to import fro…"]
+	10IC.3["10IC.3: Decide compile-dendry.js's relationship…"]
 	M10["M10: Invert to Consumption"]:::mile
 	1ES.1 --> 1ES.2
 	1ES.1 --> 2PE.1
@@ -182,13 +200,26 @@ graph LR
 	6RM.2 --> M6
 	7PT.1 --> 7PT.2
 	7PT.2 --> M7
+	8EX.1 --> 8EX.4
 	8EX.1 --> 8EX.2
-	8EX.2 --> M8
+	8EX.1 --> 8EX.3
+	8EX.1 --> 8EX.5
+	8EX.1 --> 8EX.6
+	8EX.4 --> 8EX.2
+	8EX.4 --> 8EX.5
+	8EX.4 --> 8EX.6
+	8EX.2 --> 8EX.3
+	8EX.3 --> M8
+	8EX.5 --> M8
+	8EX.6 --> M8
 	M8 --> 9DS.1
 	9DS.1 --> M9
 	M9 --> 10IC.1
 	10IC.1 --> 10IC.2
+	10IC.1 --> 10IC.3
 	10IC.2 --> M10
-	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.1 todo
-	class 10IC.1,10IC.2,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,9DS.1 blocked
+	10IC.3 --> M10
+	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.4 todo
+	class 10IC.1,10IC.2,10IC.3,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,8EX.3,8EX.5,8EX.6,9DS.1 blocked
+	class 8EX.1 done
 ```
