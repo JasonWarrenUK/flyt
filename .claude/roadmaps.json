@@ -223,12 +223,49 @@
 					},
 					{
 						"id": "8EX.2",
-						"description": "Remove/generalise Flyt-specific remnants from Riffle",
+						"description": "Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle",
 						"status": "todo",
 						"dependsOn": [
 							"8EX.1"
 						],
-						"notes": "Findings and recommended disposition per item: docs/reports/RIFFLE_AUDIT.md"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F1"
+					},
+					{
+						"id": "8EX.3",
+						"description": "Remove the arena re-export from src/engine/index.ts and update ArenaMap.svelte's import to the new location",
+						"status": "blocked",
+						"dependsOn": [
+							"8EX.1",
+							"8EX.2"
+						],
+						"notes": "docs/reports/RIFFLE_AUDIT.md F2"
+					},
+					{
+						"id": "8EX.4",
+						"description": "Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the arena section and the dead dendrynexus link",
+						"status": "todo",
+						"dependsOn": [
+							"8EX.1"
+						],
+						"notes": "docs/reports/RIFFLE_AUDIT.md F3"
+					},
+					{
+						"id": "8EX.5",
+						"description": "Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent",
+						"status": "todo",
+						"dependsOn": [
+							"8EX.1"
+						],
+						"notes": "docs/reports/RIFFLE_AUDIT.md F4"
+					},
+					{
+						"id": "8EX.6",
+						"description": "Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js",
+						"status": "todo",
+						"dependsOn": [
+							"8EX.1"
+						],
+						"notes": "docs/reports/RIFFLE_AUDIT.md F5"
 					}
 				]
 			},
@@ -267,6 +304,15 @@
 						"dependsOn": [
 							"10IC.1"
 						]
+					},
+					{
+						"id": "10IC.3",
+						"description": "Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/)",
+						"status": "blocked",
+						"dependsOn": [
+							"10IC.1"
+						],
+						"notes": "docs/reports/RIFFLE_AUDIT.md, reverse-direction section"
 					}
 				]
 			}
