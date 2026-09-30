@@ -95,6 +95,10 @@ Groundwork across all three areas of the project before either subgame is conten
   - Note: docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
 - [ ] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(blocked: depends on 8EX.4)_
   - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
+- [ ] **8EX.7**: Separate arena.ts's zone data from its adjacency helpers during the move: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(blocked: depends on 8EX.2)_
+  - Note: docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones
+- [ ] **8EX.8**: Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels) _(blocked: depends on 8EX.3)_
+  - Note: ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI
 
 ---
 
@@ -114,6 +118,7 @@ Groundwork across all three areas of the project before either subgame is conten
 - [ ] **10IC.2**: Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly _(blocked: depends on 10IC.1)_
 - [ ] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(blocked: depends on 10IC.1)_
   - Note: docs/reports/RIFFLE_AUDIT.md, reverse-direction section
+- [ ] **10IC.4**: Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle _(blocked: depends on 10IC.2, 8EX.7)_
 
 ---
 
@@ -127,7 +132,7 @@ graph LR
 	classDef paused fill:#fdf4ff,stroke:#b01fe3,color:#b01fe3,stroke-dasharray:4 3
 	classDef deferred fill:#fff8f3,stroke:#ac5c00,color:#ac5c00,stroke-dasharray:2 4,font-style:italic
 	classDef done fill:#e0ffd9,stroke:#008217,color:#008217
-	classDef outOfScope fill:#f6f6f6,stroke:#e2e2e2,color:#e2e2e2,stroke-dasharray:2 2
+	classDef outOfScope fill:#f6f6f6,stroke:#717171,color:#717171,stroke-dasharray:2 2
 	classDef mile fill:#e3f7ff,stroke:#007590,color:#007590,font-weight:bold
 	classDef external fill:#fff9e5,stroke:#7d6f00,color:#7d6f00,stroke-dasharray:4 3,font-style:italic
 	1ES.1["1ES.1: Design per-entity state schema (patience…"]
@@ -163,12 +168,15 @@ graph LR
 	8EX.3["8EX.3: Remove the arena re-export from src/engi…"]
 	8EX.5["8EX.5: Fix doc comments in types.ts and engine.…"]
 	8EX.6["8EX.6: Reword the CompiledGame doc comment in t…"]
+	8EX.7["8EX.7: Separate arena.ts's zone data from its a…"]
+	8EX.8["8EX.8: Add a CI check that flags PRs touching s…"]
 	M8["M8: Clean Extraction"]:::mile
 	9DS.1["9DS.1: Remove auto-sync hook/workflow between F…"]
 	M9["M9: Detach Auto-Sync"]:::mile
 	10IC.1["10IC.1: Publish/package Riffle so it's installa…"]
 	10IC.2["10IC.2: Update Flyt's src/engine/ to import fro…"]
 	10IC.3["10IC.3: Decide compile-dendry.js's relationship…"]
+	10IC.4["10IC.4: Assess whether the generic zone-graph h…"]
 	M10["M10: Invert to Consumption"]:::mile
 	1ES.1 --> 1ES.2
 	1ES.1 --> 2PE.1
@@ -210,17 +218,22 @@ graph LR
 	8EX.4 --> 8EX.5
 	8EX.4 --> 8EX.6
 	8EX.2 --> 8EX.3
-	8EX.3 --> M8
+	8EX.2 --> 8EX.7
+	8EX.3 --> 8EX.8
 	8EX.5 --> M8
 	8EX.6 --> M8
+	8EX.7 --> M8
+	8EX.7 --> 10IC.4
+	8EX.8 --> M8
 	M8 --> 9DS.1
 	9DS.1 --> M9
 	M9 --> 10IC.1
 	10IC.1 --> 10IC.2
 	10IC.1 --> 10IC.3
-	10IC.2 --> M10
+	10IC.2 --> 10IC.4
 	10IC.3 --> M10
+	10IC.4 --> M10
 	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,8EX.4 todo
-	class 10IC.1,10IC.2,10IC.3,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,8EX.3,8EX.5,8EX.6,9DS.1 blocked
+	class 10IC.1,10IC.2,10IC.3,10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,8EX.3,8EX.5,8EX.6,8EX.7,8EX.8,9DS.1 blocked
 	class 2PE.6,8EX.1 done
 ```

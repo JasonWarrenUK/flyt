@@ -270,6 +270,24 @@
 							"8EX.4"
 						],
 						"notes": "docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it"
+					},
+					{
+						"id": "8EX.7",
+						"description": "Separate arena.ts's zone data from its adjacency helpers during the move: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union",
+						"status": "blocked",
+						"dependsOn": [
+							"8EX.2"
+						],
+						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones"
+					},
+					{
+						"id": "8EX.8",
+						"description": "Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels)",
+						"status": "blocked",
+						"dependsOn": [
+							"8EX.3"
+						],
+						"notes": "ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI"
 					}
 				]
 			},
@@ -317,6 +335,15 @@
 							"10IC.1"
 						],
 						"notes": "docs/reports/RIFFLE_AUDIT.md, reverse-direction section"
+					},
+					{
+						"id": "10IC.4",
+						"description": "Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle",
+						"status": "blocked",
+						"dependsOn": [
+							"10IC.2",
+							"8EX.7"
+						]
 					}
 				]
 			}
