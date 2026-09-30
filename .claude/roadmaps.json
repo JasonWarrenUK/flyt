@@ -37,7 +37,8 @@
 						"status": "blocked",
 						"dependsOn": [
 							"1ES.1"
-						]
+						],
+						"notes": "Must split the model into an engine part (src/engine/, synced to Riffle) and a Flyt part, per the boundary test in docs/adr/0001-riffle-boundary.md"
 					},
 					{
 						"id": "2PE.2",
@@ -74,9 +75,9 @@
 					{
 						"id": "2PE.6",
 						"description": "Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [],
-						"notes": "No hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking."
+						"notes": "Resolved in docs/adr/0001-riffle-boundary.md: Riffle holds game-agnostic mechanism, Flyt holds flyting content; the phrase engine splits across both, line drawn by 2PE.1"
 					}
 				]
 			},
@@ -229,7 +230,7 @@
 							"8EX.1",
 							"8EX.4"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it. Boundary rule: docs/adr/0001-riffle-boundary.md; the chosen location should also host the phrase engine's Flyt half"
 					},
 					{
 						"id": "8EX.3",

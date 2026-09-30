@@ -30,7 +30,7 @@ The original milestone proposal grouped Contest into two milestones (core mechan
 
 Two tasks are worth flagging as non-standard:
 
-- **2PE.6** is a standalone note-task, not a build task: it records an open architectural question (should the phrase engine eventually live in Riffle?) that was explicitly decided *not* to block M2 on. It has no outgoing dependency; it exists purely so the question isn't lost.
+- **2PE.6** is a standalone note-task, not a build task: it records an open architectural question (should the phrase engine eventually live in Riffle?) that was explicitly decided *not* to block M2 on. It has no outgoing dependency; it exists purely so the question isn't lost. Resolved 2026-09-30 in `docs/adr/0001-riffle-boundary.md`.
 - **2PE.5** (round end conditions) has no incoming dependency and can be worked in parallel with 2PE.1-2PE.3, but its output feeds 2PE.4's judging logic.
 
 ## External blockers (flag early)

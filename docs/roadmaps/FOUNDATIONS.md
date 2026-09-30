@@ -20,13 +20,14 @@ Groundwork across all three areas of the project before either subgame is conten
 **Goal:** Build the chained phrase-slot mechanic, extending DendryNexus card mechanics, with unlock conditions and diegetic acclaim judging
 
 - [ ] **2PE.1**: Design phrase-chain data model (subject / response-to-opponent / observed-detail slots) atop DendryNexus card mechanics _(blocked: depends on 1ES.1)_
+  - Note: must split the model into an engine part (src/engine/, synced to Riffle) and a Flyt part, per the boundary test in docs/adr/0001-riffle-boundary.md
 - [ ] **2PE.2**: Implement phrase-slot selection UI (extends card/hand rendering for chained, non-reversible choices) _(blocked: depends on 2PE.1)_
 - [ ] **2PE.3**: Implement unlock-condition resolution (opponent's move + observed events + player history determine available phrase options) _(blocked: depends on 2PE.1)_
 - [ ] **2PE.4**: Implement diegetic acclaim judging (no visible score; world-state narrative reveals relative success/failure each attempt) _(blocked: depends on 2PE.2, 2PE.3)_
 - [ ] **2PE.5**: Design/document round end conditions (fail to match prior acclaim, or fail to construct a coherent attempt)
   - Note: informs 2PE.4's judging logic; can be spec'd in parallel with 2PE.1-2PE.3
-- [ ] **2PE.6**: Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/?
-  - Note: no hard dependency on M10 (Invert to Consumption). Flagged for later reassessment, not blocking.
+- [x] **2PE.6**: Open question: should the phrase engine eventually live in Riffle rather than Flyt's src/engine/? _(done)_
+  - Note: resolved in docs/adr/0001-riffle-boundary.md: Riffle holds game-agnostic mechanism, Flyt holds flyting content; the phrase engine splits across both, line drawn by 2PE.1
 
 ---
 
@@ -85,7 +86,7 @@ Groundwork across all three areas of the project before either subgame is conten
 - [x] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there _(done)_
   - Note: findings and recommended disposition per item in docs/reports/RIFFLE_AUDIT.md
 - [ ] **8EX.2**: Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle _(blocked: depends on 8EX.4)_
-  - Note: docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
+  - Note: docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it. Boundary rule: docs/adr/0001-riffle-boundary.md; the chosen location should also host the phrase engine's Flyt half
 - [ ] **8EX.3**: Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md _(blocked: depends on 8EX.2)_
   - Note: docs/reports/RIFFLE_AUDIT.md F2
 - [ ] **8EX.4**: Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land
@@ -219,7 +220,7 @@ graph LR
 	10IC.1 --> 10IC.3
 	10IC.2 --> M10
 	10IC.3 --> M10
-	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.4 todo
+	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,8EX.4 todo
 	class 10IC.1,10IC.2,10IC.3,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,8EX.3,8EX.5,8EX.6,9DS.1 blocked
-	class 8EX.1 done
+	class 2PE.6,8EX.1 done
 ```
