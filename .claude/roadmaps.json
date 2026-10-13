@@ -296,13 +296,14 @@
 					{
 						"id": "8EX.7",
 						"description": "Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.2"
 						],
 						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones",
 						"assignee": "Jason",
-						"started": "2026-10-13"
+						"started": "2026-10-13",
+						"ended": "2026-10-13"
 					},
 					{
 						"id": "8EX.8",
