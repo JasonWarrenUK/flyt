@@ -1,0 +1,30 @@
+name: Engine Vocabulary Guard
+
+# src/engine/ is mirrored to Riffle and must stay game-agnostic. This fails a
+# PR whose added engine lines carry flyting vocabulary or contest zone labels.
+# Rule and word list: docs/adr/0001-riffle-boundary.md, scripts/check-engine-vocabulary.js
+
+on:
+  pull_request:
+    paths:
+      - 'src/engine/**'
+
+jobs:
+  vocabulary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check added engine lines for flyting vocabulary
+        run: |
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          git diff "origin/${{ github.base_ref }}...HEAD" -- src/engine \
+            | node scripts/check-engine-vocabulary.js
