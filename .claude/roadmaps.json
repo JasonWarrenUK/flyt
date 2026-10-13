@@ -219,12 +219,13 @@
 						"id": "8EX.1",
 						"description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there",
 						"status": "done",
-						"dependsOn": []
+						"dependsOn": [],
+						"ended": "2026-09-25"
 					},
 					{
 						"id": "8EX.2",
 						"description": "Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
@@ -244,18 +245,19 @@
 					{
 						"id": "8EX.4",
 						"description": "Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.1"
 						],
 						"notes": "docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first",
 						"assignee": "Jason",
-						"started": "2026-10-13"
+						"started": "2026-10-13",
+						"ended": "2026-10-13"
 					},
 					{
 						"id": "8EX.5",
 						"description": "Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
@@ -265,7 +267,7 @@
 					{
 						"id": "8EX.6",
 						"description": "Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
