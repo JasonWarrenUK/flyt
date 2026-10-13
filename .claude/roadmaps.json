@@ -282,14 +282,15 @@
 					{
 						"id": "8EX.6",
 						"description": "Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
 						],
 						"notes": "docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
 						"assignee": "Jason",
-						"started": "2026-10-13"
+						"started": "2026-10-13",
+						"ended": "2026-10-13"
 					},
 					{
 						"id": "8EX.7",
