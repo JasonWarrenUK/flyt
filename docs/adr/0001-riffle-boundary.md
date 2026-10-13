@@ -47,9 +47,9 @@ The table is a starting position. 2PE.1 draws the actual line when it designs th
 - The phrase engine is no longer a single unit with one home; it spans both repos by design.
 - 2PE.1 carries an extra deliverable: an explicit engine/Flyt split in its data model.
 - 8EX.2 moves `arena.ts` under this rule. Should zone adjacency later prove generic, it can return to Riffle as mechanism, without the zone data.
-- Flyt-only code needs a home outside `src/engine/` (8EX.2 proposes `src/game/`); the phrase engine's Flyt half should use the same location.
+- Flyt-only code needs a home outside `src/engine/` (8EX.2 chose `src/lib/`); the phrase engine's Flyt half should use the same location.
 - Every addition to `src/engine/` needs a boundary check before merge, since the sync publishes it immediately.
 
 ## Follow-up
 
-A mechanical guard, so the boundary doesn't rely on memory: a check on PRs touching `src/engine/` that flags flyting vocabulary (`acclaim`, `crowd`, `insult`, `flyt`, contest zone names). A hit means the code is in the wrong repo. Not yet on the roadmap.
+A mechanical guard, so the boundary doesn't rely on memory: a check on PRs touching `src/engine/` that flags flyting vocabulary (`acclaim`, `crowd`, `insult`, `flyt`, contest zone names). A hit means the code is in the wrong repo. Tracked as 8EX.8.
