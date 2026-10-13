@@ -84,15 +84,15 @@ Groundwork across all three areas of the project before either subgame is conten
 
 - [x] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there _(done)_
   - Note: findings and recommended disposition per item in docs/reports/RIFFLE_AUDIT.md
-- [ ] **8EX.2**: Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle _(blocked: depends on 8EX.4)_
+- [ ] **8EX.2**: Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle _(done)_
   - Note: docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [ ] **8EX.3**: Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md _(blocked: depends on 8EX.2)_
+- [ ] **8EX.3**: Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md _(done)_
   - Note: docs/reports/RIFFLE_AUDIT.md F2
-- [ ] **8EX.4**: Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land
+- [x] **8EX.4**: Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land _(done)_
   - Note: docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first
-- [ ] **8EX.5**: Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent _(blocked: depends on 8EX.4)_
+- [ ] **8EX.5**: Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent _(depends on 8EX.1, 8EX.4)_
   - Note: docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [ ] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(blocked: depends on 8EX.4)_
+- [ ] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(depends on 8EX.1, 8EX.4)_
   - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
 
 ---
@@ -126,7 +126,7 @@ graph LR
 	classDef paused fill:#fdf4ff,stroke:#b01fe3,color:#b01fe3,stroke-dasharray:4 3
 	classDef deferred fill:#fff8f3,stroke:#ac5c00,color:#ac5c00,stroke-dasharray:2 4,font-style:italic
 	classDef done fill:#e0ffd9,stroke:#008217,color:#008217
-	classDef outOfScope fill:#f6f6f6,stroke:#e2e2e2,color:#e2e2e2,stroke-dasharray:2 2
+	classDef outOfScope fill:#f6f6f6,stroke:#717171,color:#717171,stroke-dasharray:2 2
 	classDef mile fill:#e3f7ff,stroke:#007590,color:#007590,font-weight:bold
 	classDef external fill:#fff9e5,stroke:#7d6f00,color:#7d6f00,stroke-dasharray:4 3,font-style:italic
 	1ES.1["1ES.1: Design per-entity state schema (patience…"]
@@ -219,7 +219,7 @@ graph LR
 	10IC.1 --> 10IC.3
 	10IC.2 --> M10
 	10IC.3 --> M10
-	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.4 todo
-	class 10IC.1,10IC.2,10IC.3,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,8EX.2,8EX.3,8EX.5,8EX.6,9DS.1 blocked
-	class 8EX.1 done
+	class 1ES.1,2PE.5,2PE.6,5AU.1,5AU.2,5AU.3,7PT.1,8EX.5,8EX.6 todo
+	class 10IC.1,10IC.2,10IC.3,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,9DS.1 blocked
+	class 8EX.1,8EX.2,8EX.3,8EX.4 done
 ```

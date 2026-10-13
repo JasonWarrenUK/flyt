@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS, ZONES, areAdjacent, type Zone } from '$engine/arena.js';
+	import { INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS, ZONES, areAdjacent, type Zone } from '$lib/arena.js';
 
 	let { qualities }: { qualities: Record<string, number> } = $props();
 
