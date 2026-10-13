@@ -52,4 +52,4 @@ The table is a starting position. 2PE.1 draws the actual line when it designs th
 
 ## Follow-up
 
-A mechanical guard, so the boundary doesn't rely on memory: a check on PRs touching `src/engine/` that flags flyting vocabulary (`acclaim`, `crowd`, `insult`, `flyt`, contest zone names). A hit means the code is in the wrong repo. Tracked as 8EX.8.
+A mechanical guard, so the boundary doesn't rely on memory: a check on PRs touching `src/engine/` that flags flyting vocabulary (`acclaim`, `crowd`, `insult`, `flyt`, contest zone names). A hit means the code is in the wrong repo. Implemented as `.github/workflows/engine-vocabulary.yml`, which runs `scripts/check-engine-vocabulary.js` over the added lines of any PR touching `src/engine/` (8EX.8). The capitalised proper noun `Flyt`, naming this repository, is allowed; `flyting` and lower-case `flyt` are not.
