@@ -62,7 +62,7 @@ One instance per game session. In Flyt, `src/routes/+page.svelte` owns the insta
 | `error` | `string \| null` | Error message from the last load attempt |
 | `currentScene` | `GameScene \| null` | Derived: the active scene object |
 | `display` | `DisplayContent \| null` | Derived: rendered scene with choices for the UI |
-| `qualityList` | `Array` | Derived: all qualities with current values and definitions |
+| `qualityList` | `{ id, name, value, definition }[]` | Derived: all qualities with current values and definitions |
 | `lastCheck` | `CheckResult \| null` | Result of the most recent difficulty check |
 
 Internally it implements the full DendryNexus feature set: priority/frequency choice selection, the card/deck/hand system, pinned cards, tag-based choices, conditional go-to / go-to-ref / set-root, max-visits filtering, min/max-choices, broad and narrow difficulty checks and content markup rendering. Flyt keeps a reference to the upstream semantics in `docs/dendrynexus-reference.md` at its project root.
