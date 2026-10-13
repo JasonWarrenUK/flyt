@@ -2,6 +2,12 @@
  * Arena topology — defines the concentric-circle layout and adjacency
  * relationships for the flyting contest play area.
  *
+ * The file has two halves. The first is mechanism: a zone shape and three
+ * adjacency helpers that work on any zone map and know nothing about
+ * flyting. The second is Flyt content: the thirteen named contest zones.
+ * The split keeps the mechanism promotable to Riffle on its own
+ * (docs/adr/0001-riffle-boundary.md).
+ *
  * Three rings, each subdivided:
  *   Inner  (3 zones)  — player, centre, opponent
  *   Middle (6 sectors) — crowd/observers around the arena
@@ -11,17 +17,17 @@
  *   "i1"–"i3", "m1"–"m6", "o1"–"o4"
  */
 
-// ── Ring enum ────────────────────────────────────────────────────────
+// ── Mechanism: zone shape ────────────────────────────────────────────
 
-export type Ring = 'inner' | 'middle' | 'outer';
-
-// ── Zone definition ──────────────────────────────────────────────────
-
-export interface Zone {
+/**
+ * A zone in a ring-based arena. `R` is the set of ring names a given
+ * arena uses; the mechanism never assumes which names those are.
+ */
+export interface Zone<R extends string = string> {
 	/** Unique zone ID, e.g. "m3" */
 	id: string;
 	/** Which ring this zone belongs to */
-	ring: Ring;
+	ring: R;
 	/** Numeric index within its ring (matches the quality value) */
 	index: number;
 	/** Human-readable label */
@@ -29,6 +35,39 @@ export interface Zone {
 	/** IDs of all zones sharing an edge with this one */
 	adjacent: string[];
 }
+
+/** Every zone in an arena, keyed by zone ID */
+export type ZoneMap<R extends string = string> = Record<string, Zone<R>>;
+
+// ── Mechanism: adjacency helpers ─────────────────────────────────────
+
+/** Build a zone map from one or more zone lists */
+export function buildZoneMap<R extends string>(...groups: Zone<R>[][]): ZoneMap<R> {
+	return Object.fromEntries(groups.flat().map(z => [z.id, z]));
+}
+
+/** Get a zone by its ring and index (e.g. ring='middle', index=3 → m3) */
+export function getZone<R extends string>(zones: ZoneMap<R>, ring: R, index: number): Zone<R> | undefined {
+	return Object.values(zones).find(z => z.ring === ring && z.index === index);
+}
+
+/** Get all zones adjacent to a given zone ID */
+export function getAdjacent<R extends string>(zones: ZoneMap<R>, zoneId: string): Zone<R>[] {
+	const zone = zones[zoneId];
+	if (!zone) return [];
+	return zone.adjacent.map(id => zones[id]).filter((z): z is Zone<R> => z !== undefined);
+}
+
+/** Check whether two zone IDs share an edge */
+export function areAdjacent<R extends string>(zones: ZoneMap<R>, a: string, b: string): boolean {
+	const zone = zones[a];
+	return zone ? zone.adjacent.includes(b) : false;
+}
+
+// ── Flyt content: the contest arena ──────────────────────────────────
+
+/** The three rings of the flyting contest arena */
+export type Ring = 'inner' | 'middle' | 'outer';
 
 // ── Inner circle (3 zones, divided by parallel chords) ──────────────
 //
@@ -40,7 +79,7 @@ export interface Zone {
 //      i2 (centre) faces m2, m3, m5, m6  (the chord-band spans both flanks)
 //      i3 (top)    faces m3, m4, m5
 
-export const INNER_ZONES: Zone[] = [
+export const INNER_ZONES: Zone<Ring>[] = [
 	{
 		id: 'i1', ring: 'inner', index: 1,
 		label: 'Player\'s End',
@@ -82,7 +121,7 @@ export const INNER_ZONES: Zone[] = [
 //      m5 (  0°– 60°) → straddles o3 and o4
 //      m6 (300°–360°) → straddles o4 and o1
 
-export const MIDDLE_SECTORS: Zone[] = [
+export const MIDDLE_SECTORS: Zone<Ring>[] = [
 	{
 		id: 'm1', ring: 'middle', index: 1,
 		label: 'Behind Player',
@@ -123,7 +162,7 @@ export const MIDDLE_SECTORS: Zone[] = [
 //      3 = beyond opponent  (centred at  90°, spanning  45°–135°)
 //      4 = right            (centred at   0°, spanning 315°– 45°)
 
-export const OUTER_QUARTERS: Zone[] = [
+export const OUTER_QUARTERS: Zone<Ring>[] = [
 	{
 		id: 'o1', ring: 'outer', index: 1,
 		label: 'Behind Player',
@@ -146,28 +185,5 @@ export const OUTER_QUARTERS: Zone[] = [
 	},
 ];
 
-// ── Aggregate lookups ────────────────────────────────────────────────
-
-/** All zones in the arena, keyed by ID */
-export const ZONES: Record<string, Zone> = Object.fromEntries(
-	[...INNER_ZONES, ...MIDDLE_SECTORS, ...OUTER_QUARTERS].map(z => [z.id, z])
-);
-
-/** Get a zone by its ring and index (e.g. ring='middle', index=3 → m3) */
-export function getZone(ring: Ring, index: number): Zone | undefined {
-	const prefix = ring[0]; // 'i', 'm', 'o'
-	return ZONES[`${prefix}${index}`];
-}
-
-/** Get all zones adjacent to a given zone ID */
-export function getAdjacent(zoneId: string): Zone[] {
-	const zone = ZONES[zoneId];
-	if (!zone) return [];
-	return zone.adjacent.map(id => ZONES[id]).filter(Boolean);
-}
-
-/** Check whether two zone IDs share an edge */
-export function areAdjacent(a: string, b: string): boolean {
-	const zone = ZONES[a];
-	return zone ? zone.adjacent.includes(b) : false;
-}
+/** All zones in the contest arena, keyed by ID */
+export const ZONES: ZoneMap<Ring> = buildZoneMap(INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS);
