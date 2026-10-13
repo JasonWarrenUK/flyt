@@ -287,7 +287,7 @@
 					},
 					{
 						"id": "8EX.7",
-						"description": "Separate arena.ts's zone data from its adjacency helpers during the move: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union",
+						"description": "Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union",
 						"status": "todo",
 						"dependsOn": [
 							"8EX.2"
