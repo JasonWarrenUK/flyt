@@ -91,11 +91,11 @@ Groundwork across all three areas of the project before either subgame is conten
   - Note: docs/reports/RIFFLE_AUDIT.md F2
 - [x] **8EX.4**: Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land _(done)_
   - Note: docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first
-- [ ] **8EX.5**: Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent _(depends on 8EX.1, 8EX.4)_
+- [x] **8EX.5**: Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent _(done)_
   - Note: docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [ ] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(depends on 8EX.1, 8EX.4)_
+- [x] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(done)_
   - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [ ] **8EX.7**: Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(depends on 8EX.2)_
+- [x] **8EX.7**: Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(done)_
   - Note: docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones
 - [ ] **8EX.8**: Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels) _(depends on 8EX.3)_
   - Note: ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI
@@ -233,7 +233,7 @@ graph LR
 	10IC.2 --> 10IC.4
 	10IC.3 --> M10
 	10IC.4 --> M10
-	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,8EX.5,8EX.6,8EX.7,8EX.8 todo
+	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,8EX.8 todo
 	class 10IC.1,10IC.2,10IC.3,10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,9DS.1 blocked
-	class 2PE.6,8EX.1,8EX.2,8EX.3,8EX.4 done
+	class 2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7 done
 ```

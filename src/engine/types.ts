@@ -1,8 +1,14 @@
 /**
- * Types representing DendryNexus compiled game data (game.json).
+ * Types for the compiled game JSON the engine consumes.
  *
- * These mirror the structure output by `dendrynexus compile`.
- * See docs/dendrynexus-reference.md for full feature documentation.
+ * `CompiledGame` is the engine's input contract: any compiler that
+ * produces this shape will do. Flyt's own `scripts/compile-dendry.js`
+ * is one such producer, parsing DendryNexus-style `.dry` files; the
+ * upstream `dendrynexus compile` output is the model these types follow,
+ * not their definition.
+ * Upstream semantics: https://github.com/aucchen/dendrynexus
+ * (Flyt also keeps a feature reference at docs/dendrynexus-reference.md
+ * in its own repo; that file is not part of the engine.)
  */
 
 export interface GameScene {

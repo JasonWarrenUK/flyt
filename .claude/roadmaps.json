@@ -268,31 +268,43 @@
 					{
 						"id": "8EX.5",
 						"description": "Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
+						"assignee": "Jason",
+						"started": "2026-10-13",
+						"ended": "2026-10-13",
+						"pr": 19
 					},
 					{
 						"id": "8EX.6",
 						"description": "Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
+						"assignee": "Jason",
+						"started": "2026-10-13",
+						"ended": "2026-10-13",
+						"pr": 20
 					},
 					{
 						"id": "8EX.7",
 						"description": "Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.2"
 						],
-						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones"
+						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones",
+						"assignee": "Jason",
+						"started": "2026-10-13",
+						"ended": "2026-10-13",
+						"pr": 22
 					},
 					{
 						"id": "8EX.8",
