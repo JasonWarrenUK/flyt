@@ -303,7 +303,8 @@
 						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones",
 						"assignee": "Jason",
 						"started": "2026-10-13",
-						"ended": "2026-10-13"
+						"ended": "2026-10-13",
+						"pr": 22
 					},
 					{
 						"id": "8EX.8",
