@@ -230,7 +230,9 @@
 							"8EX.1",
 							"8EX.4"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
+						"assignee": "Jason",
+						"started": "2026-10-13"
 					},
 					{
 						"id": "8EX.3",
