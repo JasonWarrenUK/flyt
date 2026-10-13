@@ -13,7 +13,6 @@ This directory is the canonical source. It is mirrored one way to [`JasonWarrenU
 - **Card/deck/hand system**: draw, play and discard cards across multiple hands with pinned cards, max hand sizes and per-hand state
 - **Quality system**: named attributes with typed display (`integer`, `fudge`, `onOff`, `wordScale`, `raw`) and min/max clamping
 - **Content rendering**: quality interpolation (`[+ qualityName +]`), conditional text (`[? if condition : text ?]`), `*italic*` and `**bold**`
-- **Arena topology**: concentric-ring spatial system (inner/middle/outer, 13 zones) with adjacency relationships. Flyt game content that has moved to `src/lib/arena.ts`; the barrel still re-exports it for now, see "Arena" below
 
 ## Structure
 
@@ -85,22 +84,6 @@ Plain interfaces for compiled game data (`GameScene`, `SceneOption`, `Conditiona
 | > 90% | straightforward |
 
 Broad checks: `success = scaler * (stat / difficulty)`, default scaler 0.6. Narrow checks: `success = 0.5 + (stat - difficulty) * increment`, default increment 0.1. A scaler or increment above 1 is treated as a percentage.
-
-### Arena (`src/lib/arena.ts`, outside this directory)
-
-Standalone module (no dependency on the engine or on DendryNexus data) defining the flyting contest's play area: three concentric rings, each subdivided into zones with an adjacency graph. This is Flyt game content rather than engine infrastructure, so it lives in Flyt's `src/lib/` and is not mirrored to Riffle. The barrel still re-exports it so existing `$engine` imports keep working; that re-export is scheduled for removal, at which point this section goes with it. New code should import from `$lib/arena.js` directly.
-
-```ts
-import { ZONES, getZone, getAdjacent, areAdjacent, INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS } from '$lib/arena.js';
-import type { Ring, Zone } from '$lib/arena.js';
-
-getZone('middle', 3);           // the Zone for "m3"
-getAdjacent('i2');              // Zone[] sharing an edge with the centre ground
-areAdjacent('m1', 'o1');        // true
-ZONES['i1'].label;              // "Player's End"
-```
-
-Zone IDs are ring-prefixed: `i1` to `i3` (inner: player, centre, opponent), `m1` to `m6` (middle: crowd sectors), `o1` to `o4` (outer: distant quarters). The adjacency lists and the degree mapping between rings are documented in the comments at the top of the file; read those before changing any `adjacent` array, since they encode the geometry, not an arbitrary graph.
 
 ## Requirements
 
