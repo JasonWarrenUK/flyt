@@ -95,7 +95,7 @@ Groundwork across all three areas of the project before either subgame is conten
   - Note: docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
 - [ ] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(depends on 8EX.1, 8EX.4)_
   - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [ ] **8EX.7**: Separate arena.ts's zone data from its adjacency helpers during the move: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(depends on 8EX.2)_
+- [ ] **8EX.7**: Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(depends on 8EX.2)_
   - Note: docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones
 - [ ] **8EX.8**: Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels) _(depends on 8EX.3)_
   - Note: ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI
@@ -168,7 +168,7 @@ graph LR
 	8EX.3["8EX.3: Remove the arena re-export from src/engi…"]
 	8EX.5["8EX.5: Fix doc comments in types.ts and engine.…"]
 	8EX.6["8EX.6: Reword the CompiledGame doc comment in t…"]
-	8EX.7["8EX.7: Separate arena.ts's zone data from its a…"]
+	8EX.7["8EX.7: Separate the zone data in src/lib/arena.…"]
 	8EX.8["8EX.8: Add a CI check that flags PRs touching s…"]
 	M8["M8: Clean Extraction"]:::mile
 	9DS.1["9DS.1: Remove auto-sync hook/workflow between F…"]
