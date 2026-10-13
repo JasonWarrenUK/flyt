@@ -239,14 +239,15 @@
 					{
 						"id": "8EX.3",
 						"description": "Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.2"
 						],
 						"notes": "docs/reports/RIFFLE_AUDIT.md F2",
 						"assignee": "Jason",
-						"started": "2026-10-13"
+						"started": "2026-10-13",
+						"ended": "2026-10-13"
 					},
 					{
 						"id": "8EX.4",
