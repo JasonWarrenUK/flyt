@@ -248,7 +248,9 @@
 						"dependsOn": [
 							"8EX.1"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first",
+						"assignee": "Jason",
+						"started": "2026-10-13"
 					},
 					{
 						"id": "8EX.5",
