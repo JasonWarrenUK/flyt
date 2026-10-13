@@ -300,7 +300,9 @@
 						"dependsOn": [
 							"8EX.2"
 						],
-						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones"
+						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones",
+						"assignee": "Jason",
+						"started": "2026-10-13"
 					},
 					{
 						"id": "8EX.8",
