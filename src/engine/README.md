@@ -13,7 +13,7 @@ This directory is the canonical source. It is mirrored one way to [`JasonWarrenU
 - **Card/deck/hand system**: draw, play and discard cards across multiple hands with pinned cards, max hand sizes and per-hand state
 - **Quality system**: named attributes with typed display (`integer`, `fudge`, `onOff`, `wordScale`, `raw`) and min/max clamping
 - **Content rendering**: quality interpolation (`[+ qualityName +]`), conditional text (`[? if condition : text ?]`), `*italic*` and `**bold**`
-- **Arena topology**: concentric-ring spatial system (inner/middle/outer, 13 zones) with adjacency relationships. Flyt-specific and due to move out of the engine; see "Arena" below
+- **Arena topology**: concentric-ring spatial system (inner/middle/outer, 13 zones) with adjacency relationships. Flyt game content that has moved to `src/lib/arena.ts`; the barrel still re-exports it for now, see "Arena" below
 
 ## Structure
 
@@ -21,7 +21,6 @@ This directory is the canonical source. It is mirrored one way to [`JasonWarrenU
 index.ts              Barrel export; add new public exports here, not by reaching into individual files
 engine.svelte.ts      RiffleEngine, the reactive game-state class
 types.ts              TypeScript contracts for compiled game data and runtime state
-arena.ts              Arena topology and spatial adjacency utilities
 ```
 
 ## Usage
@@ -87,13 +86,13 @@ Plain interfaces for compiled game data (`GameScene`, `SceneOption`, `Conditiona
 
 Broad checks: `success = scaler * (stat / difficulty)`, default scaler 0.6. Narrow checks: `success = 0.5 + (stat - difficulty) * increment`, default increment 0.1. A scaler or increment above 1 is treated as a percentage.
 
-### Arena (`arena.ts`)
+### Arena (`src/lib/arena.ts`, outside this directory)
 
-Standalone module (no dependency on the engine or on DendryNexus data) defining the flyting contest's play area: three concentric rings, each subdivided into zones with an adjacency graph. This is Flyt game content rather than engine infrastructure and is due to leave this directory; it stays documented here until that lands.
+Standalone module (no dependency on the engine or on DendryNexus data) defining the flyting contest's play area: three concentric rings, each subdivided into zones with an adjacency graph. This is Flyt game content rather than engine infrastructure, so it lives in Flyt's `src/lib/` and is not mirrored to Riffle. The barrel still re-exports it so existing `$engine` imports keep working; that re-export is scheduled for removal, at which point this section goes with it. New code should import from `$lib/arena.js` directly.
 
 ```ts
-import { ZONES, getZone, getAdjacent, areAdjacent, INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS } from '$engine';
-import type { Ring, Zone } from '$engine';
+import { ZONES, getZone, getAdjacent, areAdjacent, INNER_ZONES, MIDDLE_SECTORS, OUTER_QUARTERS } from '$lib/arena.js';
+import type { Ring, Zone } from '$lib/arena.js';
 
 getZone('middle', 3);           // the Zone for "m3"
 getAdjacent('i2');              // Zone[] sharing an edge with the centre ground
