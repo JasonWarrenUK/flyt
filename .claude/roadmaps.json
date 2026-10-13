@@ -268,14 +268,15 @@
 					{
 						"id": "8EX.5",
 						"description": "Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.1",
 							"8EX.4"
 						],
 						"notes": "docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
 						"assignee": "Jason",
-						"started": "2026-10-13"
+						"started": "2026-10-13",
+						"ended": "2026-10-13"
 					},
 					{
 						"id": "8EX.6",
