@@ -247,7 +247,8 @@
 						"notes": "docs/reports/RIFFLE_AUDIT.md F2",
 						"assignee": "Jason",
 						"started": "2026-10-13",
-						"ended": "2026-10-13"
+						"ended": "2026-10-13",
+						"pr": 15
 					},
 					{
 						"id": "8EX.4",
