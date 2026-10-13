@@ -244,7 +244,9 @@
 							"8EX.1",
 							"8EX.2"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F2"
+						"notes": "docs/reports/RIFFLE_AUDIT.md F2",
+						"assignee": "Jason",
+						"started": "2026-10-13"
 					},
 					{
 						"id": "8EX.4",
