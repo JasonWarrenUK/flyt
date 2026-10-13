@@ -309,13 +309,14 @@
 					{
 						"id": "8EX.8",
 						"description": "Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels)",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"8EX.3"
 						],
 						"notes": "ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI",
 						"assignee": "Jason",
-						"started": "2026-10-14"
+						"started": "2026-10-14",
+						"ended": "2026-10-14"
 					}
 				]
 			},
@@ -327,7 +328,7 @@
 					{
 						"id": "9DS.1",
 						"description": "Remove auto-sync hook/workflow between Flyt and Riffle repos",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"M8"
 						]

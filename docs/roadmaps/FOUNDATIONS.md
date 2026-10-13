@@ -97,7 +97,7 @@ Groundwork across all three areas of the project before either subgame is conten
   - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
 - [x] **8EX.7**: Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(done)_
   - Note: docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones
-- [ ] **8EX.8**: Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels) _(depends on 8EX.3)_
+- [x] **8EX.8**: Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels) _(done)_
   - Note: ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI
 
 ---
@@ -106,7 +106,7 @@ Groundwork across all three areas of the project before either subgame is conten
 
 **Goal:** Remove the current one-way auto-sync mechanism between Flyt and Riffle
 
-- [ ] **9DS.1**: Remove auto-sync hook/workflow between Flyt and Riffle repos _(blocked: depends on M8)_
+- [ ] **9DS.1**: Remove auto-sync hook/workflow between Flyt and Riffle repos _(depends on M8)_
 
 ---
 
@@ -233,7 +233,7 @@ graph LR
 	10IC.2 --> 10IC.4
 	10IC.3 --> M10
 	10IC.4 --> M10
-	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,8EX.8 todo
-	class 10IC.1,10IC.2,10IC.3,10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2,9DS.1 blocked
-	class 2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7 done
+	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,9DS.1 todo
+	class 10IC.1,10IC.2,10IC.3,10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
+	class 2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7,8EX.8 done
 ```
