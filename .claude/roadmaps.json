@@ -316,7 +316,8 @@
 						"notes": "ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI",
 						"assignee": "Jason",
 						"started": "2026-10-14",
-						"ended": "2026-10-14"
+						"ended": "2026-10-14",
+						"pr": 24
 					}
 				]
 			},
