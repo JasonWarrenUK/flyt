@@ -2,7 +2,9 @@
  * Types representing DendryNexus compiled game data (game.json).
  *
  * These mirror the structure output by `dendrynexus compile`.
- * See docs/dendrynexus-reference.md for full feature documentation.
+ * Upstream semantics: https://github.com/aucchen/dendrynexus
+ * (Flyt also keeps a feature reference at docs/dendrynexus-reference.md
+ * in its own repo; that file is not part of the engine.)
  */
 
 export interface GameScene {

@@ -12,7 +12,9 @@
  * - Conditional text rendering
  * - Difficulty labels on choices
  *
- * See docs/dendrynexus-reference.md for upstream behaviour.
+ * Upstream behaviour: https://github.com/aucchen/dendrynexus
+ * (Flyt also keeps a feature reference at docs/dendrynexus-reference.md
+ * in its own repo; that file is not part of the engine.)
  */
 
 import type {
