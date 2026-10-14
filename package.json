@@ -9,6 +9,7 @@
 		"preview": "vite preview",
 		"compile:dendry": "node scripts/compile-dendry.js",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:engine-vocab": "git diff origin/main...HEAD -- src/engine | node scripts/check-engine-vocabulary.js",
 		"test": "vitest run"
 	},
 	"devDependencies": {
