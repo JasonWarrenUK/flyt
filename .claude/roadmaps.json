@@ -347,11 +347,12 @@
 				"tasks": [
 					{
 						"id": "10IC.1",
-						"description": "Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD)",
+						"description": "Publish Riffle to npm as @jasonwarrenuk/riffle so it's installable",
 						"status": "todo",
 						"dependsOn": [
 							"M9"
 						],
+						"notes": "Method decided: npm, scoped because the bare name riffle is an unrelated package. Packaging done and verified in JasonWarrenUK/riffle PR 1 (a throwaway Flyt built against the packed tarball). Remaining before done: add a licence to the Riffle repo, merge that PR, npm login, npm publish --access public",
 						"assignee": "Jason",
 						"started": "2026-10-14"
 					},
