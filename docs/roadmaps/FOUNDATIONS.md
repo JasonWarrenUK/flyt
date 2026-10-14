@@ -106,7 +106,7 @@ Groundwork across all three areas of the project before either subgame is conten
 
 **Goal:** Remove the current one-way auto-sync mechanism between Flyt and Riffle
 
-- [ ] **9DS.1**: Remove auto-sync hook/workflow between Flyt and Riffle repos _(depends on M8)_
+- [x] **9DS.1**: Remove auto-sync hook/workflow between Flyt and Riffle repos _(done)_
 
 ---
 
@@ -114,7 +114,7 @@ Groundwork across all three areas of the project before either subgame is conten
 
 **Goal:** Flyt installs/imports Riffle as a dependency instead of housing the engine directly
 
-- [ ] **10IC.1**: Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD) _(blocked: depends on M9)_
+- [ ] **10IC.1**: Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD) _(depends on M9)_
 - [ ] **10IC.2**: Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly _(blocked: depends on 10IC.1)_
 - [ ] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(blocked: depends on 10IC.1)_
   - Note: docs/reports/RIFFLE_AUDIT.md, reverse-direction section
@@ -233,7 +233,7 @@ graph LR
 	10IC.2 --> 10IC.4
 	10IC.3 --> M10
 	10IC.4 --> M10
-	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1,9DS.1 todo
-	class 10IC.1,10IC.2,10IC.3,10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
-	class 2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7,8EX.8 done
+	class 10IC.1,1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
+	class 10IC.2,10IC.3,10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
+	class 2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7,8EX.8,9DS.1 done
 ```

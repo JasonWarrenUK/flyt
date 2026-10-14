@@ -329,12 +329,13 @@
 					{
 						"id": "9DS.1",
 						"description": "Remove auto-sync hook/workflow between Flyt and Riffle repos",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"M8"
 						],
 						"assignee": "Jason",
-						"started": "2026-10-14"
+						"started": "2026-10-14",
+						"ended": "2026-10-14"
 					}
 				]
 			},
@@ -346,7 +347,7 @@
 					{
 						"id": "10IC.1",
 						"description": "Publish/package Riffle so it's installable (npm package, git dependency, or workspace link, method TBD)",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"M9"
 						]
