@@ -1,7 +1,7 @@
 /**
  * Engine vocabulary guard (docs/adr/0001-riffle-boundary.md, follow-up).
  *
- * src/engine/ is mirrored verbatim to Riffle, which must stay game-agnostic.
+ * src/engine/ is the Riffle engine's source and must stay game-agnostic.
  * This script reads a unified diff on stdin and fails when a line ADDED under
  * src/engine/ carries flyting vocabulary: the game's own concepts (acclaim,
  * crowd, insult, flyting) or one of the contest arena's zone labels. A hit
@@ -160,7 +160,7 @@ export function formatReport(hits) {
 	if (hits.length === 0) return 'engine vocabulary: clean';
 	const lines = hits.map(h => `${h.file}:${h.line}: ${h.matches.join(', ')}\n    ${h.text.trim()}`);
 	const noun = hits.length === 1 ? 'line' : 'lines';
-	return `engine vocabulary: ${hits.length} ${noun} under ${GUARDED_PREFIX} carry flyting vocabulary\n${lines.join('\n')}\n\nThe engine is mirrored to Riffle and must stay game-agnostic (docs/adr/0001-riffle-boundary.md). Move the content to Flyt, or mark a reviewed line with ${ALLOW_MARKER}.`;
+	return `engine vocabulary: ${hits.length} ${noun} under ${GUARDED_PREFIX} carry flyting vocabulary\n${lines.join('\n')}\n\nsrc/engine/ is the Riffle engine's source and must stay game-agnostic (docs/adr/0001-riffle-boundary.md). Move the content to Flyt, or mark a reviewed line with ${ALLOW_MARKER}.`;
 }
 
 function main(argv) {

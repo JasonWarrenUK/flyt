@@ -2,7 +2,7 @@
 
 A Svelte 5 reactive game engine for interactive fiction compiled from [DendryNexus](https://github.com/aucchen/dendrynexus) story files. Riffle wraps compiled game JSON in a fully reactive runtime: branching narrative, player choices, difficulty checks, card/deck mechanics and quality systems.
 
-This directory is the canonical source. It is mirrored one way to [`JasonWarrenUK/riffle`](https://github.com/JasonWarrenUK/riffle) by Flyt's `sync-engine.yml` workflow on every push to `main` that touches it, so edit the README here rather than on the mirror.
+This directory is the canonical source. [`JasonWarrenUK/riffle`](https://github.com/JasonWarrenUK/riffle) holds a snapshot of it from when a one-way sync workflow still ran; that sync has been removed, and the next step on the roadmap (M10) publishes Riffle as a package that Flyt consumes. Until then, edit the engine here.
 
 ## Features
 

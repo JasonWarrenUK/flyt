@@ -8,7 +8,7 @@
 
 ## Context
 
-Riffle (`JasonWarrenUK/riffle`) is the engine extracted from Flyt's `src/engine/`. Until M9 lands, `.github/workflows/sync-engine.yml` mirrors that directory to Riffle on every push to `main`, so anything placed there becomes part of Riffle's public API.
+Riffle (`JasonWarrenUK/riffle`) is the engine extracted from Flyt's `src/engine/`. Until M9 landed, `.github/workflows/sync-engine.yml` mirrored that directory to Riffle on every push to `main`, so anything placed there became part of Riffle's public API. The sync is gone (9DS.1); M10 replaces it with Riffle published as a package that Flyt consumes. `src/engine/` remains the engine's canonical source until then, and the same rule applies: anything placed there is engine, not game.
 
 `arena.ts` shows the cost of getting this wrong: thirteen hardcoded contest zones went into `src/engine/`, were mirrored to Riffle and now take three M8 tasks to remove (`docs/reports/RIFFLE_AUDIT.md`, F1 and F2).
 
@@ -48,7 +48,7 @@ The table is a starting position. 2PE.1 draws the actual line when it designs th
 - 2PE.1 carries an extra deliverable: an explicit engine/Flyt split in its data model.
 - 8EX.2 moves `arena.ts` under this rule. Should zone adjacency later prove generic, it can return to Riffle as mechanism, without the zone data.
 - Flyt-only code needs a home outside `src/engine/` (8EX.2 chose `src/lib/`); the phrase engine's Flyt half should use the same location.
-- Every addition to `src/engine/` needs a boundary check before merge, since the sync publishes it immediately.
+- Every addition to `src/engine/` needs a boundary check before merge: it is the engine's source, and whatever is there when M10 publishes Riffle becomes the package.
 
 ## Follow-up
 
