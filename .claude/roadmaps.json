@@ -385,14 +385,16 @@
 					{
 						"id": "10IC.4",
 						"description": "Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"10IC.2",
 							"8EX.7"
 						],
-						"notes": "Assessed in docs/reports/ZONE_GRAPH_ASSESSMENT.md: the helpers pass, the data does not. Promotion PR open in the Riffle repo (feat/zone-graph). Remaining before done: merge and release Riffle with the zone-graph exports, bump Flyt, then arena.ts keeps the data and imports the helpers from the package",
+						"notes": "Done: assessed in docs/reports/ZONE_GRAPH_ASSESSMENT.md; promoted in Riffle PR 4 and released as 1.1.0; Flyt now depends on ^1.1.0 and arena.ts holds only the contest data",
 						"assignee": "Jason",
-						"started": "2026-10-15"
+						"started": "2026-10-15",
+						"ended": "2026-10-15",
+						"pr": 32
 					},
 					{
 						"id": "10IC.5",
