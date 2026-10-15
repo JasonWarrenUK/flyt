@@ -39,7 +39,7 @@ scripts/
 
 src/
   lib/                          # Flyt-only code that is not UI
-    arena.ts                    # Contest arena zones and adjacency helpers
+    arena.ts                    # The thirteen contest arena zones (helpers come from the Riffle package)
     riffle.test.ts              # Smoke test that the engine package loads Flyt's JSON shape
   components/                   # UI components
     SceneView.svelte            # Renders current scene + choices

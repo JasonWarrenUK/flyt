@@ -28,17 +28,15 @@ The helpers pass. The data fails, as ADR 0001 said it would.
 
 ## Decision
 
-Promote the helpers to Riffle as a `zone-graph` module, exported from the package root. Flyt's `arena.ts` keeps the data and imports the mechanism from `@jasonwarrenuk/riffle`.
+Promote the helpers to Riffle as a `zone-graph` module, exported from the package root. Flyt's `arena.ts` keeps the data and imports the mechanism from `@jasonwarrenuk/riffle`, which is how it now stands.
 
 One improvement goes in with the move, from the review on Flyt PR #22: `buildZoneMap` throws on a duplicate zone ID instead of letting the last one win. In Flyt the thirteen hand-written zones made that harmless; as package mechanism fed by arbitrary content, a loud failure at build time beats a quiet adjacency bug later.
 
-## What this task does and does not finish
+## Outcome
 
-Done in this task:
+All of it is done:
 
 - This assessment.
-- The Riffle PR adding `src/lib/zone-graph.ts`, its tests and the exports.
-
-Not done until the Riffle release lands:
-
-- Flyt's `arena.ts` dropping its own copies of the helpers in favour of the package imports. That needs a published Riffle version carrying the exports, then a version bump here. The roadmap task stays open with a note until both have happened; the swap is a small follow-up PR.
+- Riffle PR #4 added `src/lib/zone-graph.ts`, its tests and the exports, and shipped in `@jasonwarrenuk/riffle` 1.1.0. A review of that PR caught a bug the Flyt original shared: zone IDs that match `Object.prototype` members (`constructor`, `toString`) misbehaved on a plain-object map. The package fixed it with a prototype-free map and a regression test.
+- Flyt now depends on `^1.1.0`. `src/lib/arena.ts` holds only the thirteen contest zones, builds them with the package's `buildZoneMap` and imports its types from the package. `ArenaMap.svelte` imports the `Zone` type from the package too.
+- Flyt's own tests for the helpers were removed with the helpers, because they now live in Riffle. `src/lib/arena.test.ts` keeps what is Flyt's: the thirteen zones, the documented lookups through the package helpers, the ID-suffix convention and symmetric adjacency.
