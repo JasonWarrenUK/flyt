@@ -70,7 +70,8 @@ export function groupName(file) {
  * @returns {string[]}
  */
 export function identifiersRead(text) {
-	const rhs = text.includes('=') && !/[<>!=]=|<|>/.test(text.split('=')[0]) ? text.slice(text.indexOf('=') + 1) : text;
+	const assignment = text.match(/^\s*[a-z_][a-z0-9_]*\s*=(?!=)([\s\S]*)$/);
+	const rhs = assignment ? assignment[1] : text;
 	return [...new Set((rhs.match(/\b[a-z_][a-z0-9_]*\b/g) ?? []).filter((id) => !EXPRESSION_KEYWORDS.has(id)))];
 }
 

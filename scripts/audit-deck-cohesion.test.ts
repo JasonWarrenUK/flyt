@@ -32,6 +32,12 @@ describe('identifiersRead and assignmentTargets', () => {
 		expect(identifiersRead('gold >= 2 and not key')).toEqual(['gold', 'key']);
 	});
 
+	it('keeps the quality in equality and inequality predicates', () => {
+		expect(identifiersRead('key == 1')).toEqual(['key']);
+		expect(identifiersRead('key != 1')).toEqual(['key']);
+		expect(identifiersRead('gold == silver')).toEqual(['gold', 'silver']);
+	});
+
 	it('reads only the right-hand side of an assignment', () => {
 		expect(identifiersRead('gold = silver + 1')).toEqual(['silver']);
 		expect(assignmentTargets(['gold = gold + 1', 'key = 1'])).toEqual(['gold', 'key']);
