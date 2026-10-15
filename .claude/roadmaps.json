@@ -363,7 +363,9 @@
 						"status": "todo",
 						"dependsOn": [
 							"10IC.1"
-						]
+						],
+						"assignee": "Jason",
+						"started": "2026-10-15"
 					},
 					{
 						"id": "10IC.3",
