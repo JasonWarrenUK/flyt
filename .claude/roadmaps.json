@@ -390,6 +390,7 @@
 							"10IC.2",
 							"8EX.7"
 						],
+						"notes": "Assessed in docs/reports/ZONE_GRAPH_ASSESSMENT.md: the helpers pass, the data does not. Promotion PR open in the Riffle repo (feat/zone-graph). Remaining before done: merge and release Riffle with the zone-graph exports, bump Flyt, then arena.ts keeps the data and imports the helpers from the package",
 						"assignee": "Jason",
 						"started": "2026-10-15"
 					},
