@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DisplayContent, CheckResult } from '$engine';
+	import type { DisplayContent, CheckResult } from '@jasonwarrenuk/riffle';
 	import CheckResultBanner from '$components/CheckResultBanner.svelte';
 
 	let {

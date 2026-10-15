@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CheckResult } from '$engine';
+	import type { CheckResult } from '@jasonwarrenuk/riffle';
 
 	let { result }: { result: CheckResult } = $props();
 </script>
