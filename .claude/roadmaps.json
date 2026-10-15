@@ -379,7 +379,8 @@
 						"notes": "Decided in docs/adr/0002-compiler-home.md: the compiler moves into Riffle as a CLI, with its Flyt-specific parts (title fallback, story/ and static/ roots, subgame convention) parameterised. 10IC.5 carries out the move",
 						"assignee": "Jason",
 						"started": "2026-10-15",
-						"ended": "2026-10-15"
+						"ended": "2026-10-15",
+						"pr": 30
 					},
 					{
 						"id": "10IC.4",
