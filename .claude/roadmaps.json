@@ -360,12 +360,13 @@
 					{
 						"id": "10IC.2",
 						"description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"10IC.1"
 						],
 						"assignee": "Jason",
-						"started": "2026-10-15"
+						"started": "2026-10-15",
+						"ended": "2026-10-15"
 					},
 					{
 						"id": "10IC.3",
@@ -379,7 +380,7 @@
 					{
 						"id": "10IC.4",
 						"description": "Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"10IC.2",
 							"8EX.7"
