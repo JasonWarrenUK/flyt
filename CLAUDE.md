@@ -9,7 +9,8 @@ An interactive fiction game about Norse flyting (ritualized insult poetry contes
 - A niche IF engine by Autumn Chen, extending Dendry with StoryNexus-like card/deck mechanics
 - **Not on npm** — designed as a CLI tool (`dendrynexus compile`, `dendrynexus make-html`)
 - Repo: https://github.com/aucchen/dendrynexus (extends https://github.com/aucchen/dendry)
-- We use a **custom integration**: our own compiler (`scripts/compile-dendry.js`) parses `.dry` files into `static/game.json`, and a Svelte-native engine wrapper (`src/engine/`) consumes it with `$state`/`$derived` reactivity
+- We use a **custom integration**: our own compiler (`scripts/compile-dendry.js`) parses `.dry` files into `static/game.json`, and the Riffle engine (the `@jasonwarrenuk/riffle` npm package, source at https://github.com/JasonWarrenUK/riffle) consumes it with `$state`/`$derived` reactivity
+- Riffle was extracted from this repo and is now a dependency, not a directory here. Engine changes go to the Riffle repo, get published, then land here as a version bump
 - The default Dendry browser runtime (Browserify + Handlebars) is NOT used
 - Full upstream feature reference: `docs/dendrynexus-reference.md`
 
@@ -17,7 +18,7 @@ An interactive fiction game about Norse flyting (ritualized insult poetry contes
 - SvelteKit in **SPA mode** (`adapter-static`, `ssr: false`, `prerender: true`)
 - Svelte 5 runes throughout: `$state`, `$derived`, `$derived.by`, `$props`
 - **Do NOT use** legacy Svelte syntax (`export let`, `$:`, stores, `{#each ... as}` without `(key)`)
-- Path aliases: `$engine` → `src/engine`, `$components` → `src/components`
+- Path aliases: `$components` → `src/components`, `$lib` → `src/lib` (SvelteKit default). The engine is imported from `@jasonwarrenuk/riffle`
 
 ### Aesthetic
 - Bronze/iron age Scandinavia: aged bronze, dark iron, parchment, hearth-fire palette
@@ -37,10 +38,9 @@ scripts/
   compile-dendry.js             # .dry → static/game.json compiler
 
 src/
-  engine/                       # Svelte 5 reactive engine wrapper
-    types.ts                    # TypeScript interfaces for game data
-    engine.svelte.ts            # RiffleEngine class (reactive game state)
-    index.ts                    # Barrel export
+  lib/                          # Flyt-only code that is not UI
+    arena.ts                    # Contest arena zones and adjacency helpers
+    riffle.test.ts              # Smoke test that the engine package loads Flyt's JSON shape
   components/                   # UI components
     SceneView.svelte            # Renders current scene + choices
     CheckResultBanner.svelte    # Shows stat check result after a card play
@@ -232,7 +232,7 @@ npm run check             # TypeScript + Svelte type checking
 
 ## Engine Architecture
 
-`RiffleEngine` (in `src/engine/engine.svelte.ts`) is a class using Svelte 5 runes:
+`RiffleEngine` (from `@jasonwarrenuk/riffle`; source in the Riffle repo's `src/lib/engine.svelte.ts`) is a class using Svelte 5 runes:
 - `game: CompiledGame | null` — loaded game data ($state)
 - `state: GameState` — current scene, qualities, visits, history, per-hand card state ($state)
 - `currentScene` — derived from state.currentSceneId ($derived)
