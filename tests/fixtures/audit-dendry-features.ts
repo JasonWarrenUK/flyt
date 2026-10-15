@@ -53,8 +53,18 @@ export const markupVariety = `@scene markup
 title: Markup
 
 [? if gold >= 1 : rich ?] and [? if gold < 1 : poor ?]
+[? if gold > 2 : Rich, are we? ?]
 **bold one** **bold two** *lonely italic*
 [+ gold +] [+gold+]
+`;
+
+export const bareHeader = `@bare
+title: Bare
+
+Text.
+
+@scene named
+title: Named
 `;
 
 export const emptyReport = `# Report

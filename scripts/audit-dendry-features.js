@@ -161,7 +161,7 @@ const MARKUP_PATTERNS = {
 	'markup: *italic*': /(?<!\*)\*(?!\*)[^*\n]+\*(?!\*)/g,
 	'markup: **bold**': /\*\*[^*\n]+\*\*/g,
 	'markup: [+ quality +]': /\[\+\s*[^+\]]+?\s*\+\]/g,
-	'markup: [? if : ?]': /\[\?\s*if\b[^?]*\?\]/g
+	'markup: [? if : ?]': /\[\?\s*if\b[\s\S]*?\?\]/g
 };
 
 /**
@@ -210,6 +210,13 @@ export function parseDryText(text, file) {
 		if (header) {
 			if (current) blocks.push(current);
 			current = { type: header[1] === 'scene' ? 'scene' : 'quality', id: header[2], file, props: {}, content: [] };
+			continue;
+		}
+		// Bare @id header: the compiler accepts it as a scene, so the audit must too
+		const bare = line.match(/^@(\w+)\s*$/);
+		if (bare) {
+			if (current) blocks.push(current);
+			current = { type: 'scene', id: bare[1], file, props: {}, content: [] };
 			continue;
 		}
 		if (!current) continue;

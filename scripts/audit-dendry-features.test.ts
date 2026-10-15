@@ -29,6 +29,15 @@ describe('parseDryText', () => {
 		expect(start.content.join('\n')).toContain('Prose with');
 		expect(start.file).toBe('f.dry');
 	});
+
+	it('accepts a bare @id header as a scene, as the compiler does', () => {
+		const blocks = parseDryText(fixtures.bareHeader, 'f.dry');
+		expect(blocks.map((b) => [b.type, b.id])).toEqual([
+			['scene', 'bare'],
+			['scene', 'named']
+		]);
+		expect(blocks[0].props.title).toBe('Bare');
+	});
 });
 
 describe('splitChoices', () => {
@@ -79,7 +88,7 @@ describe('tallyBlocks', () => {
 
 	it('counts each markup occurrence, not each scene', () => {
 		const { tally } = tallyText(fixtures.markupVariety);
-		expect(tally['markup: [? if : ?]'].count).toBe(2);
+		expect(tally['markup: [? if : ?]'].count).toBe(3);
 		expect(tally['markup: **bold**'].count).toBe(2);
 		expect(tally['markup: *italic*'].count).toBe(1);
 		expect(tally['markup: [+ quality +]'].count).toBe(2);
