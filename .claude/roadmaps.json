@@ -393,12 +393,12 @@
 					},
 					{
 						"id": "10IC.5",
-						"description": "Move compile-dendry.js into the Riffle repo as a CLI (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it",
+						"description": "Move compile-dendry.js into the Riffle repo as a runtime-neutral CLI that works under Node, Bun and Deno with byte-identical output (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it",
 						"status": "todo",
 						"dependsOn": [
 							"10IC.3"
 						],
-						"notes": "docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it; src/lib/riffle.test.ts stays as the consumer-side check"
+						"notes": "docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it, including a fixture compiled under all three runtimes and compared; src/lib/riffle.test.ts stays as the consumer-side check. Bun lists directories in a different order from Node, so the port must sort directory listings"
 					}
 				]
 			}

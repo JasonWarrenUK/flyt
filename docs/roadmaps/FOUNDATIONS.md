@@ -120,8 +120,8 @@ Groundwork across all three areas of the project before either subgame is conten
 - [x] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(done)_
   - Note: decided in docs/adr/0002-compiler-home.md: the compiler moves into Riffle as a CLI, with its Flyt-specific parts (title fallback, story/ and static/ roots, subgame convention) parameterised. 10IC.5 carries out the move
 - [ ] **10IC.4**: Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle _(depends on 10IC.2, 8EX.7)_
-- [ ] **10IC.5**: Move compile-dendry.js into the Riffle repo as a CLI (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it _(depends on 10IC.3)_
-  - Note: docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it; src/lib/riffle.test.ts stays as the consumer-side check
+- [ ] **10IC.5**: Move compile-dendry.js into the Riffle repo as a runtime-neutral CLI that works under Node, Bun and Deno with byte-identical output (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it _(depends on 10IC.3)_
+  - Note: docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it, including a fixture compiled under all three runtimes and compared; src/lib/riffle.test.ts stays as the consumer-side check. Bun lists directories in a different order from Node, so the port must sort directory listings
 
 ---
 
