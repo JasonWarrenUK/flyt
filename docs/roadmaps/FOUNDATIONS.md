@@ -56,7 +56,7 @@ Groundwork across all three areas of the project before either subgame is conten
 
 - [ ] **5AU.1**: Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)
 - [ ] **5AU.2**: Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)
-- [ ] **5AU.3**: DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)
+- [x] **5AU.3**: DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)
   - Note: pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity
 
 ---
@@ -166,7 +166,7 @@ graph LR
 	7PT.1 --> 7PT.2
 	7PT.2 --> M7
 	10IC.5 --> M10
-	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
+	class 1ES.1,2PE.5,5AU.1,5AU.2,7PT.1 todo
 	class 10IC.5,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
-	class 2PE.6 done
+	class 2PE.6,5AU.3 done
 ```
