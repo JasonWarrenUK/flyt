@@ -372,13 +372,14 @@
 					{
 						"id": "10IC.3",
 						"description": "Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/)",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"10IC.1"
 						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md, reverse-direction section",
+						"notes": "Decided in docs/adr/0002-compiler-home.md: the compiler moves into Riffle as a CLI, with its Flyt-specific parts (title fallback, story/ and static/ roots, subgame convention) parameterised. 10IC.5 carries out the move",
 						"assignee": "Jason",
-						"started": "2026-10-15"
+						"started": "2026-10-15",
+						"ended": "2026-10-15"
 					},
 					{
 						"id": "10IC.4",
@@ -388,6 +389,15 @@
 							"10IC.2",
 							"8EX.7"
 						]
+					},
+					{
+						"id": "10IC.5",
+						"description": "Move compile-dendry.js into the Riffle repo as a CLI (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it",
+						"status": "todo",
+						"dependsOn": [
+							"10IC.3"
+						],
+						"notes": "docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it; src/lib/riffle.test.ts stays as the consumer-side check"
 					}
 				]
 			}

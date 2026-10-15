@@ -1,6 +1,6 @@
 # Flyt Foundations: Roadmap Overview
 
-**33 tasks across 10 milestones.** Files: `.claude/roadmaps.json` (machine-readable), `docs/roadmaps/FOUNDATIONS.md` (full task list with Mermaid dependency diagram).
+**34 tasks across 10 milestones.** Files: `.claude/roadmaps.json` (machine-readable), `docs/roadmaps/FOUNDATIONS.md` (full task list with Mermaid dependency diagram).
 
 ---
 
