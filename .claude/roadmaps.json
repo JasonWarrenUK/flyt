@@ -2,6 +2,7 @@
 	{
 		"name": "Foundations",
 		"path": "docs/roadmaps/FOUNDATIONS.md",
+		"min_plugin": "2.7.0",
 		"archived": false,
 		"externalGates": [
 			{
@@ -173,7 +174,8 @@
 						"description": "DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)",
 						"status": "todo",
 						"dependsOn": [],
-						"notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity"
+						"notes": "Pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity",
+						"started": "2026-10-15"
 					}
 				]
 			},
