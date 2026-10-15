@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { QualityDefinition } from '$engine';
+	import type { QualityDefinition } from '@jasonwarrenuk/riffle';
 	import StatBar from '$components/StatBar.svelte';
 
 	let { qualities }: {

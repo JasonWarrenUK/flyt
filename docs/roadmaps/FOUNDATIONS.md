@@ -116,10 +116,13 @@ Groundwork across all three areas of the project before either subgame is conten
 
 - [x] **10IC.1**: Publish Riffle to npm as @jasonwarrenuk/riffle so it's installable _(done)_
   - Note: published as @jasonwarrenuk/riffle 0.1.0 (MIT) on npm, scoped because the bare name riffle is an unrelated package. Packaging and publish done in the Riffle repo (PRs 1 and 2 there); 10IC.2 swaps Flyt over to it
-- [ ] **10IC.2**: Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly _(depends on 10IC.1)_
-- [ ] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(depends on 10IC.1)_
-  - Note: docs/reports/RIFFLE_AUDIT.md, reverse-direction section
-- [ ] **10IC.4**: Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle _(blocked: depends on 10IC.2, 8EX.7)_
+- [x] **10IC.2**: Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly _(done)_
+- [x] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(done)_
+  - Note: decided in docs/adr/0002-compiler-home.md: the compiler moves into Riffle as a CLI, with its Flyt-specific parts (title fallback, story/ and static/ roots, subgame convention) parameterised. 10IC.5 carries out the move
+- [x] **10IC.4**: Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle _(done)_
+  - Note: done: assessed in docs/reports/ZONE_GRAPH_ASSESSMENT.md; promoted in Riffle PR 4 and released as 1.1.0; Flyt now depends on ^1.1.0 and arena.ts holds only the contest data
+- [ ] **10IC.5**: Move compile-dendry.js into the Riffle repo as a runtime-neutral CLI that works under Node, Bun and Deno with byte-identical output (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it _(depends on 10IC.3)_
+  - Note: docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it, including a fixture compiled under all three runtimes and compared; src/lib/riffle.test.ts stays as the consumer-side check. Bun lists directories in a different order from Node, so the port must sort directory listings
 
 ---
 
@@ -178,6 +181,7 @@ graph LR
 	10IC.2["10IC.2: Update Flyt's src/engine/ to import fro…"]
 	10IC.3["10IC.3: Decide compile-dendry.js's relationship…"]
 	10IC.4["10IC.4: Assess whether the generic zone-graph h…"]
+	10IC.5["10IC.5: Move compile-dendry.js into the Riffle…"]
 	M10["M10: Invert to Consumption"]:::mile
 	1ES.1 --> 1ES.2
 	1ES.1 --> 2PE.1
@@ -232,9 +236,10 @@ graph LR
 	10IC.1 --> 10IC.2
 	10IC.1 --> 10IC.3
 	10IC.2 --> 10IC.4
-	10IC.3 --> M10
+	10IC.3 --> 10IC.5
 	10IC.4 --> M10
-	class 10IC.2,10IC.3,1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
-	class 10IC.4,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
-	class 10IC.1,2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7,8EX.8,9DS.1 done
+	10IC.5 --> M10
+	class 10IC.5,1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
+	class 1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
+	class 10IC.1,10IC.2,10IC.3,10IC.4,2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7,8EX.8,9DS.1 done
 ```

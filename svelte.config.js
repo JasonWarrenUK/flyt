@@ -9,7 +9,6 @@ const config = {
 			fallback: 'index.html'
 		}),
 		alias: {
-			$engine: 'src/engine',
 			$components: 'src/components'
 		}
 	}

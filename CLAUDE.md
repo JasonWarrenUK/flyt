@@ -9,7 +9,8 @@ An interactive fiction game about Norse flyting (ritualized insult poetry contes
 - A niche IF engine by Autumn Chen, extending Dendry with StoryNexus-like card/deck mechanics
 - **Not on npm** — designed as a CLI tool (`dendrynexus compile`, `dendrynexus make-html`)
 - Repo: https://github.com/aucchen/dendrynexus (extends https://github.com/aucchen/dendry)
-- We use a **custom integration**: our own compiler (`scripts/compile-dendry.js`) parses `.dry` files into `static/game.json`, and a Svelte-native engine wrapper (`src/engine/`) consumes it with `$state`/`$derived` reactivity
+- We use a **custom integration**: our own compiler (`scripts/compile-dendry.js`) parses `.dry` files into `static/game.json`, and the Riffle engine (the `@jasonwarrenuk/riffle` npm package, source at https://github.com/JasonWarrenUK/riffle) consumes it with `$state`/`$derived` reactivity
+- Riffle was extracted from this repo and is now a dependency, not a directory here. Engine changes go to the Riffle repo, get published, then land here as a version bump
 - The default Dendry browser runtime (Browserify + Handlebars) is NOT used
 - Full upstream feature reference: `docs/dendrynexus-reference.md`
 
@@ -17,7 +18,7 @@ An interactive fiction game about Norse flyting (ritualized insult poetry contes
 - SvelteKit in **SPA mode** (`adapter-static`, `ssr: false`, `prerender: true`)
 - Svelte 5 runes throughout: `$state`, `$derived`, `$derived.by`, `$props`
 - **Do NOT use** legacy Svelte syntax (`export let`, `$:`, stores, `{#each ... as}` without `(key)`)
-- Path aliases: `$engine` → `src/engine`, `$components` → `src/components`
+- Path aliases: `$components` → `src/components`, `$lib` → `src/lib` (SvelteKit default). The engine is imported from `@jasonwarrenuk/riffle`
 
 ### Aesthetic
 - Bronze/iron age Scandinavia: aged bronze, dark iron, parchment, hearth-fire palette
@@ -37,10 +38,9 @@ scripts/
   compile-dendry.js             # .dry → static/game.json compiler
 
 src/
-  engine/                       # Svelte 5 reactive engine wrapper
-    types.ts                    # TypeScript interfaces for game data
-    engine.svelte.ts            # RiffleEngine class (reactive game state)
-    index.ts                    # Barrel export
+  lib/                          # Flyt-only code that is not UI
+    arena.ts                    # The thirteen contest arena zones (helpers come from the Riffle package)
+    riffle.test.ts              # Smoke test that the engine package loads Flyt's JSON shape
   components/                   # UI components
     SceneView.svelte            # Renders current scene + choices
     CheckResultBanner.svelte    # Shows stat check result after a card play
@@ -232,32 +232,13 @@ npm run check             # TypeScript + Svelte type checking
 
 ## Engine Architecture
 
-`RiffleEngine` (in `src/engine/engine.svelte.ts`) is a class using Svelte 5 runes:
-- `game: CompiledGame | null` — loaded game data ($state)
-- `state: GameState` — current scene, qualities, visits, history, per-hand card state ($state)
-- `currentScene` — derived from state.currentSceneId ($derived)
-- `display: DisplayContent` — rendered title/body/choices for the UI ($derived)
-- `qualityList` — all qualities with current values ($derived)
-- `load(url)` — fetch and parse game.json
-- `choose(sceneId)` — transition to a scene (handles departure/arrival/auto-navigation)
-- `drawCard(deckId)` — draw a card from a deck into current hand (uses priority/frequency)
-- `playCard(cardId)` — play a hand card (removes from hand, navigates to card scene)
-- `playPinnedCard(cardId)` — play a pinned card (navigates without hand management)
-- `discardCard(cardId)` — discard without playing
-- `restart()` — reset to initial state
+The engine is `RiffleEngine` from `@jasonwarrenuk/riffle`. Its API, features and behaviour are documented in the package's README and the Riffle repo (https://github.com/JasonWarrenUK/riffle), and deliberately not repeated here: a copy in this file goes stale with every release.
 
-The engine handles:
-- Scene transitions with on-departure/on-arrival/on-display actions
-- Quality mutations via command execution
-- Condition evaluation for view-if/choose-if
-- Priority/frequency-based choice selection and card drawing
-- max-visits filtering for scenes and cards
-- Tag-based choice expansion (#tag syntax)
-- Conditional go-to with predicates, go-to-ref, set-root
-- Difficulty checks (broad + narrow) with configurable curves
-- Per-hand-scene card state (hands, discards)
-- Content rendering: bold, italic, quality interpolation, conditional text
-- Difficulty labels on choices (Fallen London style)
+What Flyt-side code needs to know:
+- `src/routes/+page.svelte` owns the single engine instance. It loads a compiled game with `load('/<game>.json')`, renders from `engine.display` and `engine.qualityList`, passes `engine.state.qualities` to the arena map and forwards the scene view's player actions (`choose`, `drawCard`, `playCard`, `playPinnedCard`, `discardCard`) straight to the engine.
+- Returning to the game menu calls `reset()`, which clears the loaded game; the restart button calls `restart()`, which returns to the first scene of the same game.
+- The JSON shape comes from `scripts/compile-dendry.js` and must stay compatible with the package's `CompiledGame` type. `src/lib/riffle.test.ts` is the check that Flyt's shape still loads.
+- To see which engine version is installed, run `npm ls @jasonwarrenuk/riffle`. To change engine behaviour, work in the Riffle repo.
 
 ## Common Pitfalls
 - `static/game.json` is gitignored — it must be compiled, not hand-edited

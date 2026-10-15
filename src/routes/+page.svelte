@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { RiffleEngine } from '$engine';
+	import { RiffleEngine } from '@jasonwarrenuk/riffle';
 	import SceneView from '$components/SceneView.svelte';
 	import QualitiesPanel from '$components/QualitiesPanel.svelte';
 	import GameMenu from '$components/GameMenu.svelte';
