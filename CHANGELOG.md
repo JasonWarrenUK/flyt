@@ -7,6 +7,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-15
+
+### Breaking
+
+- The engine is no longer part of this repository. `src/engine/` and the `$engine` import alias are gone; import `RiffleEngine` and its types from `@jasonwarrenuk/riffle` instead.
+- The zone shape and the adjacency helpers (`Zone`, `ZoneMap`, `buildZoneMap`, `getZone`, `getAdjacent`, `areAdjacent`) are no longer exported from `src/lib/arena.ts`. Import them from `@jasonwarrenuk/riffle`.
+
+### Added
+
+- Flyt now installs the engine from npm (`@jasonwarrenuk/riffle` 1.1.0 or later) and has a smoke test that the installed package loads Flyt's compiled game JSON and navigates a scene.
+- Architecture decision record 0002: the story compiler will move into Riffle as a command-line tool that works under Node, Bun and Deno with identical output, with the parts specific to Flyt turned into parameters.
+- A boundary assessment report showing that the arena's adjacency helpers are generic and the thirteen contest zones are not.
+
+### Changed
+
+- The arena module holds only the thirteen contest zones and builds its zone map with the package, which also fixes a bug where a zone ID such as `constructor` misbehaved.
+- The engine's vocabulary guard, which keeps flyting terms out of the engine, now lives in the Riffle repository where the engine source is. It ran here only while the engine did.
+- The project guide points at the package README for the engine's API instead of copying it, and its structure listing matches the repository.
+
+### Removed
+
+- The workflow that pushed `src/engine/` to the Riffle repository on every merge. Riffle is now published as a package instead.
+
 ## [0.2.0] - 2026-10-13
 
 ### Breaking
@@ -57,7 +80,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Reorganised Great Hall: deck descriptions moved into one-time intro cards
 
-[Unreleased]: https://github.com/JasonWarrenUK/flyt/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/JasonWarrenUK/flyt/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.0.1...v0.1.0
 [0.0.1]: https://github.com/JasonWarrenUK/flyt/releases/tag/v0.0.1
