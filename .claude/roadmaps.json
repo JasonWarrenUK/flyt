@@ -166,9 +166,10 @@
 					{
 						"id": "5AU.2",
 						"description": "Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [],
-						"started": "2026-10-15"
+						"started": "2026-10-15",
+						"ended": "2026-10-15"
 					},
 					{
 						"id": "5AU.3",
