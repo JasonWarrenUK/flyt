@@ -348,18 +348,19 @@
 					{
 						"id": "10IC.1",
 						"description": "Publish Riffle to npm as @jasonwarrenuk/riffle so it's installable",
-						"status": "todo",
+						"status": "done",
 						"dependsOn": [
 							"M9"
 						],
-						"notes": "Method decided: npm, scoped because the bare name riffle is an unrelated package. Packaging done and verified in JasonWarrenUK/riffle PR 1 (a throwaway Flyt built against the packed tarball). Remaining before done: add a licence to the Riffle repo, merge that PR, npm login, npm publish --access public",
+						"notes": "Published as @jasonwarrenuk/riffle 0.1.0 (MIT) on npm, scoped because the bare name riffle is an unrelated package. Packaging and publish done in the Riffle repo (PRs 1 and 2 there); 10IC.2 swaps Flyt over to it",
 						"assignee": "Jason",
-						"started": "2026-10-14"
+						"started": "2026-10-14",
+						"ended": "2026-10-15"
 					},
 					{
 						"id": "10IC.2",
 						"description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"10IC.1"
 						]
@@ -367,7 +368,7 @@
 					{
 						"id": "10IC.3",
 						"description": "Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/)",
-						"status": "blocked",
+						"status": "todo",
 						"dependsOn": [
 							"10IC.1"
 						],
