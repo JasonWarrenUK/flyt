@@ -3,7 +3,18 @@
 		"name": "Foundations",
 		"path": "docs/roadmaps/FOUNDATIONS.md",
 		"archived": false,
-		"externalGates": [],
+		"externalGates": [
+			{
+				"id": "GRIFFLECLI",
+				"name": "Riffle publishes the compiler CLI (Riffle roadmap task 1CC.4)",
+				"status": "external",
+				"imposes": "blocked",
+				"blocks": [
+					"10IC.5"
+				],
+				"notes": "Tracked in the Riffle repo's roadmap. Once published: bump @jasonwarrenuk/riffle in Flyt, then lift this gate: remove GRIFFLECLI from 10IC.5's dependsOn, remove 10IC.5 from this gate's blocks, then run recompute"
+			}
+		],
 		"milestones": [
 			{
 				"id": "M1",
@@ -38,7 +49,7 @@
 						"dependsOn": [
 							"1ES.1"
 						],
-						"notes": "Must split the model into an engine part (src/engine/, synced to Riffle) and a Flyt part, per the boundary test in docs/adr/0001-riffle-boundary.md"
+						"notes": "Must split the model into an engine part (built in the Riffle repo, tracked there as 2PH.1 behind the external gate GFLYTPHRASE) and a Flyt part, per the boundary test in docs/adr/0001-riffle-boundary.md. When this lands, tell the Riffle roadmap so it can lift GFLYTPHRASE"
 					},
 					{
 						"id": "2PE.2",
@@ -213,197 +224,18 @@
 				]
 			},
 			{
-				"id": "M8",
-				"name": "Clean Extraction",
-				"goal": "Finish pulling all engine code into the Riffle repo, with nothing Flyt-specific left behind",
-				"tasks": [
-					{
-						"id": "8EX.1",
-						"description": "Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there",
-						"status": "done",
-						"dependsOn": [],
-						"ended": "2026-09-25"
-					},
-					{
-						"id": "8EX.2",
-						"description": "Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle",
-						"status": "done",
-						"dependsOn": [
-							"8EX.1",
-							"8EX.4"
-						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it. Boundary rule: docs/adr/0001-riffle-boundary.md; the chosen location should also host the phrase engine's Flyt half",
-						"assignee": "Jason",
-						"started": "2026-10-13",
-						"ended": "2026-10-13",
-						"pr": 13
-					},
-					{
-						"id": "8EX.3",
-						"description": "Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md",
-						"status": "done",
-						"dependsOn": [
-							"8EX.1",
-							"8EX.2"
-						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F2",
-						"assignee": "Jason",
-						"started": "2026-10-13",
-						"ended": "2026-10-13",
-						"pr": 15
-					},
-					{
-						"id": "8EX.4",
-						"description": "Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land",
-						"status": "done",
-						"dependsOn": [
-							"8EX.1"
-						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first",
-						"assignee": "Jason",
-						"started": "2026-10-13",
-						"ended": "2026-10-13",
-						"pr": 12
-					},
-					{
-						"id": "8EX.5",
-						"description": "Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent",
-						"status": "done",
-						"dependsOn": [
-							"8EX.1",
-							"8EX.4"
-						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
-						"assignee": "Jason",
-						"started": "2026-10-13",
-						"ended": "2026-10-13",
-						"pr": 19
-					},
-					{
-						"id": "8EX.6",
-						"description": "Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js",
-						"status": "done",
-						"dependsOn": [
-							"8EX.1",
-							"8EX.4"
-						],
-						"notes": "docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it",
-						"assignee": "Jason",
-						"started": "2026-10-13",
-						"ended": "2026-10-13",
-						"pr": 20
-					},
-					{
-						"id": "8EX.7",
-						"description": "Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union",
-						"status": "done",
-						"dependsOn": [
-							"8EX.2"
-						],
-						"notes": "docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones",
-						"assignee": "Jason",
-						"started": "2026-10-13",
-						"ended": "2026-10-13",
-						"pr": 22
-					},
-					{
-						"id": "8EX.8",
-						"description": "Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels)",
-						"status": "done",
-						"dependsOn": [
-							"8EX.3"
-						],
-						"notes": "ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI",
-						"assignee": "Jason",
-						"started": "2026-10-14",
-						"ended": "2026-10-14",
-						"pr": 24
-					}
-				]
-			},
-			{
-				"id": "M9",
-				"name": "Detach Auto-Sync",
-				"goal": "Remove the current one-way auto-sync mechanism between Flyt and Riffle",
-				"tasks": [
-					{
-						"id": "9DS.1",
-						"description": "Remove auto-sync hook/workflow between Flyt and Riffle repos",
-						"status": "done",
-						"dependsOn": [
-							"M8"
-						],
-						"assignee": "Jason",
-						"started": "2026-10-14",
-						"ended": "2026-10-14",
-						"pr": 25
-					}
-				]
-			},
-			{
 				"id": "M10",
-				"name": "Invert to Consumption",
-				"goal": "Flyt installs/imports Riffle as a dependency instead of housing the engine directly",
+				"name": "Consume Riffle's Compiler",
+				"goal": "Flyt compiles its story with Riffle's published compiler CLI instead of its own script",
 				"tasks": [
-					{
-						"id": "10IC.1",
-						"description": "Publish Riffle to npm as @jasonwarrenuk/riffle so it's installable",
-						"status": "done",
-						"dependsOn": [
-							"M9"
-						],
-						"notes": "Published as @jasonwarrenuk/riffle 0.1.0 (MIT) on npm, scoped because the bare name riffle is an unrelated package. Packaging and publish done in the Riffle repo (PRs 1 and 2 there); 10IC.2 swaps Flyt over to it",
-						"assignee": "Jason",
-						"started": "2026-10-14",
-						"ended": "2026-10-15"
-					},
-					{
-						"id": "10IC.2",
-						"description": "Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly",
-						"status": "done",
-						"dependsOn": [
-							"10IC.1"
-						],
-						"assignee": "Jason",
-						"started": "2026-10-15",
-						"ended": "2026-10-15",
-						"pr": 29
-					},
-					{
-						"id": "10IC.3",
-						"description": "Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/)",
-						"status": "done",
-						"dependsOn": [
-							"10IC.1"
-						],
-						"notes": "Decided in docs/adr/0002-compiler-home.md: the compiler moves into Riffle as a CLI, with its Flyt-specific parts (title fallback, story/ and static/ roots, subgame convention) parameterised. 10IC.5 carries out the move",
-						"assignee": "Jason",
-						"started": "2026-10-15",
-						"ended": "2026-10-15",
-						"pr": 30
-					},
-					{
-						"id": "10IC.4",
-						"description": "Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle",
-						"status": "done",
-						"dependsOn": [
-							"10IC.2",
-							"8EX.7"
-						],
-						"notes": "Done: assessed in docs/reports/ZONE_GRAPH_ASSESSMENT.md; promoted in Riffle PR 4 and released as 1.1.0; Flyt now depends on ^1.1.0 and arena.ts holds only the contest data",
-						"assignee": "Jason",
-						"started": "2026-10-15",
-						"ended": "2026-10-15",
-						"pr": 32
-					},
 					{
 						"id": "10IC.5",
-						"description": "Move compile-dendry.js into the Riffle repo as a runtime-neutral CLI that works under Node, Bun and Deno with byte-identical output (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it",
-						"status": "todo",
+						"description": "Switch compile:dendry to Riffle's compiler CLI once it is published (Riffle roadmap task 1CC.4): bump @jasonwarrenuk/riffle, check the compiled JSON matches what scripts/compile-dendry.js produces today, then delete the script",
+						"status": "blocked",
 						"dependsOn": [
-							"10IC.3"
+							"GRIFFLECLI"
 						],
-						"notes": "docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it, including a fixture compiled under all three runtimes and compared; src/lib/riffle.test.ts stays as the consumer-side check. Bun lists directories in a different order from Node, so the port must sort directory listings"
+						"notes": "Flyt-side half of the compiler move decided in docs/adr/0002-compiler-home.md. The Riffle-side half lives in the Riffle repo's roadmap (1CC.1 to 1CC.5). Keep the .dry reference doc: it moves to Riffle with the compiler (Riffle 1CC.3)"
 					}
 				]
 			}

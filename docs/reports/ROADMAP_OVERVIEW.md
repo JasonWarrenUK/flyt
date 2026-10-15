@@ -1,18 +1,18 @@
 # Flyt Foundations: Roadmap Overview
 
-**34 tasks across 10 milestones.** Files: `.claude/roadmaps.json` (machine-readable), `docs/roadmaps/FOUNDATIONS.md` (full task list with Mermaid dependency diagram).
+**21 tasks across 8 milestones.** Files: `.claude/roadmaps.json` (machine-readable), `docs/roadmaps/FOUNDATIONS.md` (full task list with Mermaid dependency diagram).
 
 ---
 
 ## What we're building
 
-Foundations covers groundwork in three areas of the project simultaneously: the Contest subgame (a Norse flyting duel, built from nothing but zone/NPC scaffolding), the Great Hall subgame (a 94-scene card/deck showcase that already exists but hasn't been properly assessed), and the Riffle engine repository (recently extracted from Flyt, still one-way auto-synced rather than properly consumed as a dependency).
+Foundations covers groundwork in three areas of the project simultaneously: the Contest subgame (a Norse flyting duel, built from nothing but zone/NPC scaffolding), the Great Hall subgame (a 94-scene card/deck showcase that already exists but hasn't been properly assessed), and the move onto the Riffle engine package (extracted from Flyt and now consumed from npm; Riffle's own tasks are tracked in the Riffle repository).
 
 Contest is the largest area by task count and the least built. It needs a genuinely new mechanic: a phrase-by-phrase flyting exchange where the player, established as tonally inept at the art, assembles insults from a mix of randomly-surfaced phrases, adaptations of the opponent's own words, and details observed in the surrounding world. Success is judged diegetically (through crowd reaction, never a visible number), and looking around the arena to gather material trades off against the crowd's patience — modelled per-spectator rather than as one global timer, since each NPC (Thane, rival skald, shieldmaiden, merchant, seer, and the more distant jarl/warband/shipwright) needs its own state.
 
 Great Hall took a different turn: rather than assuming the existing 94 scenes are launch-ready, the milestone structure treats "we don't remember if it holds together" as a real risk worth auditing before any fix work starts. A compiler-level check during planning found the content compiles clean with zero dangling scene references, but that's link integrity, not narrative or mechanical coherence — the audit milestone digs into both, plus whether the content actually exercises the DendryNexus feature set documented in `docs/dendrynexus-reference.md`.
 
-Riffle is scoped as pure infrastructure: finish extracting engine code cleanly, remove the auto-sync mechanism that currently pushes changes one way, then invert the relationship so Flyt consumes Riffle as a dependency instead of housing the engine directly.
+Riffle was scoped as pure infrastructure: extract the engine cleanly, remove the auto-sync that pushed changes one way, then invert the relationship so Flyt consumes Riffle as a dependency. That work is done and shipped as v0.1.0 to v0.3.0. What remains here is switching Flyt's story compiler over to Riffle's, once Riffle publishes it.
 
 ## Milestone sequence and the reasoning behind it
 
@@ -22,7 +22,7 @@ Riffle is scoped as pure infrastructure: finish extracting engine code cleanly, 
 
 **M7 Progress Tracking** sits outside the audit/remediation chain. It's new functionality (a way for the player to see how much unseen content remains), not a fix, so it's tracked as its own milestone with an explicit design-first task — the UX shape (global counter vs per-deck breakdown, visible vs hidden) was deliberately left open rather than decided during planning.
 
-**M8 Clean Extraction → M9 Detach Auto-Sync → M10 Invert to Consumption.** Strictly sequential: nothing Flyt-specific can be left in Riffle before the sync mechanism is removed, and the sync can't be removed before Flyt is ready to consume Riffle properly in its place.
+**M10 Consume Riffle's Compiler.** Formerly the end of a three-milestone Riffle track (M8 Clean Extraction, M9 Detach Auto-Sync, M10 Invert to Consumption) whose other tasks are complete and have left this roadmap. One task remains, blocked on the external gate below.
 
 ## Decisions that shaped the structure
 
@@ -35,4 +35,4 @@ Two tasks are worth flagging as non-standard:
 
 ## External blockers (flag early)
 
-None currently modelled as roadmap gates. The Riffle repository's auto-sync was raised as a candidate external blocker during planning, but the user resolved it into M8-M10 as ordinary sequential work within this phase rather than an external gate — Flyt's own team controls both repos, so nothing here is genuinely outside project control.
+**GRIFFLECLI** gates 10IC.5: Riffle must publish its compiler CLI (task 1CC.4 in the Riffle repository's roadmap) before Flyt can switch over. When it is published, bump the dependency and lift the gate in the roadmap. This is a genuine external dependency now that Riffle has its own roadmap, release and owner-of-record in a separate repository.

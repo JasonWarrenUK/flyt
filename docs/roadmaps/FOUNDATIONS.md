@@ -1,8 +1,8 @@
 # Flyt Foundations Roadmap
 
-Groundwork across all three areas of the project before either subgame is content-complete: the Contest flyting duel (built from scratch), a coherence audit and remediation pass on the already-built Great Hall showcase, and a clean extraction of the shared engine into the standalone Riffle repo.
+Groundwork across all three areas of the project before either subgame is content-complete: the Contest flyting duel (built from scratch), a coherence audit and remediation pass on the already-built Great Hall showcase, and finishing the move onto the standalone Riffle package (its engine is extracted and published; the compiler is the part still to switch over).
 
-**Critical path:** `1ES.1 → 1ES.2 → 3WC.1 → 3WC.2 → 4DC.2 → 4DC.3`; the Contest duel content can't be written until per-entity state, the phrase engine, and world/observation content all exist. The Riffle and Great Hall tracks are independent of Contest and of each other.
+**Critical path:** `1ES.1 → 1ES.2 → 3WC.1 → 3WC.2 → 4DC.2 → 4DC.3`; the Contest duel content can't be written until per-entity state, the phrase engine, and world/observation content all exist. The Riffle and Great Hall tracks are independent of Contest and of each other, apart from one gate: the Riffle repo's phrase-engine half waits on 2PE.1.
 
 ---
 
@@ -79,50 +79,14 @@ Groundwork across all three areas of the project before either subgame is conten
 
 ---
 
-## Milestone 8: Clean Extraction
+## Milestone 10: Consume Riffle's Compiler
 
-**Goal:** Finish pulling all engine code into the Riffle repo, with nothing Flyt-specific left behind
+**Goal:** Flyt compiles its story with Riffle's published compiler CLI instead of its own script
 
-- [x] **8EX.1**: Audit Riffle repo for remaining Flyt-specific code/assumptions that shouldn't live there _(done)_
-  - Note: findings and recommended disposition per item in docs/reports/RIFFLE_AUDIT.md
-- [x] **8EX.2**: Move arena.ts out of src/engine/ into a Flyt-only location (e.g. src/game/ or src/lib/), so the sync workflow stops mirroring contest-specific topology to Riffle _(done)_
-  - Note: docs/reports/RIFFLE_AUDIT.md F1; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it. Boundary rule: docs/adr/0001-riffle-boundary.md; the chosen location should also host the phrase engine's Flyt half
-- [x] **8EX.3**: Remove the arena re-export from src/engine/index.ts, update ArenaMap.svelte's import to the new location, and delete the arena section from src/engine/README.md _(done)_
-  - Note: docs/reports/RIFFLE_AUDIT.md F2
-- [x] **8EX.4**: Reconcile Riffle's README (hand-edited on GitHub, diverged from Flyt's copy, overwritten by the next sync): port its content into src/engine/README.md as the canonical copy, dropping the dead dendrynexus link. Keep the arena section for now; arena.ts is still part of the engine until 8EX.2/8EX.3 land _(done)_
-  - Note: docs/reports/RIFFLE_AUDIT.md F3; must land before 8EX.2, 8EX.5 or 8EX.6 touch src/engine/, or the sync overwrites this README first
-- [x] **8EX.5**: Fix doc comments in types.ts and engine.svelte.ts that reference docs/dendrynexus-reference.md, a Flyt-only path with no Riffle equivalent _(done)_
-  - Note: docs/reports/RIFFLE_AUDIT.md F4; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [x] **8EX.6**: Reword the CompiledGame doc comment in types.ts, which claims to mirror `dendrynexus compile` output but actually mirrors Flyt's own scripts/compile-dendry.js _(done)_
-  - Note: docs/reports/RIFFLE_AUDIT.md F5; depends on 8EX.4 so the README sync lands before this touches src/engine/ and overwrites it
-- [x] **8EX.7**: Separate the zone data in src/lib/arena.ts from its adjacency helpers so the helpers can be promoted to Riffle without the 13 contest zones: getZone, getAdjacent and areAdjacent take a zone map instead of the module-level ZONES, and Ring stops being a hardcoded union _(done)_
-  - Note: docs/adr/0001-riffle-boundary.md; keeps the mechanism promotable without the 13 contest zones
-- [x] **8EX.8**: Add a CI check that flags PRs touching src/engine/ when they introduce flyting vocabulary (acclaim, crowd, insult, flyt, contest zone labels) _(done)_
-  - Note: ADR 0001 follow-up; arena content must leave src/engine/ first or the check fails on day one; after M10 the check moves to Riffle's CI
+Riffle's own roadmap lives in the Riffle repository. The engine extraction, sync removal and package publish that preceded this milestone (formerly M8 to M10, tasks 8EX.1 to 10IC.4) are complete and recorded in the changelog for v0.1.0 to v0.3.0 and in git history.
 
----
-
-## Milestone 9: Detach Auto-Sync
-
-**Goal:** Remove the current one-way auto-sync mechanism between Flyt and Riffle
-
-- [x] **9DS.1**: Remove auto-sync hook/workflow between Flyt and Riffle repos _(done)_
-
----
-
-## Milestone 10: Invert to Consumption
-
-**Goal:** Flyt installs/imports Riffle as a dependency instead of housing the engine directly
-
-- [x] **10IC.1**: Publish Riffle to npm as @jasonwarrenuk/riffle so it's installable _(done)_
-  - Note: published as @jasonwarrenuk/riffle 0.1.0 (MIT) on npm, scoped because the bare name riffle is an unrelated package. Packaging and publish done in the Riffle repo (PRs 1 and 2 there); 10IC.2 swaps Flyt over to it
-- [x] **10IC.2**: Update Flyt's src/engine/ to import from Riffle instead of housing engine code directly _(done)_
-- [x] **10IC.3**: Decide compile-dendry.js's relationship to the Riffle package now Flyt consumes Riffle as a dependency: it currently defines Riffle's CompiledGame input contract but lives only in Flyt, with a hardcoded Flyt fallback title and Flyt-specific paths (story/, static/) _(done)_
-  - Note: decided in docs/adr/0002-compiler-home.md: the compiler moves into Riffle as a CLI, with its Flyt-specific parts (title fallback, story/ and static/ roots, subgame convention) parameterised. 10IC.5 carries out the move
-- [x] **10IC.4**: Assess whether the generic zone-graph helpers pass ADR 0001's boundary test and, if so, promote them to Riffle _(done)_
-  - Note: done: assessed in docs/reports/ZONE_GRAPH_ASSESSMENT.md; promoted in Riffle PR 4 and released as 1.1.0; Flyt now depends on ^1.1.0 and arena.ts holds only the contest data
-- [ ] **10IC.5**: Move compile-dendry.js into the Riffle repo as a runtime-neutral CLI that works under Node, Bun and Deno with byte-identical output (title fallback, input and output roots and the subgame convention become parameters), publish it and switch Flyt's compile:dendry script to call it _(depends on 10IC.3)_
-  - Note: docs/adr/0002-compiler-home.md. Riffle-side first (port, tests, the .dry reference doc, publish), Flyt-side second (version bump, script swap). The compiler's tests move with it, including a fixture compiled under all three runtimes and compared; src/lib/riffle.test.ts stays as the consumer-side check. Bun lists directories in a different order from Node, so the port must sort directory listings
+- [ ] **10IC.5**: Switch compile:dendry to Riffle's compiler CLI once it is published (Riffle roadmap task 1CC.4): bump @jasonwarrenuk/riffle, check the compiled JSON matches what scripts/compile-dendry.js produces today, then delete the script _(blocked: depends on GRIFFLECLI)_
+  - Note: Flyt-side half of the compiler move decided in docs/adr/0002-compiler-home.md. The Riffle-side half lives in the Riffle repo's roadmap (1CC.1 to 1CC.5). Keep the .dry reference doc: it moves to Riffle with the compiler (Riffle 1CC.3)
 
 ---
 
@@ -139,6 +103,7 @@ graph LR
 	classDef outOfScope fill:#f6f6f6,stroke:#717171,color:#717171,stroke-dasharray:2 2
 	classDef mile fill:#e3f7ff,stroke:#007590,color:#007590,font-weight:bold
 	classDef external fill:#fff9e5,stroke:#7d6f00,color:#7d6f00,stroke-dasharray:4 3,font-style:italic
+	GRIFFLECLI["GRIFFLECLI: Riffle publishes the compiler CLI (…"]:::external
 	1ES.1["1ES.1: Design per-entity state schema (patience…"]
 	1ES.2["1ES.2: Extend qualities.dry / engine types to m…"]
 	M1["M1: Entity State"]:::mile
@@ -166,23 +131,9 @@ graph LR
 	7PT.1["7PT.1: Design progress-tracking UX (global vs p…"]
 	7PT.2["7PT.2: Implement progress-tracking feature per…"]
 	M7["M7: Progress Tracking"]:::mile
-	8EX.1["8EX.1: Audit Riffle repo for remaining Flyt-spe…"]
-	8EX.4["8EX.4: Reconcile Riffle's README (hand-edited o…"]
-	8EX.2["8EX.2: Move arena.ts out of src/engine/ into a…"]
-	8EX.3["8EX.3: Remove the arena re-export from src/engi…"]
-	8EX.5["8EX.5: Fix doc comments in types.ts and engine.…"]
-	8EX.6["8EX.6: Reword the CompiledGame doc comment in t…"]
-	8EX.7["8EX.7: Separate the zone data in src/lib/arena.…"]
-	8EX.8["8EX.8: Add a CI check that flags PRs touching s…"]
-	M8["M8: Clean Extraction"]:::mile
-	9DS.1["9DS.1: Remove auto-sync hook/workflow between F…"]
-	M9["M9: Detach Auto-Sync"]:::mile
-	10IC.1["10IC.1: Publish Riffle to npm as @jasonwarrenuk…"]
-	10IC.2["10IC.2: Update Flyt's src/engine/ to import fro…"]
-	10IC.3["10IC.3: Decide compile-dendry.js's relationship…"]
-	10IC.4["10IC.4: Assess whether the generic zone-graph h…"]
-	10IC.5["10IC.5: Move compile-dendry.js into the Riffle…"]
-	M10["M10: Invert to Consumption"]:::mile
+	10IC.5["10IC.5: Switch compile:dendry to Riffle's compi…"]
+	M10["M10: Consume Riffle's Compiler"]:::mile
+	GRIFFLECLI --> 10IC.5
 	1ES.1 --> 1ES.2
 	1ES.1 --> 2PE.1
 	1ES.2 --> M1
@@ -214,32 +165,8 @@ graph LR
 	6RM.2 --> M6
 	7PT.1 --> 7PT.2
 	7PT.2 --> M7
-	8EX.1 --> 8EX.4
-	8EX.1 --> 8EX.2
-	8EX.1 --> 8EX.3
-	8EX.1 --> 8EX.5
-	8EX.1 --> 8EX.6
-	8EX.4 --> 8EX.2
-	8EX.4 --> 8EX.5
-	8EX.4 --> 8EX.6
-	8EX.2 --> 8EX.3
-	8EX.2 --> 8EX.7
-	8EX.3 --> 8EX.8
-	8EX.5 --> M8
-	8EX.6 --> M8
-	8EX.7 --> M8
-	8EX.7 --> 10IC.4
-	8EX.8 --> M8
-	M8 --> 9DS.1
-	9DS.1 --> M9
-	M9 --> 10IC.1
-	10IC.1 --> 10IC.2
-	10IC.1 --> 10IC.3
-	10IC.2 --> 10IC.4
-	10IC.3 --> 10IC.5
-	10IC.4 --> M10
 	10IC.5 --> M10
-	class 10IC.5,1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
-	class 1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
-	class 10IC.1,10IC.2,10IC.3,10IC.4,2PE.6,8EX.1,8EX.2,8EX.3,8EX.4,8EX.5,8EX.6,8EX.7,8EX.8,9DS.1 done
+	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
+	class 10IC.5,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
+	class 2PE.6 done
 ```
