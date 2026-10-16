@@ -202,9 +202,67 @@
 					{
 						"id": "6RM.2",
 						"description": "Implement remediation fixes from triage",
+						"status": "out_of_scope",
+						"dependsOn": [
+							"6RM.1"
+						],
+						"notes": "Split into 6RM.3 to 6RM.9, one per actionable audit finding from 5AU.2 and 5AU.3. 5AU.1's tonal findings get their own tasks after triage."
+					},
+					{
+						"id": "6RM.3",
+						"description": "Refresh docs/dendrynexus-reference.md's implemented-vs-upstream section and choice-level note to match the current compiler and Riffle (coverage audit F5)",
 						"status": "blocked",
 						"dependsOn": [
 							"6RM.1"
+						]
+					},
+					{
+						"id": "6RM.4",
+						"description": "Resolve the showcase's undeclared identifiers: make the go-to-ref demo genuine or retitle it as a placeholder, declare or drop `destination`, and rewrite the conditional-text explanation so it stops being live markup (coverage audit F1, cohesion audit F5)",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1"
+						]
+					},
+					{
+						"id": "6RM.5",
+						"description": "Decide on and fix the hub's reputation increment on every main_hall arrival so deck rewards and reputation gates mean something (cohesion audit F1)",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1"
+						]
+					},
+					{
+						"id": "6RM.6",
+						"description": "Give mead a sink: at least one card or gate that spends or needs it beyond merchant_card_mead (cohesion audit F4)",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1"
+						]
+					},
+					{
+						"id": "6RM.7",
+						"description": "Add wit and courage gated cards to the merchants deck, matching the cross-stat gating the skald and warrior decks already have (cohesion audit F6)",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1"
+						]
+					},
+					{
+						"id": "6RM.8",
+						"description": "Add at least one deck-to-deck link, either a card that leads into another deck or a tag pool two decks share, so the hall stops being a pure star (cohesion audit F2)",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1"
+						]
+					},
+					{
+						"id": "6RM.9",
+						"description": "Exercise the compiler-parsed features no content uses, starting with a max-choices hand and a game-over ending (coverage audit F2)",
+						"status": "blocked",
+						"dependsOn": [
+							"6RM.1",
+							"6RM.3"
 						]
 					}
 				]
