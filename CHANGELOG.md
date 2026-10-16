@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-16
+
+### Added
+
+- `npm run audit:dendry` counts how often the story content uses each DendryNexus feature in each subgame, then writes the tables into `docs/reports/DENDRYNEXUS_FEATURE_COVERAGE.md`. Thirty-six of the sixty-four catalogued features are in use today.
+- `npm run audit:cohesion` reports how the Great Hall's decks relate: which qualities each deck writes and gates on, which scene links cross a deck boundary and which decks affect each other. It also checks that every scene is reachable from the first.
+- Two audit reports with findings for the remediation triage: feature coverage (five findings) and deck cohesion (six findings, including that the hub adds reputation on every visit).
+- Remediation tasks 6RM.3 to 6RM.9 on the roadmap, one per actionable audit finding, all behind the triage task. The catch-all task 6RM.2 is retired in their favour.
+
 ## [0.3.0] - 2026-10-15
 
 ### Breaking
@@ -80,7 +89,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Reorganised Great Hall: deck descriptions moved into one-time intro cards
 
-[Unreleased]: https://github.com/JasonWarrenUK/flyt/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/JasonWarrenUK/flyt/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/JasonWarrenUK/flyt/compare/v0.0.1...v0.1.0
