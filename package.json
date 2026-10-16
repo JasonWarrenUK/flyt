@@ -8,6 +8,8 @@
 		"build": "npm run compile:dendry && vite build",
 		"preview": "vite preview",
 		"compile:dendry": "node scripts/compile-dendry.js",
+		"audit:dendry": "node scripts/audit-dendry-features.js --write",
+		"audit:cohesion": "node scripts/audit-deck-cohesion.js --write",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest run"
 	},

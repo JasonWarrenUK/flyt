@@ -55,8 +55,8 @@ Groundwork across all three areas of the project before either subgame is conten
 **Goal:** Establish the actual state of Great Hall's 94 scenes before deciding what to fix
 
 - [ ] **5AU.1**: Narrative/tonal coherence read-through of all Great Hall content (merchants, showcase, skalds, warriors decks and hub)
-- [ ] **5AU.2**: Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)
-- [ ] **5AU.3**: DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)
+- [x] **5AU.2**: Structural/mechanical cohesion check across the 4 decks (do decks reference or affect each other; does the hub tie them together)
+- [x] **5AU.3**: DendryNexus feature-coverage audit against docs/dendrynexus-reference.md (confirm which upstream features are actually exercised by current content)
   - Note: pre-interview check already confirmed clean compile and zero dangling choice/goTo/call targets; this task goes deeper into feature coverage, not just link integrity
 
 ---
@@ -66,7 +66,15 @@ Groundwork across all three areas of the project before either subgame is conten
 **Goal:** Fix what the audit finds
 
 - [ ] **6RM.1**: Triage audit findings into a fix list (tonal fixes, structural fixes, missing-feature-coverage gaps) _(blocked: depends on 5AU.1, 5AU.2, 5AU.3)_
-- [ ] **6RM.2**: Implement remediation fixes from triage _(blocked: depends on 6RM.1)_
+- [ ] **6RM.2**: Implement remediation fixes from triage
+  - Note: split into 6RM.3 to 6RM.9, one per actionable audit finding from 5AU.2 and 5AU.3. 5AU.1's tonal findings get their own tasks after triage.
+- [ ] **6RM.3**: Refresh docs/dendrynexus-reference.md's implemented-vs-upstream section and choice-level note to match the current compiler and Riffle (coverage audit F5) _(blocked: depends on 6RM.1)_
+- [ ] **6RM.4**: Resolve the showcase's undeclared identifiers: make the go-to-ref demo genuine or retitle it as a placeholder, declare or drop `destination`, and rewrite the conditional-text explanation so it stops being live markup (coverage audit F1, cohesion audit F5) _(blocked: depends on 6RM.1)_
+- [ ] **6RM.5**: Decide on and fix the hub's reputation increment on every main_hall arrival so deck rewards and reputation gates mean something (cohesion audit F1) _(blocked: depends on 6RM.1)_
+- [ ] **6RM.6**: Give mead a sink: at least one card or gate that spends or needs it beyond merchant_card_mead (cohesion audit F4) _(blocked: depends on 6RM.1)_
+- [ ] **6RM.7**: Add wit and courage gated cards to the merchants deck, matching the cross-stat gating the skald and warrior decks already have (cohesion audit F6) _(blocked: depends on 6RM.1)_
+- [ ] **6RM.8**: Add at least one deck-to-deck link, either a card that leads into another deck or a tag pool two decks share, so the hall stops being a pure star (cohesion audit F2) _(blocked: depends on 6RM.1)_
+- [ ] **6RM.9**: Exercise the compiler-parsed features no content uses, starting with a max-choices hand and a game-over ending (coverage audit F2) _(blocked: depends on 6RM.1, 6RM.3)_
 
 ---
 
@@ -127,6 +135,13 @@ graph LR
 	M5["M5: Audit"]:::mile
 	6RM.1["6RM.1: Triage audit findings into a fix list (t…"]
 	6RM.2["6RM.2: Implement remediation fixes from triage"]
+	6RM.3["6RM.3: Refresh docs/dendrynexus-reference.md's…"]
+	6RM.4["6RM.4: Resolve the showcase's undeclared identi…"]
+	6RM.5["6RM.5: Decide on and fix the hub's reputation i…"]
+	6RM.6["6RM.6: Give mead a sink: at least one card or g…"]
+	6RM.7["6RM.7: Add wit and courage gated cards to the m…"]
+	6RM.8["6RM.8: Add at least one deck-to-deck link, eith…"]
+	6RM.9["6RM.9: Exercise the compiler-parsed features no…"]
 	M6["M6: Remediation"]:::mile
 	7PT.1["7PT.1: Design progress-tracking UX (global vs p…"]
 	7PT.2["7PT.2: Implement progress-tracking feature per…"]
@@ -162,11 +177,26 @@ graph LR
 	5AU.3 --> M5
 	5AU.3 --> 6RM.1
 	6RM.1 --> 6RM.2
+	6RM.1 --> 6RM.3
+	6RM.1 --> 6RM.4
+	6RM.1 --> 6RM.5
+	6RM.1 --> 6RM.6
+	6RM.1 --> 6RM.7
+	6RM.1 --> 6RM.8
+	6RM.1 --> 6RM.9
 	6RM.2 --> M6
+	6RM.3 --> 6RM.9
+	6RM.4 --> M6
+	6RM.5 --> M6
+	6RM.6 --> M6
+	6RM.7 --> M6
+	6RM.8 --> M6
+	6RM.9 --> M6
 	7PT.1 --> 7PT.2
 	7PT.2 --> M7
 	10IC.5 --> M10
-	class 1ES.1,2PE.5,5AU.1,5AU.2,5AU.3,7PT.1 todo
-	class 10IC.5,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.2,7PT.2 blocked
-	class 2PE.6 done
+	class 1ES.1,2PE.5,5AU.1,7PT.1 todo
+	class 10IC.5,1ES.2,2PE.1,2PE.2,2PE.3,2PE.4,3WC.1,3WC.2,4DC.1,4DC.2,4DC.3,6RM.1,6RM.3,6RM.4,6RM.5,6RM.6,6RM.7,6RM.8,6RM.9,7PT.2 blocked
+	class 2PE.6,5AU.2,5AU.3 done
+	class 6RM.2 outOfScope
 ```
